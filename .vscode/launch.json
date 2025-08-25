@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "compounds": [
+    {
+      "name": "Host + Service",
+      "configurations": ["Service", "Vela.AppHost"]
+    }
+  ],
+  "configurations": [
+    {
+      "name": "Vela.AppHost",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/Vela.AppHost/bin/Debug/net9.0/Vela.AppHost.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/Vela.AppHost"
+    },
+    {
+      "name": "Service",
+      "type": "coreclr",
+      "request": "attach",
+      "processId": "${command:pickProcess}"
+    }
+  ]
+}

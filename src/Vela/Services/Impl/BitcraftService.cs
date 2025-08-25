@@ -1,21 +1,25 @@
+using System.Diagnostics;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Retry;
-using SpacetimeDB;
 using SpacetimeDB.Types;
 
-public class BitcraftService : IHostedService
+/// <summary>
+/// This service provides a fault-tolerant, cancellable connection to the Bitcraft backend
+/// </summary>
+public class BitcraftService : BackgroundService
 {
   private readonly ILogger<BitcraftService> _logger;
   private readonly IOptions<BitcraftServiceOptions> _options;
+  private readonly IDbConnectionAccessor _accessor;
   private readonly AsyncRetryPolicy _retryPolicy;
   private readonly SemaphoreSlim _reconnectionLock;
   private Task? _connectionLoopTask;
   private CancellationTokenSource? _connLoopCts;
 
-  public BitcraftService(ILogger<BitcraftService> logger, IOptions<BitcraftServiceOptions> options)
+  public BitcraftService(ILogger<BitcraftService> logger, IOptions<BitcraftServiceOptions> options, IDbConnectionAccessor accessor)
   {
     _logger = logger;
     _options = options;
@@ -29,6 +33,7 @@ public class BitcraftService : IHostedService
       );
     _reconnectionLock = new SemaphoreSlim(1, 1);
     _connLoopCts = null;
+    _accessor = accessor;
   }
 
   private static IEnumerable<TimeSpan> GetRetrySchedule()
@@ -36,6 +41,8 @@ public class BitcraftService : IHostedService
     // First we try to reconnect immediately in case it was a transient error
     yield return TimeSpan.FromSeconds(2);
     yield return TimeSpan.FromSeconds(4);
+    yield return TimeSpan.FromSeconds(30);
+    yield return TimeSpan.FromMinutes(5);
 
     // Sustained errors typically mean the token is dead until we log in on the game client
     // so, try every 30 min for the next 12 hours.
@@ -49,7 +56,7 @@ public class BitcraftService : IHostedService
     }
   }
 
-  public async Task StartAsync(CancellationToken cancellationToken)
+  protected override async Task ExecuteAsync(CancellationToken cancellationToken)
   {
     try
     {
@@ -64,19 +71,33 @@ public class BitcraftService : IHostedService
     _logger.LogInformation("Bitcraft service run to completion");
   }
 
-  public async Task ConnectionLoop(DbConnection conn, CancellationToken cancellationToken)
+  private async Task ConnectionLoop(DbConnection conn, CancellationToken cancellationToken)
   {
     _connLoopCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+    await Task.Yield();
+
+    const int targetHz = 60;
+    const double targetLoopMs = 1000.0 / targetHz;
 
     try
     {
       _logger.LogInformation("Loop started");
+
+      var stopwatch = Stopwatch.StartNew()!;
+
       while (!_connLoopCts.Token.IsCancellationRequested)
       {
+        var startMs = stopwatch.ElapsedMilliseconds;
         conn.FrameTick();
-        await Task.Delay(50, cancellationToken);
+        var endMs = stopwatch.ElapsedMilliseconds;
+        var elapsedMs = endMs - startMs;
+
+        var delay = Math.Max(0, targetLoopMs - elapsedMs);
+
+        await Task.Delay((int)delay, _connLoopCts.Token);
       }
-      _logger.LogInformation("Loop cancelled");
+
+      _logger.LogInformation("Loop ended");
     }
     catch (TaskCanceledException)
     {
@@ -88,6 +109,7 @@ public class BitcraftService : IHostedService
     }
     finally
     {
+      _accessor.SetConnection(null);
       conn.Disconnect();
       while (conn.IsActive)
       {
@@ -100,28 +122,37 @@ public class BitcraftService : IHostedService
   {
     _logger.LogInformation("Acquiring reconnection lock");
     await _reconnectionLock.WaitAsync(cancellationToken);
-
     try
     {
       _logger.LogInformation("Acquired reconnection lock");
-
-      _connLoopCts?.Cancel();
-      _connLoopCts?.Dispose();
-      _connLoopCts = null;
-
-      await (_connectionLoopTask ?? Task.CompletedTask);
-      await _retryPolicy.ExecuteAsync(ConnectAsync, cancellationToken);
+      var conn = await _retryPolicy.ExecuteAsync(ConnectAsync, cancellationToken);
+      if (conn == null)
+      {
+        _logger.LogCritical("ConnectAsync unexpectedly returned null");
+        return;
+      }
+      _logger.LogInformation("Connection succeeded");
+      _accessor.SetConnection(conn);
     }
     finally
     {
+      _logger.LogInformation("Releasing reconnection lock");
       _reconnectionLock.Release();
     }
   }
 
-  private Task<DbConnection> ConnectAsync(CancellationToken cancellationToken)
+  private async Task<DbConnection> ConnectAsync(CancellationToken cancellationToken)
   {
-    _logger.LogInformation("Attempting connection");
+    _logger.LogInformation("Cancelling stale connection loop");
+    var oldCts = _connLoopCts;
+    _connLoopCts = null;
+    oldCts?.Cancel();
+    await (_connectionLoopTask ?? Task.CompletedTask);
 
+    oldCts?.Dispose();
+    _logger.LogInformation("Stale connection loop successfully cancelled");
+
+    _logger.LogInformation("Attempting connection");
     var tcs = new TaskCompletionSource<DbConnection>(TaskCreationOptions.RunContinuationsAsynchronously);
     using var registration = cancellationToken.Register(() => tcs.TrySetCanceled());
 
@@ -131,8 +162,8 @@ public class BitcraftService : IHostedService
       .WithToken(_options.Value.AuthToken)
       .OnConnect((conn, identity, token) =>
       {
-        tcs.TrySetResult(conn);
         _logger.LogInformation("Connected with identity {identity}", identity.ToString());
+        tcs.TrySetResult(conn);
       })
       .OnConnectError((err) =>
       {
@@ -141,32 +172,40 @@ public class BitcraftService : IHostedService
       })
       .OnDisconnect((ctx, err) =>
       {
-        if (err != null && !cancellationToken.IsCancellationRequested)
+        if (err != null)
         {
           _logger.LogWarning(err, "Disconnected due to an error");
-          _ = Task.Run(() => ConnectWithRetryAsync(cancellationToken), cancellationToken);
+          tcs.TrySetException(err);
         }
         else
         {
-          _logger.LogWarning("Did not disconnect due to an error - not attempting to reconnect");
+          _logger.LogWarning("OnDisconnect invoked with a null exception");
+          tcs.TrySetException(new Exception("Unknown error"));
         }
       })
       .Build();
 
     _logger.LogInformation("Spawning connection loop task");
     _connectionLoopTask = Task.Run(() => ConnectionLoop(conn, cancellationToken), cancellationToken);
-    return tcs.Task;
+    return await tcs.Task;
   }
 
-  public async Task StopAsync(CancellationToken cancellationToken)
+  public override async Task StopAsync(CancellationToken cancellationToken)
   {
     _logger.LogInformation("Beginning cleanup");
 
+    _accessor.SetConnection(null);
     _connLoopCts?.Cancel();
     _connLoopCts?.Dispose();
 
     await (_connectionLoopTask ?? Task.CompletedTask);
 
     _logger.LogInformation("Cleanup complete");
+  }
+
+  public override void Dispose()
+  {
+    _reconnectionLock?.Dispose();
+    _connLoopCts?.Dispose();
   }
 }

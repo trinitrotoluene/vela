@@ -1,0 +1,140 @@
+using System.Reflection;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using SpacetimeDB;
+using SpacetimeDB.Types;
+using StackExchange.Redis;
+using Vela.Events;
+
+public class EventGatewayService : BackgroundService
+{
+  private readonly ILogger<EventGatewayService> _logger;
+  private readonly IDbConnectionAccessor _accessor;
+  private readonly IEventSubscriber _subscriber;
+  private readonly IDatabase _database;
+
+  public EventGatewayService(
+    ILogger<EventGatewayService> logger,
+    IDbConnectionAccessor accessor,
+    IEventSubscriber subscriber,
+    IConnectionMultiplexer multiplexer
+  )
+  {
+    _logger = logger;
+    _accessor = accessor;
+    _subscriber = subscriber;
+    _database = multiplexer.GetDatabase();
+  }
+
+  protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+  {
+    _logger.LogInformation("Starting event gateway, waiting for Bitcraft connection");
+    while (!cancellationToken.IsCancellationRequested)
+    {
+      try
+      {
+        var conn = await _accessor.WaitForConnectionAsync(cancellationToken);
+        if (conn == null)
+        {
+          _logger.LogWarning("Received null connection, retrying...");
+          continue;
+        }
+        _logger.LogInformation("Acquired connection");
+
+        RunConnectionLifecycle(conn);
+
+        while (conn != null && _accessor.TryGet(out var currentConn) && conn == currentConn)
+        {
+          await Task.Delay(1000, cancellationToken);
+        }
+
+        _logger.LogInformation("Connection lost, waiting for reconnection");
+      }
+      catch (OperationCanceledException)
+      {
+        _logger.LogInformation("Service shutdown requested");
+        break;
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, "Error in event gateway loop {message}", ex.Message);
+        break;
+      }
+    }
+  }
+
+  private void RunConnectionLifecycle(DbConnection conn)
+  {
+    _logger.LogInformation("Start connection lifecycle");
+
+    var nowUnixSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+    var nowTimestamp = DateTimeOffset.UtcNow.ToString("o");
+
+    // Configure base subscription
+    conn.SubscriptionBuilder()
+      .OnApplied((ctx) => OnBaseSubscriptionsApplied(ctx, conn))
+      .OnError(OnBaseSubscriptionsErrored)
+      .Subscribe([
+        "SELECT * from item_desc",
+        "SELECT * from crafting_recipe_desc",
+        "SELECT * from item_list_desc",
+        @"SELECT e.* FROM empire_state e
+  JOIN claim_state c
+    ON e.capital_building_entity_id = c.owner_building_entity_id
+  ",
+        "SELECT * from building_desc",
+        "SELECT t.* from claim_state t WHERE t.neutral = FALSE",
+        "SELECT * from player_username_state",
+        $"SELECT t.* from chat_message_state t WHERE t.channel_id >= 0 AND t.timestamp > {nowUnixSeconds}",
+        $"SELECT t.* from user_moderation_state t WHERE t.created_time > '{nowTimestamp}'",
+        "SELECT* from buy_order_state",
+        "SELECT* from sell_order_state",
+        "SELECT * from building_state",
+        @"SELECT s.* FROM progressive_action_state s
+INNER JOIN public_progressive_action_state p
+  ON s.entity_id = p.entity_id
+WHERE s.craft_count > 50",
+        @"SELECT p.* FROM public_progressive_action_state p
+JOIN progressive_action_state s
+ON p.entity_id = s.entity_id
+  WHERE s.craft_count > 50",
+      ]);
+  }
+
+  private void OnBaseSubscriptionsErrored(ErrorContext err, Exception ex)
+  {
+    _logger.LogError(ex, "Error applying base subscriptions");
+  }
+
+  private async Task OnBaseSubscriptionsApplied(SubscriptionEventContext ctx, DbConnection conn)
+  {
+    try
+    {
+      _logger.LogInformation("Base subscriptions applied");
+      // todo handle cache init
+
+      foreach (var schemaEventName in BitcraftEventBase.SchemaNames)
+      {
+        var cacheKey = $"cache:{schemaEventName}";
+        _logger.LogInformation("Clearing cached key: {key}", cacheKey);
+        await _database.KeyDeleteAsync(cacheKey);
+      }
+      // reset global caches
+      // populate global caches
+      // subscriber handles making updates to the cache
+      _logger.LogInformation("Registering update handlers");
+      _subscriber.SubscribeToChanges(conn);
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Exception thrown by subscriber init");
+    }
+  }
+
+  public override Task StopAsync(CancellationToken cancellationToken)
+  {
+    return Task.CompletedTask;
+  }
+}
