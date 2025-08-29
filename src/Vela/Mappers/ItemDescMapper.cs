@@ -5,11 +5,9 @@ namespace Vela.Mappers
 {
   public class ItemDescMapper : MappedDbEntityBase<ItemDesc, BitcraftItem>
   {
-    public override string TopicName => "bitcraft.item";
-
     public override BitcraftItem Map(ItemDesc entity) =>
         new(
-          Id: entity.Id,
+          Id: entity.Id.ToString(),
           Name: entity.Name,
           Description: entity.Description,
           Volume: entity.Volume,

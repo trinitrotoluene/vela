@@ -74,7 +74,7 @@ public class EventGatewayService : BackgroundService
 
     // Configure base subscription
     conn.SubscriptionBuilder()
-      .OnApplied((ctx) => OnBaseSubscriptionsApplied(ctx, conn))
+      .OnApplied((ctx) => Task.Run(() => OnBaseSubscriptionsApplied(ctx, conn)))
       .OnError(OnBaseSubscriptionsErrored)
       .Subscribe([
         "SELECT * from item_desc",
@@ -86,11 +86,12 @@ public class EventGatewayService : BackgroundService
   ",
         "SELECT * from building_desc",
         "SELECT t.* from claim_state t WHERE t.neutral = FALSE",
+        "SELECT * FROM claim_local_state",
         "SELECT * from player_username_state",
         $"SELECT t.* from chat_message_state t WHERE t.channel_id >= 0 AND t.timestamp > {nowUnixSeconds}",
-        $"SELECT t.* from user_moderation_state t WHERE t.created_time > '{nowTimestamp}'",
-        "SELECT* from buy_order_state",
-        "SELECT* from sell_order_state",
+        $"SELECT * from user_moderation_state",
+        "SELECT * from buy_order_state",
+        "SELECT * from sell_order_state",
         "SELECT * from building_state",
         @"SELECT s.* FROM progressive_action_state s
 INNER JOIN public_progressive_action_state p
@@ -99,7 +100,7 @@ WHERE s.craft_count > 50",
         @"SELECT p.* FROM public_progressive_action_state p
 JOIN progressive_action_state s
 ON p.entity_id = s.entity_id
-  WHERE s.craft_count > 50",
+  WHERE s.craft_count > 50"
       ]);
   }
 
@@ -108,22 +109,13 @@ ON p.entity_id = s.entity_id
     _logger.LogError(ex, "Error applying base subscriptions");
   }
 
-  private async Task OnBaseSubscriptionsApplied(SubscriptionEventContext ctx, DbConnection conn)
+  private async Task OnBaseSubscriptionsApplied(SubscriptionEventContext _, DbConnection conn)
   {
     try
     {
       _logger.LogInformation("Base subscriptions applied");
-      // todo handle cache init
+      await _subscriber.PopulateBaseCachesAsync(conn);
 
-      foreach (var schemaEventName in BitcraftEventBase.SchemaNames)
-      {
-        var cacheKey = $"cache:{schemaEventName}";
-        _logger.LogInformation("Clearing cached key: {key}", cacheKey);
-        await _database.KeyDeleteAsync(cacheKey);
-      }
-      // reset global caches
-      // populate global caches
-      // subscriber handles making updates to the cache
       _logger.LogInformation("Registering update handlers");
       _subscriber.SubscribeToChanges(conn);
     }

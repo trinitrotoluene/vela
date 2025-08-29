@@ -5,8 +5,6 @@ namespace Vela.Mappers
 {
   public class SellOrderStateMapper : MappedDbEntityBase<AuctionListingState, BitcraftAuctionListingState>
   {
-    public override string TopicName => "bitcraft.orders.sell";
-
     public override BitcraftAuctionListingState Map(
       AuctionListingState entity
     ) => new(

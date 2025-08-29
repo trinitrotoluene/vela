@@ -1,37 +1,11 @@
 using System.CommandLine;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Schema;
-using Json.More;
-using Json.Schema;
-using Json.Schema.Generation;
 using Microsoft.Extensions.DependencyInjection;
-using NJsonSchema.CodeGeneration.TypeScript;
-using NJsonSchema.Generation;
-using NJsonSchema.NewtonsoftJson.Generation;
-using Polly;
 using Vela.Events;
 
 
 namespace Vela.Gen.Commands;
-
-internal class SchemaRoot
-{
-  public Envelope<object> Envelope { get; set; }
-  public UpdateEnvelope<object> UpdateEnvelope { get; set; }
-  public BitcraftAuctionListingState BitcraftAuctionListingState { get; set; }
-  public BitcraftBuildingDesc BitcraftBuildingDesc { get; set; }
-  public BitcraftBuildingState BitcraftBuildingState { get; set; }
-  public BitcraftChatMessage BitcraftChatMessage { get; set; }
-  public BitcraftClaimState BitcraftClaimState { get; set; }
-  public BitcraftEmpireState BitcraftEmpireState { get; set; }
-  public BitcraftItem BitcraftItem { get; set; }
-  public BitcraftItemList BitcraftItemList { get; set; }
-  public BitcraftPublicProgressiveAction BitcraftPublicProgressiveAction { get; set; }
-  public BitcraftRecipe BitcraftRecipe { get; set; }
-  public BitcraftUserModerationState BitcraftUserModerationState { get; set; }
-  public BitcraftUsernameState BitcraftUsernameState { get; set; }
-}
 
 public static class GenerateJsonSchema
 {

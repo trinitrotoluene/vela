@@ -5,8 +5,6 @@ namespace Vela.Mappers
 {
   public class ClaimStateMapper : MappedDbEntityBase<ClaimState, BitcraftClaimState>
   {
-    public override string TopicName => "bitcraft.claim.state";
-
     public override BitcraftClaimState Map(
       ClaimState entity
     ) => new(

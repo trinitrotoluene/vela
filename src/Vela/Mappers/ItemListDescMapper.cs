@@ -1,15 +1,13 @@
-using stdb = SpacetimeDB.Types;
+using Sdk = SpacetimeDB.Types;
 using Vela.Events;
 
 namespace Vela.Mappers
 {
-  public class ItemListDescMapper : MappedDbEntityBase<stdb::ItemListDesc, BitcraftItemList>
+  public class ItemListDescMapper : MappedDbEntityBase<Sdk::ItemListDesc, BitcraftItemList>
   {
-    public override string TopicName => "bitcraft.item_list";
-
-    public override BitcraftItemList Map(stdb::ItemListDesc entity) =>
+    public override BitcraftItemList Map(Sdk::ItemListDesc entity) =>
         new(
-          Id: entity.Id,
+          Id: entity.Id.ToString(),
           Name: entity.Name,
           Possibilities: [.. entity.Possibilities.Select(x => new ItemListPossibility(
           Probability: x.Probability,

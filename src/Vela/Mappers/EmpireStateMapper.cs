@@ -5,8 +5,6 @@ namespace Vela.Mappers
 {
   public class EmpireStateMapper : MappedDbEntityBase<EmpireState, BitcraftEmpireState>
   {
-    public override string TopicName => "bitcraft.empire";
-
     public override BitcraftEmpireState Map(
       EmpireState entity
     ) => new(

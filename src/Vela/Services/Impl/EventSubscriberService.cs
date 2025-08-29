@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Reflection;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
@@ -98,6 +99,93 @@ public class EventSubscriberService : IEventSubscriber
     _logger.LogInformation("Done setting up subscriptions");
   }
 
+  public async Task PopulateBaseCachesAsync(DbConnection conn)
+  {
+    _logger.LogInformation("Populating base caches");
+
+    var dbType = conn.Db.GetType();
+    var handleFields = dbType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+      .Where(x =>
+          x.FieldType.BaseType?.IsGenericType == true &&
+          x.FieldType.BaseType.GetGenericTypeDefinition() == typeof(RemoteTableHandle<,>)
+      );
+
+    List<Task> populateTasks = [];
+
+    foreach (var handleField in handleFields)
+    {
+      var handleInstance = handleField.GetValue(conn.Db);
+      if (handleInstance == null)
+        continue;
+
+      var handlerBaseType = handleField.FieldType.BaseType;
+      if (handlerBaseType == null || !handlerBaseType.IsGenericType)
+        continue;
+
+      var rowType = handlerBaseType.GetGenericArguments()[1];
+      if (rowType == null)
+        continue;
+
+      var mapper = _eventMappings.FirstOrDefault(x => x.GetType().BaseType?.GetGenericArguments()[0] == rowType);
+      if (mapper == null)
+        continue;
+
+      var outputType = mapper.GetType().BaseType!.GetGenericArguments()[1];
+      var cacheKey = $"{BitcraftEventBase.CacheKeys[outputType]}:{_options.Value.Module}";
+
+      _logger.LogInformation("Clearing cached key: {key}", cacheKey);
+      await _cache.KeyDeleteAsync(cacheKey);
+
+      var iterMethod = handleField.FieldType.GetMethod("Iter", BindingFlags.Instance | BindingFlags.Public);
+      if (iterMethod == null)
+      {
+        _logger.LogWarning("No Iter() method found on handle field: {fieldName}", handleField.Name);
+        continue;
+      }
+
+      var iterResult = iterMethod.Invoke(handleInstance, null);
+      if (iterResult is not IEnumerable fromItems)
+      {
+        _logger.LogWarning("Iter() did not return an IEnumerable on: {fieldName}", handleField.Name);
+        continue;
+      }
+
+      var populateMethod = GetType()
+            .GetMethod(nameof(PopulateBaseCacheForHandleAsync), BindingFlags.Instance | BindingFlags.NonPublic)?
+            .MakeGenericMethod(rowType, outputType);
+
+      var task = (Task?)populateMethod?.Invoke(this, [cacheKey, iterResult, mapper]);
+      if (task != null)
+        populateTasks.Add(task);
+    }
+
+    await Task.WhenAll(populateTasks);
+  }
+
+  private async Task PopulateBaseCacheForHandleAsync<TFrom, TTo>(
+    string cacheKey,
+    IEnumerable<TFrom> fromItems,
+    MappedDbEntityBase<TFrom, TTo> mapper
+  ) where TTo : BitcraftEventBase
+  {
+    await Task.Yield();
+
+    List<HashEntry> hashEntries = [];
+
+    foreach (var item in fromItems)
+    {
+      var mappedItem = mapper.Map(item);
+      mappedItem.Module = _options.Value.Module;
+
+      var serializedItem = JsonSerializer.Serialize(mappedItem);
+
+      hashEntries.Add(new HashEntry(mappedItem.Id, serializedItem));
+    }
+
+    _logger.LogInformation("Populating cache key {cacheKey} with {count} initial values", cacheKey, hashEntries.Count);
+    await _cache.HashSetAsync(cacheKey, [.. hashEntries]);
+  }
+
   private void RegisterEventHandlers<TEntity, TOutput>(
     object table,
     MappedDbEntityBase<TEntity, TOutput> mapper
@@ -111,8 +199,7 @@ public class EventSubscriberService : IEventSubscriber
 
     if (insertEvent != null)
     {
-      _logger.LogInformation("Subscribing to inserts on {table}", tableType.Name);
-
+      _logger.LogDebug("Subscribing to inserts on {table}", tableType.Name);
       var handlerDelegate = CreateCompatibleDelegate(insertEvent, (EventContext ctx, TEntity entity) =>
       {
         try
@@ -130,7 +217,7 @@ public class EventSubscriberService : IEventSubscriber
 
     if (updateEvent != null)
     {
-      _logger.LogInformation("Subscribing to updates on {table}", tableType.Name);
+      _logger.LogDebug("Subscribing to updates on {table}", tableType.Name);
 
       var handlerDelegate = CreateCompatibleDelegate(updateEvent, (EventContext ctx, TEntity oldEntity, TEntity newEntity) =>
       {
@@ -149,7 +236,7 @@ public class EventSubscriberService : IEventSubscriber
 
     if (deleteEvent != null)
     {
-      _logger.LogInformation("Subscribing to deletes on {table}", tableType.Name);
+      _logger.LogDebug("Subscribing to deletes on {table}", tableType.Name);
 
       var handlerDelegate = CreateCompatibleDelegate(deleteEvent, (EventContext ctx, TEntity entity) =>
       {
@@ -177,6 +264,8 @@ public class EventSubscriberService : IEventSubscriber
   {
     try
     {
+      payload.Module = _options.Value.Module;
+
       var json = JsonSerializer.Serialize(new Envelope<T>
       (
         Version: EnvelopeVersion.V1,
@@ -184,16 +273,16 @@ public class EventSubscriberService : IEventSubscriber
         Entity: payload
       ));
       var cacheJson = JsonSerializer.Serialize(payload);
-      var cacheKey = $"cache:{typeof(T).Name}";
+      var cacheKey = $"{BitcraftEventBase.CacheKey(payload)}:{_options.Value.Module}";
 
       if (delete)
       {
-        _logger.LogInformation("Deleting {cacheJson} from {cacheKey}", cacheJson, cacheKey);
+        _logger.LogDebug("Deleting {cacheJson} from {cacheKey}", cacheJson, cacheKey);
         _cache.HashDelete(cacheKey, payload.Id, CommandFlags.FireAndForget);
       }
       else
       {
-        _logger.LogInformation("Caching {cacheJson} in {cacheKey}", cacheJson, cacheKey);
+        _logger.LogDebug("Caching {cacheJson} in {cacheKey}", cacheJson, cacheKey);
         _cache.HashSet(
           cacheKey,
           [new HashEntry(payload.Id, cacheJson)],
@@ -214,6 +303,9 @@ public class EventSubscriberService : IEventSubscriber
   {
     try
     {
+      oldEntity.Module = _options.Value.Module;
+      newEntity.Module = _options.Value.Module;
+
       var json = JsonSerializer.Serialize(new UpdateEnvelope<T>(
         Version: EnvelopeVersion.V1,
         Module: _options.Value.Module,
@@ -221,8 +313,9 @@ public class EventSubscriberService : IEventSubscriber
         NewEntity: newEntity
       ));
       var cacheJson = JsonSerializer.Serialize(newEntity);
-      var cacheKey = $"cache:{typeof(T).Name}";
-      _logger.LogInformation("Caching {cacheJson} in {cacheKey}", cacheJson, cacheKey);
+      var cacheKey = $"{BitcraftEventBase.CacheKey(newEntity)}:{_options.Value.Module}";
+
+      _logger.LogDebug("Caching {cacheJson} in {cacheKey}", cacheJson, cacheKey);
       _cache.HashSet(
         cacheKey,
         [new HashEntry(newEntity.Id, cacheJson)],
