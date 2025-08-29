@@ -1,5 +1,6 @@
 namespace Vela.Events
 {
+  [GlobalEntity]
   public record BitcraftItem(
     string Id,
     string Name,

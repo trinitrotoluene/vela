@@ -131,7 +131,7 @@ public class EventSubscriberService : IEventSubscriber
         continue;
 
       var outputType = mapper.GetType().BaseType!.GetGenericArguments()[1];
-      var cacheKey = $"{BitcraftEventBase.CacheKeys[outputType]}:{_options.Value.Module}";
+      var cacheKey = BitcraftEventBase.CacheKey(outputType, _options.Value.Module);
 
       _logger.LogInformation("Clearing cached key: {key}", cacheKey);
       await _cache.KeyDeleteAsync(cacheKey);
@@ -273,7 +273,7 @@ public class EventSubscriberService : IEventSubscriber
         Entity: payload
       ));
       var cacheJson = JsonSerializer.Serialize(payload);
-      var cacheKey = $"{BitcraftEventBase.CacheKey(payload)}:{_options.Value.Module}";
+      var cacheKey = BitcraftEventBase.CacheKey(payload, _options.Value.Module);
 
       if (delete)
       {
@@ -290,7 +290,7 @@ public class EventSubscriberService : IEventSubscriber
         );
       }
 
-      _logger.LogInformation("Publishing {json} to {topic}", json, topic);
+      _logger.LogDebug("Publishing {json} to {topic}", json, topic);
       _ = _cache.Publish(RedisChannel.Literal(topic), json, CommandFlags.FireAndForget);
     }
     catch (Exception ex)
@@ -313,7 +313,7 @@ public class EventSubscriberService : IEventSubscriber
         NewEntity: newEntity
       ));
       var cacheJson = JsonSerializer.Serialize(newEntity);
-      var cacheKey = $"{BitcraftEventBase.CacheKey(newEntity)}:{_options.Value.Module}";
+      var cacheKey = BitcraftEventBase.CacheKey(newEntity, _options.Value.Module);
 
       _logger.LogDebug("Caching {cacheJson} in {cacheKey}", cacheJson, cacheKey);
       _cache.HashSet(
@@ -322,7 +322,7 @@ public class EventSubscriberService : IEventSubscriber
         CommandFlags.FireAndForget
       );
 
-      _logger.LogInformation("Publishing {json} to {topic}", json, topic);
+      _logger.LogDebug("Publishing {json} to {topic}", json, topic);
       _ = _cache.Publish(RedisChannel.Literal(topic), json, CommandFlags.FireAndForget);
     }
     catch (Exception ex)

@@ -77,6 +77,7 @@ public class EventGatewayService : BackgroundService
       .OnApplied((ctx) => Task.Run(() => OnBaseSubscriptionsApplied(ctx, conn)))
       .OnError(OnBaseSubscriptionsErrored)
       .Subscribe([
+        "SELECT ls.* from location_state ls INNER JOIN public_progressive_action_state ppas ON ppas.building_entity_id = ls.entity_id",
         "SELECT * from item_desc",
         "SELECT * from crafting_recipe_desc",
         "SELECT * from item_list_desc",
@@ -100,7 +101,8 @@ WHERE s.craft_count > 50",
         @"SELECT p.* FROM public_progressive_action_state p
 JOIN progressive_action_state s
 ON p.entity_id = s.entity_id
-  WHERE s.craft_count > 50"
+  WHERE s.craft_count > 50",
+        "SELECT * FROM inventory_state"
       ]);
   }
 

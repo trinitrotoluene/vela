@@ -1,5 +1,7 @@
 using System.CommandLine;
+using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Schema;
 using Microsoft.Extensions.DependencyInjection;
 using Vela.Events;
@@ -51,7 +53,8 @@ public static class GenerateJsonSchema
 
     Console.WriteLine("Emitting schemas");
 
-    foreach (var type in BitcraftEventBase.SchemaTypes)
+    Type[] schemaTypes = [.. BitcraftEventBase.SchemaTypes, .. GenericEventBase.SchemaTypes];
+    foreach (var type in schemaTypes)
     {
       var fileName = $"{type.Name}.schema.json";
 
@@ -59,7 +62,25 @@ public static class GenerateJsonSchema
       var typeFile = new FileInfo(Path.Combine(outDir.FullName, fileName));
       using var file = typeFile.CreateText();
 
-      var schema = options.GetJsonSchemaAsNode(type, new() { TreatNullObliviousAsNonNullable = true });
+
+      var exporterOptions = new JsonSchemaExporterOptions
+      {
+        TreatNullObliviousAsNonNullable = true,
+        TransformSchemaNode = (context, node) =>
+        {
+          if (context.TypeInfo.Type.GetCustomAttribute<GlobalEntityAttribute>() != null)
+          {
+            if (node is JsonObject objNode)
+            {
+              objNode["x-global-entity"] = true;
+            }
+          }
+
+          return node;
+        }
+      };
+
+      var schema = options.GetJsonSchemaAsNode(type, exporterOptions);
       file.Write(schema);
     }
 

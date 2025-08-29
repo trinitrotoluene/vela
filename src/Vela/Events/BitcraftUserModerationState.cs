@@ -1,5 +1,6 @@
 namespace Vela.Events
 {
+  [GlobalEntity]
   public record BitcraftUserModerationState(
     string Id,
     string CreatedByEntityId,
