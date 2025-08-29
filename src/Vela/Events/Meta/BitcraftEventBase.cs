@@ -8,7 +8,7 @@ namespace Vela.Events
     // This is dynamically set when publishing to avoid having to copy the object
     public string? Module { get; set; }
 
-    public static readonly Type[] SchemaTypes = [.. Assembly.GetEntryAssembly()!
+    public static readonly Type[] SchemaTypes = [.. Assembly.GetExecutingAssembly()!
       .GetTypes()
       .Where(x => x.IsAssignableTo(typeof(BitcraftEventBase))
     )];

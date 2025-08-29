@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-      
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Log in to GitHub Container Registry
@@ -33,7 +33,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: "9.0.x"
       - name: Restore dependencies
         run: dotnet restore
       - name: Build project
@@ -53,3 +53,11 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tag }}
             ${{ env.IMAGE_NAME }}:latest
+      - name: Generate JSON Schema
+        run: dotnet run --project src/Vela.Gen -- generate-json-schema --outDir ./schema-output
+      - name: Upload JSON Schema Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: json-schema-files
+          path: ./schema-output
+

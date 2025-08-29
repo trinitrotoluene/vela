@@ -29,9 +29,17 @@ public static class GenerateJsonSchema
 
   private static void GenerateSchema(DirectoryInfo outDir)
   {
-    if (!outDir.Exists) outDir.Create();
+    Console.WriteLine("Generating schema");
+
+    if (!outDir.Exists)
+    {
+      Console.WriteLine("Output directory not found - creating it");
+      outDir.Create();
+    }
+
     foreach (var file in outDir.GetFiles())
     {
+      Console.WriteLine($"Deleting {file.Name}");
       file.Delete();
     }
 
@@ -40,13 +48,21 @@ public static class GenerateJsonSchema
     var container = services.BuildServiceProvider();
     var options = container.GetRequiredService<JsonSerializerOptions>();
 
+
+    Console.WriteLine("Emitting schemas");
+
     foreach (var type in BitcraftEventBase.SchemaTypes)
     {
-      var typeFile = new FileInfo(Path.Combine(outDir.FullName, $"{type.Name}.schema.json"));
+      var fileName = $"{type.Name}.schema.json";
+
+      Console.WriteLine($"Emitting {fileName}");
+      var typeFile = new FileInfo(Path.Combine(outDir.FullName, fileName));
       using var file = typeFile.CreateText();
 
       var schema = options.GetJsonSchemaAsNode(type, new() { TreatNullObliviousAsNonNullable = true });
       file.Write(schema);
     }
+
+    Console.WriteLine("Done");
   }
 }
