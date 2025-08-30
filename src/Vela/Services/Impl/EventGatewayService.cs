@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using SpacetimeDB;
 using SpacetimeDB.Types;
 using StackExchange.Redis;
@@ -13,19 +14,19 @@ public class EventGatewayService : BackgroundService
   private readonly ILogger<EventGatewayService> _logger;
   private readonly IDbConnectionAccessor _accessor;
   private readonly IEventSubscriber _subscriber;
-  private readonly IDatabase _database;
+  private readonly IOptions<BitcraftServiceOptions> _options;
 
   public EventGatewayService(
     ILogger<EventGatewayService> logger,
     IDbConnectionAccessor accessor,
     IEventSubscriber subscriber,
-    IConnectionMultiplexer multiplexer
+    IOptions<BitcraftServiceOptions> options
   )
   {
     _logger = logger;
     _accessor = accessor;
     _subscriber = subscriber;
-    _database = multiplexer.GetDatabase();
+    _options = options;
   }
 
   protected override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -117,6 +118,12 @@ ON p.entity_id = s.entity_id
     {
       _logger.LogInformation("Base subscriptions applied");
       await _subscriber.PopulateBaseCachesAsync(conn);
+      // todo send this regularly and inject name from options into application
+      _subscriber.PublishSystemEvent(new HeartbeatEvent(
+        Application: $"gateway-{_options.Value.Module}",
+        DateTime.UtcNow,
+        Seq: 0
+      ));
 
       _logger.LogInformation("Registering update handlers");
       _subscriber.SubscribeToChanges(conn);

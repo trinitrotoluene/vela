@@ -3,7 +3,7 @@ using Vela.Events;
 
 namespace Vela.Mappers
 {
-  public class BuyOrderStateMapper : MappedDbEntityBase<AuctionListingState, BitcraftAuctionListingState>
+  public class AuctionListingStateMapper : MappedDbEntityBase<AuctionListingState, BitcraftAuctionListingState>
   {
     public override BitcraftAuctionListingState Map(
       AuctionListingState entity

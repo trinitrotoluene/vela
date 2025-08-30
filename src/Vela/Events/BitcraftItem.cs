@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Vela.Events
 {
   [GlobalEntity]
@@ -12,6 +14,7 @@ namespace Vela.Events
     bool HasCompendiumEntry
   ) : BitcraftEventBase(Id);
 
+  [JsonConverter(typeof(JsonStringEnumConverter))]
   public enum BitcraftItemRarity
   {
     Default = 0,

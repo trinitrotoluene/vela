@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -76,24 +77,29 @@ public class EventSubscriberService : IEventSubscriber
       var mapperGenericArguments = baseType.GetGenericArguments();
       var entityType = mapperGenericArguments[0];
       var mappedType = mapperGenericArguments[1];
-      var tableProperty = fields
-          .FirstOrDefault(x => (x.FieldType.BaseType?.IsGenericType ?? false)
+      var tableProperties = fields
+          .Where(x => (x.FieldType.BaseType?.IsGenericType ?? false)
               && x.FieldType.BaseType?.GetGenericTypeDefinition() == typeof(RemoteTableHandle<,>)
               && x.FieldType.BaseType?.GenericTypeArguments[1] == entityType);
 
-      if (tableProperty == null)
+
+      // Some tables share a type e.g. AuctionListingState for buy and sell orders.
+      // Typically, you can tell what the type is by inspecting the schema, so we can just register the mapper for both.
+      // If this causes problems in the future, need to explore some kind of synthetic entity split e.g.
+      // [SyntheticEntity("<TablePropertyName", "<SyntheticEntityName>")]
+      // would then "split" the shared entity depending on which table it came from. Would be pain to implement though...
+      foreach (var tableProperty in tableProperties)
       {
-        _logger.LogWarning("No table found for entity type {type}", entityType.Name);
-        continue;
+        _logger.LogInformation("Mapping {tableName}", tableProperty.Name);
+
+        var table = tableProperty.GetValue(conn.Db) ?? throw new Exception("Unable to retrieve Db instance");
+
+        var registerHandlersMethod = typeof(EventSubscriberService)
+              .GetMethod(nameof(RegisterEventHandlers), BindingFlags.NonPublic | BindingFlags.Instance)
+              !.MakeGenericMethod(entityType, mappedType);
+
+        registerHandlersMethod?.Invoke(this, [table, mapping]);
       }
-
-      var table = tableProperty.GetValue(conn.Db) ?? throw new Exception("Unable to retrieve Db instance");
-
-      var registerHandlersMethod = typeof(EventSubscriberService)
-            .GetMethod(nameof(RegisterEventHandlers), BindingFlags.NonPublic | BindingFlags.Instance)
-            !.MakeGenericMethod(entityType, mappedType);
-
-      registerHandlersMethod?.Invoke(this, [table, mapping]);
     }
 
     _logger.LogInformation("Done setting up subscriptions");
@@ -101,7 +107,20 @@ public class EventSubscriberService : IEventSubscriber
 
   public async Task PopulateBaseCachesAsync(DbConnection conn)
   {
-    _logger.LogInformation("Populating base caches");
+    _logger.LogInformation("Clearing region-specific caches");
+
+    var keys = _cache.Multiplexer.GetServers().FirstOrDefault()?
+      .Keys(pattern: "*")
+      .Select(x => x.ToString())
+      .Where(x => x.EndsWith(_options.Value.Module));
+
+    foreach (var regionKey in keys ?? [])
+    {
+      _logger.LogInformation("Clearing cached key: {key}", regionKey);
+      await _cache.KeyDeleteAsync(regionKey);
+    }
+
+    _logger.LogInformation("Populating caches");
 
     var dbType = conn.Db.GetType();
     var handleFields = dbType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
@@ -132,9 +151,6 @@ public class EventSubscriberService : IEventSubscriber
 
       var outputType = mapper.GetType().BaseType!.GetGenericArguments()[1];
       var cacheKey = BitcraftEventBase.CacheKey(outputType, _options.Value.Module);
-
-      _logger.LogInformation("Clearing cached key: {key}", cacheKey);
-      await _cache.KeyDeleteAsync(cacheKey);
 
       var iterMethod = handleField.FieldType.GetMethod("Iter", BindingFlags.Instance | BindingFlags.Public);
       if (iterMethod == null)
@@ -172,7 +188,7 @@ public class EventSubscriberService : IEventSubscriber
 
     List<HashEntry> hashEntries = [];
 
-    foreach (var item in fromItems)
+    foreach (var item in fromItems.ToArray())
     {
       var mappedItem = mapper.Map(item);
       mappedItem.Module = _options.Value.Module;
@@ -258,6 +274,27 @@ public class EventSubscriberService : IEventSubscriber
   {
     var handlerType = eventInfo.EventHandlerType!;
     return Delegate.CreateDelegate(handlerType, handler.Target!, handler.Method);
+  }
+
+  public void PublishSystemEvent<TEvent>(TEvent payload) where TEvent : GenericEventBase
+  {
+    var topic = $"system.{typeof(TEvent).Name}";
+
+    try
+    {
+      var json = JsonSerializer.Serialize(new Envelope<TEvent>
+      (
+        Version: EnvelopeVersion.V1,
+        Module: _options.Value.Module,
+        Entity: payload
+      ));
+
+      _cache.Publish(RedisChannel.Literal(topic), json, CommandFlags.FireAndForget);
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Error publishing to {topic}", topic);
+    }
   }
 
   private void PublishEvent<T>(string topic, T payload, bool delete = false) where T : BitcraftEventBase

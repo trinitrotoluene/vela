@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using Serilog;
@@ -20,7 +21,7 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.OpenTelemetry()
     .CreateLogger();
 
-builder.Logging.AddSerilog();
+builder.Logging.ClearProviders().AddSerilog();
 
 builder.AddRedisClient("Valkey");
 
