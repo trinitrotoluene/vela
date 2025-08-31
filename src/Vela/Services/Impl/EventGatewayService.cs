@@ -1,16 +1,13 @@
-using System.Reflection;
-using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using SpacetimeDB;
 using SpacetimeDB.Types;
-using StackExchange.Redis;
 using Vela.Events;
+using Vela.Services.Contracts;
 
 public class EventGatewayService : BackgroundService
 {
+  private readonly IMetricHelpers _metrics;
   private readonly ILogger<EventGatewayService> _logger;
   private readonly IDbConnectionAccessor _accessor;
   private readonly IEventSubscriber _subscriber;
@@ -20,13 +17,15 @@ public class EventGatewayService : BackgroundService
     ILogger<EventGatewayService> logger,
     IDbConnectionAccessor accessor,
     IEventSubscriber subscriber,
-    IOptions<BitcraftServiceOptions> options
+    IOptions<BitcraftServiceOptions> options,
+    IMetricHelpers metrics
   )
   {
     _logger = logger;
     _accessor = accessor;
     _subscriber = subscriber;
     _options = options;
+    _metrics = metrics;
   }
 
   protected override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -44,7 +43,7 @@ public class EventGatewayService : BackgroundService
         }
         _logger.LogInformation("Acquired connection");
 
-        RunConnectionLifecycle(conn);
+        RunConnectionLifecycle(conn, cancellationToken);
 
         while (conn != null && _accessor.TryGet(out var currentConn) && conn == currentConn)
         {
@@ -66,7 +65,7 @@ public class EventGatewayService : BackgroundService
     }
   }
 
-  private void RunConnectionLifecycle(DbConnection conn)
+  private void RunConnectionLifecycle(DbConnection conn, CancellationToken cancellationToken)
   {
     _logger.LogInformation("Start connection lifecycle");
 
@@ -75,7 +74,7 @@ public class EventGatewayService : BackgroundService
 
     // Configure base subscription
     conn.SubscriptionBuilder()
-      .OnApplied((ctx) => Task.Run(() => OnBaseSubscriptionsApplied(ctx, conn)))
+      .OnApplied((ctx) => Task.Run(() => OnBaseSubscriptionsApplied(ctx, conn, cancellationToken)))
       .OnError(OnBaseSubscriptionsErrored)
       .Subscribe([
         "SELECT ls.* from location_state ls INNER JOIN public_progressive_action_state ppas ON ppas.building_entity_id = ls.entity_id",
@@ -112,18 +111,13 @@ ON p.entity_id = s.entity_id
     _logger.LogError(ex, "Error applying base subscriptions");
   }
 
-  private async Task OnBaseSubscriptionsApplied(SubscriptionEventContext _, DbConnection conn)
+  private async Task OnBaseSubscriptionsApplied(SubscriptionEventContext _, DbConnection conn, CancellationToken cancellationToken)
   {
     try
     {
       _logger.LogInformation("Base subscriptions applied");
       await _subscriber.PopulateBaseCachesAsync(conn);
-      // todo send this regularly and inject name from options into application
-      _subscriber.PublishSystemEvent(new HeartbeatEvent(
-        Application: $"gateway-{_options.Value.Module}",
-        DateTime.UtcNow,
-        Seq: 0
-      ));
+      await Task.Run(() => HeartbeatAsync(conn, cancellationToken), cancellationToken);
 
       _logger.LogInformation("Registering update handlers");
       _subscriber.SubscribeToChanges(conn);
@@ -137,5 +131,45 @@ ON p.entity_id = s.entity_id
   public override Task StopAsync(CancellationToken cancellationToken)
   {
     return Task.CompletedTask;
+  }
+
+  private async Task HeartbeatAsync(DbConnection currentConn, CancellationToken cancellationToken)
+  {
+    _logger.LogInformation("Starting heartbeat");
+
+    var seq = 0;
+    var interval = TimeSpan.FromSeconds(10);
+
+    while (!cancellationToken.IsCancellationRequested && currentConn.IsActive)
+    {
+      try
+      {
+        _subscriber.PublishSystemEvent(new HeartbeatEvent(
+          Application: _metrics.ServiceName,
+          DateTime.UtcNow,
+          Seq: seq++
+        ));
+      }
+      catch (TaskCanceledException)
+      {
+        _logger.LogInformation("Heartbeat task cancelled");
+        break;
+      }
+      catch (Exception ex)
+      {
+        _logger.LogError(ex, "Exception thrown while publishing heartbeat");
+      }
+
+      try
+      {
+        await Task.Delay(interval, cancellationToken);
+      }
+      catch (TaskCanceledException)
+      {
+        _logger.LogInformation("Heartbeat delay cancelled");
+      }
+    }
+
+    _logger.LogInformation("Heartbeat cancelled");
   }
 }

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Retry;
 using SpacetimeDB.Types;
+using Vela.Services.Contracts;
 
 /// <summary>
 /// This service provides a fault-tolerant, cancellable connection to the Bitcraft backend
@@ -28,7 +29,8 @@ public class BitcraftService : BackgroundService
     ILogger<BitcraftService> logger,
     IOptions<BitcraftServiceOptions> options,
     IDbConnectionAccessor accessor,
-    IMeterFactory metricsFactory
+    IMeterFactory metricsFactory,
+    IMetricHelpers metricsHelper
   )
   {
     _logger = logger;
@@ -45,7 +47,9 @@ public class BitcraftService : BackgroundService
     _connLoopCts = null;
     _accessor = accessor;
 
-    var metrics = metricsFactory.Create("Vela");
+    var metrics = metricsFactory.Create("Vela", null, [
+      new("service", metricsHelper.ServiceName)
+    ]);
 
     _connectionAttemptsMetric = metrics.CreateCounter<int>("bitcraft.connection.attempted");
     _connectionsMetric = metrics.CreateCounter<int>("bitcraft.connection.connected");

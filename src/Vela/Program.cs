@@ -7,6 +7,8 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using Serilog;
 using Serilog.Sinks.OpenTelemetry;
+using Vela.Services.Contracts;
+using Vela.Services.Impl;
 
 var builder = Host.CreateApplicationBuilder();
 
@@ -68,6 +70,7 @@ builder.Services.AddOpenTelemetry()
 
 builder.Services.AddSingleton<IDbConnectionAccessor, DbConnectionAccessor>();
 builder.Services.AddSingleton<IEventSubscriber, EventSubscriberService>();
+builder.Services.AddSingleton<IMetricHelpers, MetricHelpers>();
 
 builder.Services.AddOptions<BitcraftServiceOptions>()
     .Bind(builder.Configuration.GetSection("Bitcraft"))

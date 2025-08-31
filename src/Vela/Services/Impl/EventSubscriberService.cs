@@ -1,6 +1,7 @@
 using System.Collections;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -9,21 +10,34 @@ using SpacetimeDB.Types;
 using StackExchange.Redis;
 using Vela.Events;
 using Vela.Mappers;
+using Vela.Services.Contracts;
 
 public class EventSubscriberService : IEventSubscriber
 {
+  private readonly Counter<int> _eventCounter;
   private readonly ILogger<EventGatewayService> _logger;
   private readonly IDatabase _cache;
   private readonly List<object> _eventMappings;
   private readonly IOptions<BitcraftServiceOptions> _options;
 
-  public EventSubscriberService(ILogger<EventGatewayService> logger, IConnectionMultiplexer multiplexer, IOptions<BitcraftServiceOptions> options)
+  public EventSubscriberService(
+    ILogger<EventGatewayService> logger,
+    IConnectionMultiplexer multiplexer,
+    IOptions<BitcraftServiceOptions> options,
+    IMeterFactory metricsFactory,
+    IMetricHelpers metricHelpers
+  )
   {
     _logger = logger;
     _options = options;
 
     _cache = multiplexer.GetDatabase();
     _eventMappings = LoadMappings();
+    var metrics = metricsFactory.Create("Vela", null, [
+      new("service", metricHelpers.ServiceName)
+    ]);
+
+    _eventCounter = metrics.CreateCounter<int>("vela.event.published");
   }
 
   private List<object> LoadMappings()
@@ -289,6 +303,7 @@ public class EventSubscriberService : IEventSubscriber
         Entity: payload
       ));
 
+      _eventCounter.Add(1, new TagList { { "topic", topic } });
       _cache.Publish(RedisChannel.Literal(topic), json, CommandFlags.FireAndForget);
     }
     catch (Exception ex)
@@ -328,6 +343,7 @@ public class EventSubscriberService : IEventSubscriber
       }
 
       _logger.LogDebug("Publishing {json} to {topic}", json, topic);
+      _eventCounter.Add(1, new TagList { { "topic", topic } });
       _ = _cache.Publish(RedisChannel.Literal(topic), json, CommandFlags.FireAndForget);
     }
     catch (Exception ex)
@@ -360,6 +376,7 @@ public class EventSubscriberService : IEventSubscriber
       );
 
       _logger.LogDebug("Publishing {json} to {topic}", json, topic);
+      _eventCounter.Add(1, new TagList { { "topic", topic } });
       _ = _cache.Publish(RedisChannel.Literal(topic), json, CommandFlags.FireAndForget);
     }
     catch (Exception ex)
