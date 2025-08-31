@@ -144,6 +144,7 @@ ON p.entity_id = s.entity_id
     {
       try
       {
+        _logger.LogInformation("Heartbeat {seq}", seq);
         _subscriber.PublishSystemEvent(new HeartbeatEvent(
           Application: _metrics.ServiceName,
           DateTime.UtcNow,
