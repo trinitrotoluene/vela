@@ -1,0 +1,61 @@
+services:
+  gateway:
+    image: vela:latest
+    environment:
+      VELA_Otel__Endpoint: http://alloy:4318
+      VELA_Aspire__StackExchange__Redis__Valkey__ConnectionString: cache:6379,password=password
+    volumes:
+      - ../src/Vela/appsettings.Development.json:/app/appsettings.json:ro
+    depends_on:
+      - grafana
+      - cache
+
+  cache:
+    image: valkey/valkey:7.2
+    environment:
+      REDIS_PASSWORD: password
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    depends_on:
+      - mimir
+      - loki
+
+  mimir:
+    image: grafana/mimir
+    ports:
+      - "9009:9009"
+    volumes:
+      - mimir-storage:/tmp/mimir
+      - ./mimir-config.yml:/etc/mimir/config.yaml
+    command: >
+      --config.file=/etc/mimir/config.yaml
+
+  loki:
+    image: grafana/loki
+    ports:
+      - "3100:3100"
+    depends_on:
+      - alloy
+
+  alloy:
+    image: grafana/alloy:latest
+    container_name: alloy
+    volumes:
+      - ./alloy-config.alloy:/etc/alloy/config.alloy
+    command: >
+      run --server.http.listen-addr=0.0.0.0:12345 
+          --storage.path=/var/lib/alloy/data 
+          /etc/alloy/config.alloy
+    ports:
+      - 12345:12345
+
+volumes:
+  grafana-storage:
+  mimir-storage:

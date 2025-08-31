@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -11,6 +12,10 @@ using SpacetimeDB.Types;
 /// </summary>
 public class BitcraftService : BackgroundService
 {
+  private readonly Counter<int> _connectionAttemptsMetric;
+  private readonly Counter<int> _disconnectionsMetric;
+  private readonly Counter<int> _connectionsMetric;
+
   private readonly ILogger<BitcraftService> _logger;
   private readonly IOptions<BitcraftServiceOptions> _options;
   private readonly IDbConnectionAccessor _accessor;
@@ -19,7 +24,12 @@ public class BitcraftService : BackgroundService
   private Task? _connectionLoopTask;
   private CancellationTokenSource? _connLoopCts;
 
-  public BitcraftService(ILogger<BitcraftService> logger, IOptions<BitcraftServiceOptions> options, IDbConnectionAccessor accessor)
+  public BitcraftService(
+    ILogger<BitcraftService> logger,
+    IOptions<BitcraftServiceOptions> options,
+    IDbConnectionAccessor accessor,
+    IMeterFactory metricsFactory
+  )
   {
     _logger = logger;
     _options = options;
@@ -34,6 +44,12 @@ public class BitcraftService : BackgroundService
     _reconnectionLock = new SemaphoreSlim(1, 1);
     _connLoopCts = null;
     _accessor = accessor;
+
+    var metrics = metricsFactory.Create("Vela");
+
+    _connectionAttemptsMetric = metrics.CreateCounter<int>("bitcraft.connection.attempted");
+    _connectionsMetric = metrics.CreateCounter<int>("bitcraft.connection.connected");
+    _disconnectionsMetric = metrics.CreateCounter<int>("bitcraft.connection.disconnected");
   }
 
   private static IEnumerable<TimeSpan> GetRetrySchedule()
@@ -153,6 +169,7 @@ public class BitcraftService : BackgroundService
     _logger.LogInformation("Stale connection loop successfully cancelled");
 
     _logger.LogInformation("Attempting connection");
+    _connectionAttemptsMetric.Add(1);
     var tcs = new TaskCompletionSource<DbConnection>(TaskCreationOptions.RunContinuationsAsynchronously);
     using var registration = cancellationToken.Register(() => tcs.TrySetCanceled());
 
@@ -162,6 +179,8 @@ public class BitcraftService : BackgroundService
       .WithToken(_options.Value.AuthToken)
       .OnConnect((conn, identity, token) =>
       {
+        _connectionsMetric.Add(1);
+
         _logger.LogInformation("Connected with identity {identity}", identity.ToString());
         tcs.TrySetResult(conn);
       })
@@ -172,6 +191,18 @@ public class BitcraftService : BackgroundService
       })
       .OnDisconnect((ctx, err) =>
       {
+        _disconnectionsMetric.Add(1);
+
+        // If this callback is invoked after the tcs is completed, this means we signalled a successful connection to the caller
+        // so we need to schedule the reconnection ourselves.
+        if (tcs.Task.IsCompleted)
+        {
+          _ = Task.Run(() => ConnectWithRetryAsync(cancellationToken));
+          return;
+        }
+
+        // Otherwise, the callback was invoked before we signalled a successful connection to the caller
+        // so we can safely try and set the exception - the caller may then attempt to retry.
         if (err != null)
         {
           _logger.LogWarning(err, "Disconnected due to an error");
