@@ -111,13 +111,13 @@ ON p.entity_id = s.entity_id
     _logger.LogError(ex, "Error applying base subscriptions");
   }
 
-  private async Task OnBaseSubscriptionsApplied(SubscriptionEventContext _, DbConnection conn, CancellationToken cancellationToken)
+  private async Task OnBaseSubscriptionsApplied(SubscriptionEventContext __, DbConnection conn, CancellationToken cancellationToken)
   {
     try
     {
       _logger.LogInformation("Base subscriptions applied");
       await _subscriber.PopulateBaseCachesAsync(conn);
-      await Task.Run(() => HeartbeatAsync(conn, cancellationToken), cancellationToken);
+      _ = Task.Run(() => HeartbeatAsync(conn, cancellationToken), cancellationToken);
 
       _logger.LogInformation("Registering update handlers");
       _subscriber.SubscribeToChanges(conn);
