@@ -53,7 +53,7 @@ builder.Services.AddOpenTelemetry()
         metrics.AddRuntimeInstrumentation();
         metrics.AddMeter("Vela");
 
-        metrics.AddOtlpExporter(options =>
+        metrics.AddOtlpExporter((options, readerOptions) =>
         {
             var overrideHost = builder.Configuration.GetValue<string>("Otel:Endpoint");
             if (!string.IsNullOrEmpty(overrideHost))
@@ -61,6 +61,8 @@ builder.Services.AddOpenTelemetry()
                 Log.Logger.Information("Shipping metrics to custom endpoint {endpoint}", overrideHost);
                 options.Endpoint = new Uri($"{overrideHost}/v1/metrics");
                 options.Protocol = OtlpExportProtocol.HttpProtobuf;
+
+                readerOptions.TemporalityPreference = MetricReaderTemporalityPreference.Delta;
             }
             else
             {
