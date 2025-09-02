@@ -81,12 +81,14 @@ public class EventGatewayService : BackgroundService
         "SELECT * from item_desc",
         "SELECT * from crafting_recipe_desc",
         "SELECT * from item_list_desc",
-        @"SELECT e.* FROM empire_state e
-  JOIN claim_state c
-    ON e.capital_building_entity_id = c.owner_building_entity_id
-  ",
-        "SELECT * FROM empire_node_state",
-        "SELECT * FROM empire_node_siege_state",
+        @"SELECT e.* FROM empire_state e",
+          // todo: restore this join when running multi-node
+          // JOIN claim_state c
+          //   ON e.capital_building_entity_id = c.owner_building_entity_id",
+        @"SELECT * FROM empire_node_state", // todo can this be restricted at all?
+        @"SELECT e.* FROM empire_node_siege_state e
+          JOIN building_state b
+            ON e.building_entity_id = b.entity_id",
         "SELECT * FROM user_state",
         "SELECT * from building_desc",
         "SELECT t.* from claim_state t WHERE t.neutral = FALSE",
