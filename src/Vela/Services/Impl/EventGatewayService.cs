@@ -85,6 +85,9 @@ public class EventGatewayService : BackgroundService
   JOIN claim_state c
     ON e.capital_building_entity_id = c.owner_building_entity_id
   ",
+        "SELECT * FROM empire_node_state",
+        "SELECT * FROM empire_node_siege_state",
+        "SELECT * FROM user_state",
         "SELECT * from building_desc",
         "SELECT t.* from claim_state t WHERE t.neutral = FALSE",
         "SELECT * FROM claim_local_state",

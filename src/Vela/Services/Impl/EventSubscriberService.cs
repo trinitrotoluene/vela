@@ -234,7 +234,7 @@ public class EventSubscriberService : IEventSubscriber
       {
         try
         {
-          PublishEvent($"{mapper.TopicName}.insert", mapper.Map(entity));
+          PublishEvent(ctx, $"{mapper.TopicName}.insert", mapper.Map(entity), delete: false);
         }
         catch (Exception ex)
         {
@@ -253,7 +253,12 @@ public class EventSubscriberService : IEventSubscriber
       {
         try
         {
-          PublishUpdateEvent($"{mapper.TopicName}.update", mapper.Map(oldEntity), mapper.Map(newEntity));
+          PublishUpdateEvent(
+            ctx,
+            $"{mapper.TopicName}.update",
+            mapper.Map(oldEntity),
+            mapper.Map(newEntity)
+          );
         }
         catch (Exception ex)
         {
@@ -272,7 +277,7 @@ public class EventSubscriberService : IEventSubscriber
       {
         try
         {
-          PublishEvent($"{mapper.TopicName}.delete", mapper.Map(entity));
+          PublishEvent(ctx, $"{mapper.TopicName}.delete", mapper.Map(entity), delete: true);
         }
         catch (Exception ex)
         {
@@ -312,11 +317,16 @@ public class EventSubscriberService : IEventSubscriber
     }
   }
 
-  private void PublishEvent<T>(string topic, T payload, bool delete = false) where T : BitcraftEventBase
+  private void PublishEvent<T>(
+    EventContext ctx, string topic, T payload, bool delete
+  ) where T : BitcraftEventBase
   {
     try
     {
       payload.Module = _options.Value.Module;
+      payload.CallerIdentity = ctx.Event is Event<Reducer>.Reducer reducerCtx
+      ? reducerCtx.ReducerEvent.CallerIdentity.ToString()
+      : null!;
 
       var json = JsonSerializer.Serialize(new Envelope<T>
       (
@@ -352,7 +362,9 @@ public class EventSubscriberService : IEventSubscriber
     }
   }
 
-  public void PublishUpdateEvent<T>(string topic, T oldEntity, T newEntity) where T : BitcraftEventBase
+  public void PublishUpdateEvent<T>(
+    EventContext ctx, string topic, T oldEntity, T newEntity
+  ) where T : BitcraftEventBase
   {
     try
     {

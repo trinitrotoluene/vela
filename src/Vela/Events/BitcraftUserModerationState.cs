@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Vela.Events
 {
   [GlobalEntity]
@@ -10,6 +12,7 @@ namespace Vela.Events
     DateTimeOffset ExpiresAt
   ) : BitcraftEventBase(Id);
 
+  [JsonConverter(typeof(JsonStringEnumConverter))]
   public enum BitcraftUserModerationPolicy
   {
     PermanentBlockLogin = 0,
