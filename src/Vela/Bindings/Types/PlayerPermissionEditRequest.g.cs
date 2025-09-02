@@ -21,16 +21,20 @@ namespace SpacetimeDB.Types
         public ulong AllowedEntityId;
         [DataMember(Name = "permission")]
         public Permission? Permission;
+        [DataMember(Name = "group")]
+        public PermissionGroup Group;
 
         public PlayerPermissionEditRequest(
             ulong OrdainedEntityId,
             ulong AllowedEntityId,
-            Permission? Permission
+            Permission? Permission,
+            PermissionGroup Group
         )
         {
             this.OrdainedEntityId = OrdainedEntityId;
             this.AllowedEntityId = AllowedEntityId;
             this.Permission = Permission;
+            this.Group = Group;
         }
 
         public PlayerPermissionEditRequest()

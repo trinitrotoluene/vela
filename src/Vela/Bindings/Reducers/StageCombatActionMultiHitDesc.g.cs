@@ -14,17 +14,17 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void StageCombatActionDescHandler(ReducerEventContext ctx, System.Collections.Generic.List<CombatActionDesc> records);
-        public event StageCombatActionDescHandler? OnStageCombatActionDesc;
+        public delegate void StageCombatActionMultiHitDescHandler(ReducerEventContext ctx, System.Collections.Generic.List<CombatActionMultiHitDesc> records);
+        public event StageCombatActionMultiHitDescHandler? OnStageCombatActionMultiHitDesc;
 
-        public void StageCombatActionDesc(System.Collections.Generic.List<CombatActionDesc> records)
+        public void StageCombatActionMultiHitDesc(System.Collections.Generic.List<CombatActionMultiHitDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageCombatActionDesc(records), this.SetCallReducerFlags.StageCombatActionDescFlags);
+            conn.InternalCallReducer(new Reducer.StageCombatActionMultiHitDesc(records), this.SetCallReducerFlags.StageCombatActionMultiHitDescFlags);
         }
 
-        public bool InvokeStageCombatActionDesc(ReducerEventContext ctx, Reducer.StageCombatActionDesc args)
+        public bool InvokeStageCombatActionMultiHitDesc(ReducerEventContext ctx, Reducer.StageCombatActionMultiHitDesc args)
         {
-            if (OnStageCombatActionDesc == null)
+            if (OnStageCombatActionMultiHitDesc == null)
             {
                 if (InternalOnUnhandledReducerError != null)
                 {
@@ -36,7 +36,7 @@ namespace SpacetimeDB.Types
                 }
                 return false;
             }
-            OnStageCombatActionDesc(
+            OnStageCombatActionMultiHitDesc(
                 ctx,
                 args.Records
             );
@@ -48,28 +48,28 @@ namespace SpacetimeDB.Types
     {
         [SpacetimeDB.Type]
         [DataContract]
-        public sealed partial class StageCombatActionDesc : Reducer, IReducerArgs
+        public sealed partial class StageCombatActionMultiHitDesc : Reducer, IReducerArgs
         {
             [DataMember(Name = "records")]
-            public System.Collections.Generic.List<CombatActionDesc> Records;
+            public System.Collections.Generic.List<CombatActionMultiHitDesc> Records;
 
-            public StageCombatActionDesc(System.Collections.Generic.List<CombatActionDesc> Records)
+            public StageCombatActionMultiHitDesc(System.Collections.Generic.List<CombatActionMultiHitDesc> Records)
             {
                 this.Records = Records;
             }
 
-            public StageCombatActionDesc()
+            public StageCombatActionMultiHitDesc()
             {
                 this.Records = new();
             }
 
-            string IReducerArgs.ReducerName => "stage_combat_action_desc";
+            string IReducerArgs.ReducerName => "stage_combat_action_multi_hit_desc";
         }
     }
 
     public sealed partial class SetReducerFlags
     {
-        internal CallReducerFlags StageCombatActionDescFlags;
-        public void StageCombatActionDesc(CallReducerFlags flags) => StageCombatActionDescFlags = flags;
+        internal CallReducerFlags StageCombatActionMultiHitDescFlags;
+        public void StageCombatActionMultiHitDesc(CallReducerFlags flags) => StageCombatActionMultiHitDescFlags = flags;
     }
 }

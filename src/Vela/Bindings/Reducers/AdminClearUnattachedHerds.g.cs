@@ -14,17 +14,17 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void AttackImpactHandler(ReducerEventContext ctx, AttackImpactTimer timer);
-        public event AttackImpactHandler? OnAttackImpact;
+        public delegate void AdminClearUnattachedHerdsHandler(ReducerEventContext ctx);
+        public event AdminClearUnattachedHerdsHandler? OnAdminClearUnattachedHerds;
 
-        public void AttackImpact(AttackImpactTimer timer)
+        public void AdminClearUnattachedHerds()
         {
-            conn.InternalCallReducer(new Reducer.AttackImpact(timer), this.SetCallReducerFlags.AttackImpactFlags);
+            conn.InternalCallReducer(new Reducer.AdminClearUnattachedHerds(), this.SetCallReducerFlags.AdminClearUnattachedHerdsFlags);
         }
 
-        public bool InvokeAttackImpact(ReducerEventContext ctx, Reducer.AttackImpact args)
+        public bool InvokeAdminClearUnattachedHerds(ReducerEventContext ctx, Reducer.AdminClearUnattachedHerds args)
         {
-            if (OnAttackImpact == null)
+            if (OnAdminClearUnattachedHerds == null)
             {
                 if (InternalOnUnhandledReducerError != null)
                 {
@@ -36,9 +36,8 @@ namespace SpacetimeDB.Types
                 }
                 return false;
             }
-            OnAttackImpact(
-                ctx,
-                args.Timer
+            OnAdminClearUnattachedHerds(
+                ctx
             );
             return true;
         }
@@ -48,28 +47,15 @@ namespace SpacetimeDB.Types
     {
         [SpacetimeDB.Type]
         [DataContract]
-        public sealed partial class AttackImpact : Reducer, IReducerArgs
+        public sealed partial class AdminClearUnattachedHerds : Reducer, IReducerArgs
         {
-            [DataMember(Name = "_timer")]
-            public AttackImpactTimer Timer;
-
-            public AttackImpact(AttackImpactTimer Timer)
-            {
-                this.Timer = Timer;
-            }
-
-            public AttackImpact()
-            {
-                this.Timer = new();
-            }
-
-            string IReducerArgs.ReducerName => "attack_impact";
+            string IReducerArgs.ReducerName => "admin_clear_unattached_herds";
         }
     }
 
     public sealed partial class SetReducerFlags
     {
-        internal CallReducerFlags AttackImpactFlags;
-        public void AttackImpact(CallReducerFlags flags) => AttackImpactFlags = flags;
+        internal CallReducerFlags AdminClearUnattachedHerdsFlags;
+        public void AdminClearUnattachedHerds(CallReducerFlags flags) => AdminClearUnattachedHerdsFlags = flags;
     }
 }

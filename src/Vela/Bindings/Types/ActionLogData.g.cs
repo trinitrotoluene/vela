@@ -10,12 +10,9 @@ using System;
 namespace SpacetimeDB.Types
 {
     [SpacetimeDB.Type]
-    public enum DimensionType
-    {
-        Unknown,
-        Overworld,
-        AncientRuin,
-        BuildingInterior,
-        Dungeon,
-    }
+    public partial record ActionLogData : SpacetimeDB.TaggedEnum<(
+        ActionLogDataSpaceAllocator Reserved,
+        ItemStack WithdrawItem,
+        ItemStack DepositItem
+    )>;
 }

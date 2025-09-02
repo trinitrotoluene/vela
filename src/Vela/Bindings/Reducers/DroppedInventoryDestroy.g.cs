@@ -14,17 +14,17 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void AttackImpactHandler(ReducerEventContext ctx, AttackImpactTimer timer);
-        public event AttackImpactHandler? OnAttackImpact;
+        public delegate void DroppedInventoryDestroyHandler(ReducerEventContext ctx, ulong droppedInventoryEntityId);
+        public event DroppedInventoryDestroyHandler? OnDroppedInventoryDestroy;
 
-        public void AttackImpact(AttackImpactTimer timer)
+        public void DroppedInventoryDestroy(ulong droppedInventoryEntityId)
         {
-            conn.InternalCallReducer(new Reducer.AttackImpact(timer), this.SetCallReducerFlags.AttackImpactFlags);
+            conn.InternalCallReducer(new Reducer.DroppedInventoryDestroy(droppedInventoryEntityId), this.SetCallReducerFlags.DroppedInventoryDestroyFlags);
         }
 
-        public bool InvokeAttackImpact(ReducerEventContext ctx, Reducer.AttackImpact args)
+        public bool InvokeDroppedInventoryDestroy(ReducerEventContext ctx, Reducer.DroppedInventoryDestroy args)
         {
-            if (OnAttackImpact == null)
+            if (OnDroppedInventoryDestroy == null)
             {
                 if (InternalOnUnhandledReducerError != null)
                 {
@@ -36,9 +36,9 @@ namespace SpacetimeDB.Types
                 }
                 return false;
             }
-            OnAttackImpact(
+            OnDroppedInventoryDestroy(
                 ctx,
-                args.Timer
+                args.DroppedInventoryEntityId
             );
             return true;
         }
@@ -48,28 +48,27 @@ namespace SpacetimeDB.Types
     {
         [SpacetimeDB.Type]
         [DataContract]
-        public sealed partial class AttackImpact : Reducer, IReducerArgs
+        public sealed partial class DroppedInventoryDestroy : Reducer, IReducerArgs
         {
-            [DataMember(Name = "_timer")]
-            public AttackImpactTimer Timer;
+            [DataMember(Name = "dropped_inventory_entity_id")]
+            public ulong DroppedInventoryEntityId;
 
-            public AttackImpact(AttackImpactTimer Timer)
+            public DroppedInventoryDestroy(ulong DroppedInventoryEntityId)
             {
-                this.Timer = Timer;
+                this.DroppedInventoryEntityId = DroppedInventoryEntityId;
             }
 
-            public AttackImpact()
+            public DroppedInventoryDestroy()
             {
-                this.Timer = new();
             }
 
-            string IReducerArgs.ReducerName => "attack_impact";
+            string IReducerArgs.ReducerName => "dropped_inventory_destroy";
         }
     }
 
     public sealed partial class SetReducerFlags
     {
-        internal CallReducerFlags AttackImpactFlags;
-        public void AttackImpact(CallReducerFlags flags) => AttackImpactFlags = flags;
+        internal CallReducerFlags DroppedInventoryDestroyFlags;
+        public void DroppedInventoryDestroy(CallReducerFlags flags) => DroppedInventoryDestroyFlags = flags;
     }
 }

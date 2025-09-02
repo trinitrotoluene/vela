@@ -10,12 +10,8 @@ using System;
 namespace SpacetimeDB.Types
 {
     [SpacetimeDB.Type]
-    public enum DimensionType
+    public enum ActionLogSubjectType
     {
-        Unknown,
-        Overworld,
-        AncientRuin,
-        BuildingInterior,
-        Dungeon,
+        Player,
     }
 }

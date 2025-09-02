@@ -14,17 +14,17 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void AttackImpactHandler(ReducerEventContext ctx, AttackImpactTimer timer);
-        public event AttackImpactHandler? OnAttackImpact;
+        public delegate void AdminUpdateLoreKnowledgeHandler(ReducerEventContext ctx);
+        public event AdminUpdateLoreKnowledgeHandler? OnAdminUpdateLoreKnowledge;
 
-        public void AttackImpact(AttackImpactTimer timer)
+        public void AdminUpdateLoreKnowledge()
         {
-            conn.InternalCallReducer(new Reducer.AttackImpact(timer), this.SetCallReducerFlags.AttackImpactFlags);
+            conn.InternalCallReducer(new Reducer.AdminUpdateLoreKnowledge(), this.SetCallReducerFlags.AdminUpdateLoreKnowledgeFlags);
         }
 
-        public bool InvokeAttackImpact(ReducerEventContext ctx, Reducer.AttackImpact args)
+        public bool InvokeAdminUpdateLoreKnowledge(ReducerEventContext ctx, Reducer.AdminUpdateLoreKnowledge args)
         {
-            if (OnAttackImpact == null)
+            if (OnAdminUpdateLoreKnowledge == null)
             {
                 if (InternalOnUnhandledReducerError != null)
                 {
@@ -36,9 +36,8 @@ namespace SpacetimeDB.Types
                 }
                 return false;
             }
-            OnAttackImpact(
-                ctx,
-                args.Timer
+            OnAdminUpdateLoreKnowledge(
+                ctx
             );
             return true;
         }
@@ -48,28 +47,15 @@ namespace SpacetimeDB.Types
     {
         [SpacetimeDB.Type]
         [DataContract]
-        public sealed partial class AttackImpact : Reducer, IReducerArgs
+        public sealed partial class AdminUpdateLoreKnowledge : Reducer, IReducerArgs
         {
-            [DataMember(Name = "_timer")]
-            public AttackImpactTimer Timer;
-
-            public AttackImpact(AttackImpactTimer Timer)
-            {
-                this.Timer = Timer;
-            }
-
-            public AttackImpact()
-            {
-                this.Timer = new();
-            }
-
-            string IReducerArgs.ReducerName => "attack_impact";
+            string IReducerArgs.ReducerName => "admin_update_lore_knowledge";
         }
     }
 
     public sealed partial class SetReducerFlags
     {
-        internal CallReducerFlags AttackImpactFlags;
-        public void AttackImpact(CallReducerFlags flags) => AttackImpactFlags = flags;
+        internal CallReducerFlags AdminUpdateLoreKnowledgeFlags;
+        public void AdminUpdateLoreKnowledge(CallReducerFlags flags) => AdminUpdateLoreKnowledgeFlags = flags;
     }
 }

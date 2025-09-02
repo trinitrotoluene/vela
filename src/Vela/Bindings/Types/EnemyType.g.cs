@@ -44,5 +44,9 @@ namespace SpacetimeDB.Types
         Drone,
         Soldier,
         Queen,
+        Sentinel,
+        SentinelDungeonJakyl,
+        SentinelDungeonSkitch,
+        SentinelDungeonLargeJakyl,
     }
 }
