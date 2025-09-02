@@ -14,7 +14,7 @@ using Vela.Services.Contracts;
 
 public class EventSubscriberService : IEventSubscriber
 {
-  private readonly Counter<int> _eventCounter;
+  private readonly Counter<long> _eventCounter;
   private readonly ILogger<EventGatewayService> _logger;
   private readonly IDatabase _cache;
   private readonly List<object> _eventMappings;
@@ -37,7 +37,7 @@ public class EventSubscriberService : IEventSubscriber
       new("service", metricHelpers.ServiceName)
     ]);
 
-    _eventCounter = metrics.CreateCounter<int>("vela.event.published");
+    _eventCounter = metrics.CreateCounter<long>("vela_event_published");
   }
 
   private List<object> LoadMappings()

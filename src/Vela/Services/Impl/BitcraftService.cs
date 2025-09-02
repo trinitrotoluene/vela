@@ -13,13 +13,14 @@ using Vela.Services.Contracts;
 /// </summary>
 public class BitcraftService : BackgroundService
 {
-  private readonly Counter<int> _connectionAttemptsMetric;
-  private readonly Counter<int> _disconnectionsMetric;
-  private readonly Counter<int> _connectionsMetric;
+  private readonly Counter<long> _connectionAttemptsMetric;
+  private readonly Counter<long> _disconnectionsMetric;
+  private readonly Counter<long> _connectionsMetric;
 
   private readonly ILogger<BitcraftService> _logger;
   private readonly IOptions<BitcraftServiceOptions> _options;
   private readonly IDbConnectionAccessor _accessor;
+  private readonly IMetricHelpers _metricHelpers;
   private readonly AsyncRetryPolicy _retryPolicy;
   private readonly SemaphoreSlim _reconnectionLock;
   private Task? _connectionLoopTask;
@@ -30,7 +31,7 @@ public class BitcraftService : BackgroundService
     IOptions<BitcraftServiceOptions> options,
     IDbConnectionAccessor accessor,
     IMeterFactory metricsFactory,
-    IMetricHelpers metricsHelper
+    IMetricHelpers metricHelpers
   )
   {
     _logger = logger;
@@ -46,14 +47,13 @@ public class BitcraftService : BackgroundService
     _reconnectionLock = new SemaphoreSlim(1, 1);
     _connLoopCts = null;
     _accessor = accessor;
+    _metricHelpers = metricHelpers;
 
-    var metrics = metricsFactory.Create("Vela", null, [
-      new("service", metricsHelper.ServiceName)
-    ]);
+    var metrics = metricsFactory.Create("Vela");
 
-    _connectionAttemptsMetric = metrics.CreateCounter<int>("bitcraft.connection.attempted");
-    _connectionsMetric = metrics.CreateCounter<int>("bitcraft.connection.connected");
-    _disconnectionsMetric = metrics.CreateCounter<int>("bitcraft.connection.disconnected");
+    _connectionAttemptsMetric = metrics.CreateCounter<long>("bitcraft_connection_attempted");
+    _connectionsMetric = metrics.CreateCounter<long>("bitcraft_connection_connected");
+    _disconnectionsMetric = metrics.CreateCounter<long>("bitcraft_connection_disconnected");
   }
 
   private static IEnumerable<TimeSpan> GetRetrySchedule()
@@ -173,7 +173,7 @@ public class BitcraftService : BackgroundService
     _logger.LogInformation("Stale connection loop successfully cancelled");
 
     _logger.LogInformation("Attempting connection");
-    _connectionAttemptsMetric.Add(1);
+    _connectionAttemptsMetric.Add(1, new TagList() { { "service", _metricHelpers.ServiceName } });
     var tcs = new TaskCompletionSource<DbConnection>(TaskCreationOptions.RunContinuationsAsynchronously);
     using var registration = cancellationToken.Register(() => tcs.TrySetCanceled());
 
@@ -183,7 +183,7 @@ public class BitcraftService : BackgroundService
       .WithToken(_options.Value.AuthToken)
       .OnConnect((conn, identity, token) =>
       {
-        _connectionsMetric.Add(1);
+        _connectionsMetric.Add(1, new TagList() { { "service", _metricHelpers.ServiceName } });
 
         _logger.LogInformation("Connected with identity {identity}", identity.ToString());
         tcs.TrySetResult(conn);
@@ -195,7 +195,7 @@ public class BitcraftService : BackgroundService
       })
       .OnDisconnect((ctx, err) =>
       {
-        _disconnectionsMetric.Add(1);
+        _disconnectionsMetric.Add(1, new TagList() { { "service", _metricHelpers.ServiceName } });
 
         // If this callback is invoked after the tcs is completed, this means we signalled a successful connection to the caller
         // so we need to schedule the reconnection ourselves.

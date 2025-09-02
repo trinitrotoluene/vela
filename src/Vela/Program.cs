@@ -50,25 +50,24 @@ builder.Services.AddOpenTelemetry()
     .ConfigureResource(x => x.AddService(builder.Configuration.GetValue<string>("Bitcraft:Module")!))
     .WithMetrics(metrics =>
     {
-        metrics.AddRuntimeInstrumentation();
-        metrics.AddMeter("Vela");
-
-        metrics.AddOtlpExporter((options, readerOptions) =>
-        {
-            var overrideHost = builder.Configuration.GetValue<string>("Otel:Endpoint");
-            if (!string.IsNullOrEmpty(overrideHost))
+        metrics.AddRuntimeInstrumentation()
+            .AddMeter("Vela")
+            .AddOtlpExporter((options, readerOptions) =>
             {
-                Log.Logger.Information("Shipping metrics to custom endpoint {endpoint}", overrideHost);
-                options.Endpoint = new Uri($"{overrideHost}/v1/metrics");
-                options.Protocol = OtlpExportProtocol.HttpProtobuf;
+                var overrideHost = builder.Configuration.GetValue<string>("Otel:Endpoint");
+                if (!string.IsNullOrEmpty(overrideHost))
+                {
+                    Log.Logger.Information("Shipping metrics to custom endpoint {endpoint}", overrideHost);
+                    options.Endpoint = new Uri($"{overrideHost}/v1/metrics");
+                    options.Protocol = OtlpExportProtocol.HttpProtobuf;
 
-                readerOptions.TemporalityPreference = MetricReaderTemporalityPreference.Delta;
-            }
-            else
-            {
-                Log.Logger.Information("Using default metric shipper");
-            }
-        });
+                    readerOptions.TemporalityPreference = MetricReaderTemporalityPreference.Cumulative;
+                }
+                else
+                {
+                    Log.Logger.Information("Using default metric shipper");
+                }
+            });
     });
 
 builder.Services.AddSingleton<IDbConnectionAccessor, DbConnectionAccessor>();
