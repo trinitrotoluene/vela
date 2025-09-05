@@ -181,6 +181,7 @@ public class BitcraftService : BackgroundService
       .WithUri(_options.Value.Uri)
       .WithModuleName(_options.Value.Module)
       .WithToken(_options.Value.AuthToken)
+      .WithLightMode(false)
       .OnConnect((conn, identity, token) =>
       {
         _connectionsMetric.Add(1, new TagList() { { "service", _metricHelpers.ServiceName } });

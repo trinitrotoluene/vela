@@ -9,7 +9,6 @@ namespace Vela.Events
 
     // This is dynamically set when publishing to avoid having to copy the object
     public string Module { get; set; } = null!;
-    public string CallerIdentity { get; set; } = null!;
 
     public static readonly Type[] SchemaTypes = [.. Assembly.GetExecutingAssembly()!
       .GetTypes()

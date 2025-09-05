@@ -305,6 +305,7 @@ public class EventSubscriberService : IEventSubscriber
       (
         Version: EnvelopeVersion.V1,
         Module: _options.Value.Module,
+        CallerIdentity: "SYSTEM",
         Entity: payload
       ));
 
@@ -324,15 +325,16 @@ public class EventSubscriberService : IEventSubscriber
     try
     {
       payload.Module = _options.Value.Module;
-      payload.CallerIdentity = ctx.Event is Event<Reducer>.Reducer reducerCtx
-      ? reducerCtx.ReducerEvent.CallerIdentity.ToString()
-      : null!;
+      var callerIdentity = ctx.Event is Event<Reducer>.Reducer reducerCtx
+        ? reducerCtx.ReducerEvent.CallerIdentity.ToString()
+        : null!;
 
       var json = JsonSerializer.Serialize(new Envelope<T>
       (
         Version: EnvelopeVersion.V1,
         Module: _options.Value.Module,
-        Entity: payload
+        Entity: payload,
+        CallerIdentity: callerIdentity
       ));
       var cacheJson = JsonSerializer.Serialize(payload);
       var cacheKey = BitcraftEventBase.CacheKey(payload, _options.Value.Module);
@@ -371,9 +373,14 @@ public class EventSubscriberService : IEventSubscriber
       oldEntity.Module = _options.Value.Module;
       newEntity.Module = _options.Value.Module;
 
+      var callerIdentity = ctx.Event is Event<Reducer>.Reducer reducerCtx
+        ? reducerCtx.ReducerEvent.CallerIdentity.ToString()
+        : null!;
+
       var json = JsonSerializer.Serialize(new UpdateEnvelope<T>(
         Version: EnvelopeVersion.V1,
         Module: _options.Value.Module,
+        CallerIdentity: callerIdentity,
         OldEntity: oldEntity,
         NewEntity: newEntity
       ));
