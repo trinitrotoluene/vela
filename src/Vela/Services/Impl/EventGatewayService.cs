@@ -116,11 +116,28 @@ ON p.entity_id = s.entity_id
     _logger.LogError(ex, "Error applying base subscriptions");
   }
 
-  private async Task OnBaseSubscriptionsApplied(SubscriptionEventContext __, DbConnection conn, CancellationToken cancellationToken)
+  private async Task OnBaseSubscriptionsApplied(SubscriptionEventContext ctx, DbConnection conn, CancellationToken cancellationToken)
   {
     try
     {
       _logger.LogInformation("Base subscriptions applied");
+      var currentIdentity = ctx.Identity ?? new SpacetimeDB.Identity();
+      var userState = conn.Db.UserState.Identity.Find(currentIdentity);
+      if (userState != null)
+      {
+        var username = conn.Db.PlayerUsernameState.EntityId.Find(userState.EntityId);
+        _logger.LogInformation(
+          "Signed in with identity {identity} as {username} ({entityId})",
+          currentIdentity,
+          username?.Username,
+          userState.EntityId
+        );
+      }
+      else
+      {
+        _logger.LogInformation("Signed in with unknown credentials");
+      }
+
       await _subscriber.PopulateBaseCachesAsync(conn);
       _ = Task.Run(() => HeartbeatAsync(conn, cancellationToken), cancellationToken);
 
