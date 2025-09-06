@@ -1,0 +1,3 @@
+[submodule "src/SpacetimeDB.ClientSDK"]
+	path = src/SpacetimeDB.ClientSDK
+	url = https://github.com/trinitrotoluene/com.clockworklabs.spacetimedbsdk
