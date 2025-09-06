@@ -19,14 +19,15 @@ public class EventSubscriberService : IEventSubscriber
   private readonly IDatabase _cache;
   private readonly List<object> _eventMappings;
   private readonly IOptions<BitcraftServiceOptions> _options;
+  private readonly JsonSerializerOptions _jsonOptions;
 
   public EventSubscriberService(
     ILogger<EventGatewayService> logger,
     IConnectionMultiplexer multiplexer,
     IOptions<BitcraftServiceOptions> options,
     IMeterFactory metricsFactory,
-    IMetricHelpers metricHelpers
-  )
+    IMetricHelpers metricHelpers,
+    JsonSerializerOptions jsonOptions)
   {
     _logger = logger;
     _options = options;
@@ -38,6 +39,7 @@ public class EventSubscriberService : IEventSubscriber
     ]);
 
     _eventCounter = metrics.CreateCounter<long>("vela_event_published");
+    _jsonOptions = jsonOptions;
   }
 
   private List<object> LoadMappings()
@@ -207,7 +209,7 @@ public class EventSubscriberService : IEventSubscriber
       var mappedItem = mapper.Map(item);
       mappedItem.Module = _options.Value.Module;
 
-      var serializedItem = JsonSerializer.Serialize(mappedItem);
+      var serializedItem = JsonSerializer.Serialize(mappedItem, _jsonOptions);
 
       hashEntries.Add(new HashEntry(mappedItem.Id, serializedItem));
     }
@@ -307,7 +309,7 @@ public class EventSubscriberService : IEventSubscriber
         Module: _options.Value.Module,
         CallerIdentity: "SYSTEM",
         Entity: payload
-      ));
+      ), _jsonOptions);
 
       _eventCounter.Add(1, new TagList { { "topic", topic } });
       _cache.Publish(RedisChannel.Literal(topic), json, CommandFlags.FireAndForget);
@@ -335,8 +337,8 @@ public class EventSubscriberService : IEventSubscriber
         Module: _options.Value.Module,
         Entity: payload,
         CallerIdentity: callerIdentity
-      ));
-      var cacheJson = JsonSerializer.Serialize(payload);
+      ), _jsonOptions);
+      var cacheJson = JsonSerializer.Serialize(payload, _jsonOptions);
       var cacheKey = BitcraftEventBase.CacheKey(payload, _options.Value.Module);
 
       if (delete)
@@ -383,8 +385,8 @@ public class EventSubscriberService : IEventSubscriber
         CallerIdentity: callerIdentity,
         OldEntity: oldEntity,
         NewEntity: newEntity
-      ));
-      var cacheJson = JsonSerializer.Serialize(newEntity);
+      ), _jsonOptions);
+      var cacheJson = JsonSerializer.Serialize(newEntity, _jsonOptions);
       var cacheKey = BitcraftEventBase.CacheKey(newEntity, _options.Value.Module);
 
       _logger.LogDebug("Caching {cacheJson} in {cacheKey}", cacheJson, cacheKey);
