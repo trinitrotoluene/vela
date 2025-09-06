@@ -45,7 +45,7 @@ Log.Logger = new LoggerConfiguration()
 builder.Logging.ClearProviders().AddSerilog();
 
 builder.AddRedisClient("Valkey");
-
+builder.Services.AddJsonSerializer();
 builder.Services.AddOpenTelemetry()
     .ConfigureResource(x => x.AddService(builder.Configuration.GetValue<string>("Bitcraft:Module")!))
     .WithMetrics(metrics =>

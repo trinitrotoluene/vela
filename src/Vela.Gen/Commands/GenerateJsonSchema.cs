@@ -53,10 +53,16 @@ public static class GenerateJsonSchema
 
     Console.WriteLine("Emitting schemas");
 
-    Type[] schemaTypes = [.. BitcraftEventBase.SchemaTypes, .. GenericEventBase.SchemaTypes];
+    Type[] schemaTypes = [
+      .. BitcraftEventBase.SchemaTypes,
+      .. GenericEventBase.SchemaTypes,
+      typeof(Envelope<object>),
+      typeof(UpdateEnvelope<object>)
+    ];
+
     foreach (var type in schemaTypes)
     {
-      var fileName = $"{type.Name}.schema.json";
+      var fileName = $"{type.Name.Replace('`', '_')}.schema.json";
 
       Console.WriteLine($"Emitting {fileName}");
       var typeFile = new FileInfo(Path.Combine(outDir.FullName, fileName));
