@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
+using System.Security.Cryptography;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -58,21 +59,24 @@ public class BitcraftService : BackgroundService
 
   private static IEnumerable<TimeSpan> GetRetrySchedule()
   {
-    // First we try to reconnect immediately in case it was a transient error
-    yield return TimeSpan.FromSeconds(2);
-    yield return TimeSpan.FromSeconds(4);
-    yield return TimeSpan.FromSeconds(30);
-    yield return TimeSpan.FromMinutes(5);
+    // Start with exponential backoff with jitter for the first few retries
+    int maxRetries = 5;
 
-    // Sustained errors typically mean the token is dead until we log in on the game client
-    // so, try every 30 min for the next 12 hours.
-    var duration = TimeSpan.FromHours(12);
-    var interval = TimeSpan.FromMinutes(30);
-    int additionalRetries = (int)(duration.TotalMinutes / interval.TotalMinutes);
-
-    for (int i = 0; i < additionalRetries; i++)
+    for (int i = 0; i < maxRetries; i++)
     {
-      yield return interval;
+      var backoff = TimeSpan.FromSeconds(Math.Pow(2, i));
+      var jitter = TimeSpan.FromSeconds(Random.Shared.Next(0, 9));
+      yield return backoff + jitter;
+    }
+
+    // Switch to periodic retry with jitter after exponential phase
+    var periodicRetryInterval = TimeSpan.FromMinutes(30);
+    var retryDuration = TimeSpan.FromHours(12);
+    var retries = (int)(retryDuration.TotalMinutes / periodicRetryInterval.TotalMinutes);
+
+    for (int i = 0; i < retries; i++)
+    {
+      yield return periodicRetryInterval.Add(TimeSpan.FromSeconds(Random.Shared.Next(0, 30)));
     }
   }
 
@@ -80,6 +84,9 @@ public class BitcraftService : BackgroundService
   {
     try
     {
+      // Initial jitter to avoid thundering herd if many instances start simultaneously
+      await Task.Delay(Random.Shared.Next(0, 10_000), cancellationToken);
+
       await ConnectWithRetryAsync(cancellationToken);
       await Task.Delay(Timeout.Infinite, cancellationToken);
     }
