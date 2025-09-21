@@ -1,5 +1,4 @@
 using SpacetimeDB.Types;
-using Vela.Events;
 
 namespace Vela.Mappers
 {
@@ -10,7 +9,8 @@ namespace Vela.Mappers
     ) => new(
         Id: entity.EntityId.ToString(),
         X: entity.X,
-        Z: entity.Z
+        Z: entity.Z,
+        Dimension: entity.Dimension
       );
   }
 }
