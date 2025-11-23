@@ -66,5 +66,6 @@ namespace SpacetimeDB.Types
         Accuracy,
         MaxTeleportationEnergy,
         TeleportationEnergyRegenRate,
+        ConstructionPower,
     }
 }

@@ -19,5 +19,7 @@ namespace SpacetimeDB.Types
         Claim,
         EmpirePublic,
         EmpireInternal,
+        LookingForGroup,
+        Trade,
     }
 }

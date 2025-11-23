@@ -79,6 +79,7 @@ public class EventGatewayService : BackgroundService
       .Subscribe([
         "SELECT ls.* from location_state ls INNER JOIN public_progressive_action_state ppas ON ppas.building_entity_id = ls.entity_id",
         "SELECT * from item_desc",
+        "SELECT * from cargo_desc",
         "SELECT * from crafting_recipe_desc",
         "SELECT * from item_list_desc",
         @"SELECT e.* FROM empire_state e

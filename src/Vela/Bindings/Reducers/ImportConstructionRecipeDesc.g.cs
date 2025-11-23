@@ -14,10 +14,10 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void ImportConstructionRecipeDescHandler(ReducerEventContext ctx, System.Collections.Generic.List<ConstructionRecipeDesc> records);
+        public delegate void ImportConstructionRecipeDescHandler(ReducerEventContext ctx, System.Collections.Generic.List<ConstructionRecipeDescV2> records);
         public event ImportConstructionRecipeDescHandler? OnImportConstructionRecipeDesc;
 
-        public void ImportConstructionRecipeDesc(System.Collections.Generic.List<ConstructionRecipeDesc> records)
+        public void ImportConstructionRecipeDesc(System.Collections.Generic.List<ConstructionRecipeDescV2> records)
         {
             conn.InternalCallReducer(new Reducer.ImportConstructionRecipeDesc(records), this.SetCallReducerFlags.ImportConstructionRecipeDescFlags);
         }
@@ -51,9 +51,9 @@ namespace SpacetimeDB.Types
         public sealed partial class ImportConstructionRecipeDesc : Reducer, IReducerArgs
         {
             [DataMember(Name = "records")]
-            public System.Collections.Generic.List<ConstructionRecipeDesc> Records;
+            public System.Collections.Generic.List<ConstructionRecipeDescV2> Records;
 
-            public ImportConstructionRecipeDesc(System.Collections.Generic.List<ConstructionRecipeDesc> Records)
+            public ImportConstructionRecipeDesc(System.Collections.Generic.List<ConstructionRecipeDescV2> Records)
             {
                 this.Records = Records;
             }

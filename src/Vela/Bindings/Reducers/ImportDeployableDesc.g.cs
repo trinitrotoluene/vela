@@ -14,10 +14,10 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void ImportDeployableDescHandler(ReducerEventContext ctx, System.Collections.Generic.List<DeployableDesc> records);
+        public delegate void ImportDeployableDescHandler(ReducerEventContext ctx, System.Collections.Generic.List<DeployableDescV4> records);
         public event ImportDeployableDescHandler? OnImportDeployableDesc;
 
-        public void ImportDeployableDesc(System.Collections.Generic.List<DeployableDesc> records)
+        public void ImportDeployableDesc(System.Collections.Generic.List<DeployableDescV4> records)
         {
             conn.InternalCallReducer(new Reducer.ImportDeployableDesc(records), this.SetCallReducerFlags.ImportDeployableDescFlags);
         }
@@ -51,9 +51,9 @@ namespace SpacetimeDB.Types
         public sealed partial class ImportDeployableDesc : Reducer, IReducerArgs
         {
             [DataMember(Name = "records")]
-            public System.Collections.Generic.List<DeployableDesc> Records;
+            public System.Collections.Generic.List<DeployableDescV4> Records;
 
-            public ImportDeployableDesc(System.Collections.Generic.List<DeployableDesc> Records)
+            public ImportDeployableDesc(System.Collections.Generic.List<DeployableDescV4> Records)
             {
                 this.Records = Records;
             }

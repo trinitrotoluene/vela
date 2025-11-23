@@ -50,7 +50,7 @@ namespace SpacetimeDB.Types
         [DataContract]
         public sealed partial class BarterStallSetMarketModeEnabled : Reducer, IReducerArgs
         {
-            [DataMember(Name = "request")]
+            [DataMember(Name = "_request")]
             public BarterStallSetMarketModeEnabledRequest Request;
 
             public BarterStallSetMarketModeEnabled(BarterStallSetMarketModeEnabledRequest Request)

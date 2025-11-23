@@ -31,5 +31,6 @@ namespace SpacetimeDB.Types
         Crown,
         Pet,
         ClothesCape,
+        PremiumItem,
     }
 }

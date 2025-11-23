@@ -14,6 +14,19 @@ namespace Vela.Events
     bool HasCompendiumEntry
   ) : BitcraftEventBase(Id);
 
+  [GlobalEntity]
+  public record BitcraftCargoItem(
+    string Id,
+    string Name,
+    string Description,
+    int Volume,
+    int Tier,
+    BitcraftItemRarity Rarity,
+    string Tag,
+    bool NotPickupable,
+    bool BlocksPath
+  ) : BitcraftEventBase(Id);
+
   [JsonConverter(typeof(JsonStringEnumConverter))]
   public enum BitcraftItemRarity
   {

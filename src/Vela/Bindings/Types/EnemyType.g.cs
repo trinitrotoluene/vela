@@ -48,5 +48,10 @@ namespace SpacetimeDB.Types
         SentinelDungeonJakyl,
         SentinelDungeonSkitch,
         SentinelDungeonLargeJakyl,
+        CrabDungeonCrabBoss,
+        CrabDungeonCrabTrash,
+        SpiderDungeonEliteSpider,
+        SpiderDungeonSmallSpider,
+        SpiderDungeonSpiderNest,
     }
 }

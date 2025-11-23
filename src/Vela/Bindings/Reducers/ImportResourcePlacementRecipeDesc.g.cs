@@ -14,10 +14,10 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void ImportResourcePlacementRecipeDescHandler(ReducerEventContext ctx, System.Collections.Generic.List<ResourcePlacementRecipeDesc> records);
+        public delegate void ImportResourcePlacementRecipeDescHandler(ReducerEventContext ctx, System.Collections.Generic.List<ResourcePlacementRecipeDescV2> records);
         public event ImportResourcePlacementRecipeDescHandler? OnImportResourcePlacementRecipeDesc;
 
-        public void ImportResourcePlacementRecipeDesc(System.Collections.Generic.List<ResourcePlacementRecipeDesc> records)
+        public void ImportResourcePlacementRecipeDesc(System.Collections.Generic.List<ResourcePlacementRecipeDescV2> records)
         {
             conn.InternalCallReducer(new Reducer.ImportResourcePlacementRecipeDesc(records), this.SetCallReducerFlags.ImportResourcePlacementRecipeDescFlags);
         }
@@ -51,9 +51,9 @@ namespace SpacetimeDB.Types
         public sealed partial class ImportResourcePlacementRecipeDesc : Reducer, IReducerArgs
         {
             [DataMember(Name = "records")]
-            public System.Collections.Generic.List<ResourcePlacementRecipeDesc> Records;
+            public System.Collections.Generic.List<ResourcePlacementRecipeDescV2> Records;
 
-            public ImportResourcePlacementRecipeDesc(System.Collections.Generic.List<ResourcePlacementRecipeDesc> Records)
+            public ImportResourcePlacementRecipeDesc(System.Collections.Generic.List<ResourcePlacementRecipeDescV2> Records)
             {
                 this.Records = Records;
             }
