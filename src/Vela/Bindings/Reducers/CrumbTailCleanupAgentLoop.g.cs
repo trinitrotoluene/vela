@@ -14,17 +14,17 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void ImportEmoteDescHandler(ReducerEventContext ctx, System.Collections.Generic.List<EmoteDescV2> records);
-        public event ImportEmoteDescHandler? OnImportEmoteDesc;
+        public delegate void CrumbTailCleanupAgentLoopHandler(ReducerEventContext ctx, CrumbTrailCleanupTimer timer);
+        public event CrumbTailCleanupAgentLoopHandler? OnCrumbTailCleanupAgentLoop;
 
-        public void ImportEmoteDesc(System.Collections.Generic.List<EmoteDescV2> records)
+        public void CrumbTailCleanupAgentLoop(CrumbTrailCleanupTimer timer)
         {
-            conn.InternalCallReducer(new Reducer.ImportEmoteDesc(records), this.SetCallReducerFlags.ImportEmoteDescFlags);
+            conn.InternalCallReducer(new Reducer.CrumbTailCleanupAgentLoop(timer), this.SetCallReducerFlags.CrumbTailCleanupAgentLoopFlags);
         }
 
-        public bool InvokeImportEmoteDesc(ReducerEventContext ctx, Reducer.ImportEmoteDesc args)
+        public bool InvokeCrumbTailCleanupAgentLoop(ReducerEventContext ctx, Reducer.CrumbTailCleanupAgentLoop args)
         {
-            if (OnImportEmoteDesc == null)
+            if (OnCrumbTailCleanupAgentLoop == null)
             {
                 if (InternalOnUnhandledReducerError != null)
                 {
@@ -36,9 +36,9 @@ namespace SpacetimeDB.Types
                 }
                 return false;
             }
-            OnImportEmoteDesc(
+            OnCrumbTailCleanupAgentLoop(
                 ctx,
-                args.Records
+                args.Timer
             );
             return true;
         }
@@ -48,28 +48,28 @@ namespace SpacetimeDB.Types
     {
         [SpacetimeDB.Type]
         [DataContract]
-        public sealed partial class ImportEmoteDesc : Reducer, IReducerArgs
+        public sealed partial class CrumbTailCleanupAgentLoop : Reducer, IReducerArgs
         {
-            [DataMember(Name = "records")]
-            public System.Collections.Generic.List<EmoteDescV2> Records;
+            [DataMember(Name = "_timer")]
+            public CrumbTrailCleanupTimer Timer;
 
-            public ImportEmoteDesc(System.Collections.Generic.List<EmoteDescV2> Records)
+            public CrumbTailCleanupAgentLoop(CrumbTrailCleanupTimer Timer)
             {
-                this.Records = Records;
+                this.Timer = Timer;
             }
 
-            public ImportEmoteDesc()
+            public CrumbTailCleanupAgentLoop()
             {
-                this.Records = new();
+                this.Timer = new();
             }
 
-            string IReducerArgs.ReducerName => "import_emote_desc";
+            string IReducerArgs.ReducerName => "crumb_tail_cleanup_agent_loop";
         }
     }
 
     public sealed partial class SetReducerFlags
     {
-        internal CallReducerFlags ImportEmoteDescFlags;
-        public void ImportEmoteDesc(CallReducerFlags flags) => ImportEmoteDescFlags = flags;
+        internal CallReducerFlags CrumbTailCleanupAgentLoopFlags;
+        public void CrumbTailCleanupAgentLoop(CallReducerFlags flags) => CrumbTailCleanupAgentLoopFlags = flags;
     }
 }

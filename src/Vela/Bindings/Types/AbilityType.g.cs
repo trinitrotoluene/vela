@@ -14,6 +14,11 @@ namespace SpacetimeDB.Types
         U128 _Unsupported,
         int Eat,
         int CombatAction,
-        SpacetimeDB.Unit AutoAttack
+        SpacetimeDB.Unit AutoAttack,
+        int Custom,
+        int Prospecting,
+        int Equip,
+        int DeployableDeploy,
+        int AddToToolbelt
     )>;
 }

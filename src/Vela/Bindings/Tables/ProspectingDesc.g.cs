@@ -15,27 +15,27 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteTables
     {
-        public sealed class StagedEmoteDescHandle : RemoteTableHandle<EventContext, EmoteDescV2>
+        public sealed class ProspectingDescHandle : RemoteTableHandle<EventContext, ProspectingDesc>
         {
-            protected override string RemoteTableName => "staged_emote_desc";
+            protected override string RemoteTableName => "prospecting_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {
-                protected override int GetKey(EmoteDescV2 row) => row.Id;
+                protected override int GetKey(ProspectingDesc row) => row.Id;
 
-                public IdUniqueIndex(StagedEmoteDescHandle table) : base(table) { }
+                public IdUniqueIndex(ProspectingDescHandle table) : base(table) { }
             }
 
             public readonly IdUniqueIndex Id;
 
-            internal StagedEmoteDescHandle(DbConnection conn) : base(conn)
+            internal ProspectingDescHandle(DbConnection conn) : base(conn)
             {
                 Id = new(this);
             }
 
-            protected override object GetPrimaryKey(EmoteDescV2 row) => row.Id;
+            protected override object GetPrimaryKey(ProspectingDesc row) => row.Id;
         }
 
-        public readonly StagedEmoteDescHandle StagedEmoteDesc;
+        public readonly ProspectingDescHandle ProspectingDesc;
     }
 }

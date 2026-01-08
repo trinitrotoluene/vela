@@ -10,22 +10,17 @@ using System;
 namespace SpacetimeDB.Types
 {
     [SpacetimeDB.Type]
-    public enum BuffCategory
+    public enum AbilityTypeEnum
     {
-        None,
-        Generic,
-        Rested,
-        RezSicknessShortTerm,
-        RezSicknessLongTerm,
-        InnerLight,
-        Darkness,
-        CarryCargo,
-        Freezing,
-        Overheating,
-        FriendWarpDebuff,
-        Starving,
-        ElevatorSickness,
-        NearbyFlame,
-        Sprint,
+        _Unsupported,
+        Eat,
+        CombatAction,
+        AutoAttack,
+        SelfBuff,
+        Custom,
+        Prospecting,
+        Equip,
+        DeployableDeploy,
+        AddToToolbelt,
     }
 }

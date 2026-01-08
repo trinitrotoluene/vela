@@ -14,17 +14,17 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void ImportEmoteDescHandler(ReducerEventContext ctx, System.Collections.Generic.List<EmoteDescV2> records);
-        public event ImportEmoteDescHandler? OnImportEmoteDesc;
+        public delegate void ProspectHandler(ReducerEventContext ctx, int prospectingId, ulong timestamp);
+        public event ProspectHandler? OnProspect;
 
-        public void ImportEmoteDesc(System.Collections.Generic.List<EmoteDescV2> records)
+        public void Prospect(int prospectingId, ulong timestamp)
         {
-            conn.InternalCallReducer(new Reducer.ImportEmoteDesc(records), this.SetCallReducerFlags.ImportEmoteDescFlags);
+            conn.InternalCallReducer(new Reducer.Prospect(prospectingId, timestamp), this.SetCallReducerFlags.ProspectFlags);
         }
 
-        public bool InvokeImportEmoteDesc(ReducerEventContext ctx, Reducer.ImportEmoteDesc args)
+        public bool InvokeProspect(ReducerEventContext ctx, Reducer.Prospect args)
         {
-            if (OnImportEmoteDesc == null)
+            if (OnProspect == null)
             {
                 if (InternalOnUnhandledReducerError != null)
                 {
@@ -36,9 +36,10 @@ namespace SpacetimeDB.Types
                 }
                 return false;
             }
-            OnImportEmoteDesc(
+            OnProspect(
                 ctx,
-                args.Records
+                args.ProspectingId,
+                args.Timestamp
             );
             return true;
         }
@@ -48,28 +49,33 @@ namespace SpacetimeDB.Types
     {
         [SpacetimeDB.Type]
         [DataContract]
-        public sealed partial class ImportEmoteDesc : Reducer, IReducerArgs
+        public sealed partial class Prospect : Reducer, IReducerArgs
         {
-            [DataMember(Name = "records")]
-            public System.Collections.Generic.List<EmoteDescV2> Records;
+            [DataMember(Name = "prospecting_id")]
+            public int ProspectingId;
+            [DataMember(Name = "timestamp")]
+            public ulong Timestamp;
 
-            public ImportEmoteDesc(System.Collections.Generic.List<EmoteDescV2> Records)
+            public Prospect(
+                int ProspectingId,
+                ulong Timestamp
+            )
             {
-                this.Records = Records;
+                this.ProspectingId = ProspectingId;
+                this.Timestamp = Timestamp;
             }
 
-            public ImportEmoteDesc()
+            public Prospect()
             {
-                this.Records = new();
             }
 
-            string IReducerArgs.ReducerName => "import_emote_desc";
+            string IReducerArgs.ReducerName => "prospect";
         }
     }
 
     public sealed partial class SetReducerFlags
     {
-        internal CallReducerFlags ImportEmoteDescFlags;
-        public void ImportEmoteDesc(CallReducerFlags flags) => ImportEmoteDescFlags = flags;
+        internal CallReducerFlags ProspectFlags;
+        public void Prospect(CallReducerFlags flags) => ProspectFlags = flags;
     }
 }

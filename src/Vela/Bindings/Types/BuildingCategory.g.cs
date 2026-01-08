@@ -36,5 +36,6 @@ namespace SpacetimeDB.Types
         TownMarket,
         RecoveryChest,
         PlayerHousing,
+        PremiumBuilding,
     }
 }

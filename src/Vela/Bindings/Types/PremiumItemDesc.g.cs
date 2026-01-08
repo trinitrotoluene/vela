@@ -31,6 +31,10 @@ namespace SpacetimeDB.Types
         public uint BasePrice;
         [DataMember(Name = "is_enabled")]
         public bool IsEnabled;
+        [DataMember(Name = "quantity")]
+        public uint Quantity;
+        [DataMember(Name = "sorting_priority")]
+        public ushort SortingPriority;
 
         public PremiumItemDesc(
             int Id,
@@ -40,7 +44,9 @@ namespace SpacetimeDB.Types
             int CollectibleDescId,
             uint Price,
             uint BasePrice,
-            bool IsEnabled
+            bool IsEnabled,
+            uint Quantity,
+            ushort SortingPriority
         )
         {
             this.Id = Id;
@@ -51,6 +57,8 @@ namespace SpacetimeDB.Types
             this.Price = Price;
             this.BasePrice = BasePrice;
             this.IsEnabled = IsEnabled;
+            this.Quantity = Quantity;
+            this.SortingPriority = SortingPriority;
         }
 
         public PremiumItemDesc()

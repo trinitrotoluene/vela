@@ -42,5 +42,7 @@ namespace SpacetimeDB.Types
         MobileEmote,
         PlacePillarShaping,
         DestroyPillarShaping,
+        AbilityCustom,
+        Prospect,
     }
 }

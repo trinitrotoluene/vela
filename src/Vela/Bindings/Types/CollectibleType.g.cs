@@ -32,5 +32,6 @@ namespace SpacetimeDB.Types
         Pet,
         ClothesCape,
         PremiumItem,
+        Emote,
     }
 }

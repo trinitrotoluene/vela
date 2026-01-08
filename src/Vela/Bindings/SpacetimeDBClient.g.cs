@@ -24,7 +24,9 @@ namespace SpacetimeDB.Types
         public RemoteTables(DbConnection conn)
         {
             AddTable(AIDebugState = new(conn));
+            AddTable(AbilityCustomDesc = new(conn));
             AddTable(AbilityState = new(conn));
+            AddTable(AbilityUnlockDesc = new(conn));
             AddTable(AchievementDesc = new(conn));
             AddTable(ActionBarState = new(conn));
             AddTable(ActionState = new(conn));
@@ -95,6 +97,10 @@ namespace SpacetimeDB.Types
             AddTable(ContributionLootDescV2 = new(conn));
             AddTable(ContributionState = new(conn));
             AddTable(CraftingRecipeDesc = new(conn));
+            AddTable(CrumbTailCleanupTimer = new(conn));
+            AddTable(CrumbTrailContributionLockState = new(conn));
+            AddTable(CrumbTrailContributionSpentState = new(conn));
+            AddTable(CrumbTrailState = new(conn));
             AddTable(DayNightLoopTimer = new(conn));
             AddTable(DeconstructionRecipeDesc = new(conn));
             AddTable(DeployableCollectibleState = new(conn));
@@ -120,6 +126,7 @@ namespace SpacetimeDB.Types
             AddTable(DungeonState = new(conn));
             AddTable(ElevatorDesc = new(conn));
             AddTable(EmoteDesc = new(conn));
+            AddTable(EmoteDescV2 = new(conn));
             AddTable(EmpireChunkState = new(conn));
             AddTable(EmpireColorDesc = new(conn));
             AddTable(EmpireExpansionState = new(conn));
@@ -218,6 +225,7 @@ namespace SpacetimeDB.Types
             AddTable(LostItemsState = new(conn));
             AddTable(MarketplaceState = new(conn));
             AddTable(MigrationAchievementsParams = new(conn));
+            AddTable(MigrationBuildingDescParams = new(conn));
             AddTable(MobileEntityState = new(conn));
             AddTable(ModerationActionLogEntry = new(conn));
             AddTable(MountingState = new(conn));
@@ -272,6 +280,8 @@ namespace SpacetimeDB.Types
             AddTable(PrivateParametersDesc = new(conn));
             AddTable(ProgressiveActionState = new(conn));
             AddTable(ProjectSiteState = new(conn));
+            AddTable(ProspectingDesc = new(conn));
+            AddTable(ProspectingState = new(conn));
             AddTable(PublicProgressiveActionState = new(conn));
             AddTable(RegionConnectionInfo = new(conn));
             AddTable(RegionPopulationInfo = new(conn));
@@ -304,6 +314,8 @@ namespace SpacetimeDB.Types
             AddTable(SingleResourceClumpInfo = new(conn));
             AddTable(SingleResourceToClumpDesc = new(conn));
             AddTable(SkillDesc = new(conn));
+            AddTable(StagedAbilityCustomDesc = new(conn));
+            AddTable(StagedAbilityUnlockDesc = new(conn));
             AddTable(StagedAchievementDesc = new(conn));
             AddTable(StagedAlertDesc = new(conn));
             AddTable(StagedBiomeDesc = new(conn));
@@ -376,6 +388,7 @@ namespace SpacetimeDB.Types
             AddTable(StagedPremiumItemDesc = new(conn));
             AddTable(StagedPremiumServiceDesc = new(conn));
             AddTable(StagedPrivateParametersDesc = new(conn));
+            AddTable(StagedProspectingDesc = new(conn));
             AddTable(StagedReservedNameDesc = new(conn));
             AddTable(StagedResourceClumpDesc = new(conn));
             AddTable(StagedResourceDesc = new(conn));
@@ -890,6 +903,8 @@ namespace SpacetimeDB.Types
             var encodedArgs = update.ReducerCall.Args;
             return update.ReducerCall.ReducerName switch
             {
+                "ability_custom_activate" => BSATNHelpers.Decode<Reducer.AbilityCustomActivate>(encodedArgs),
+                "ability_custom_activate_start" => BSATNHelpers.Decode<Reducer.AbilityCustomActivateStart>(encodedArgs),
                 "ability_remove" => BSATNHelpers.Decode<Reducer.AbilityRemove>(encodedArgs),
                 "ability_set" => BSATNHelpers.Decode<Reducer.AbilitySet>(encodedArgs),
                 "achievement_claim" => BSATNHelpers.Decode<Reducer.AchievementClaim>(encodedArgs),
@@ -915,6 +930,7 @@ namespace SpacetimeDB.Types
                 "admin_collapse_ruins" => BSATNHelpers.Decode<Reducer.AdminCollapseRuins>(encodedArgs),
                 "admin_complete_all_passive_crafts" => BSATNHelpers.Decode<Reducer.AdminCompleteAllPassiveCrafts>(encodedArgs),
                 "admin_count_inventory_items" => BSATNHelpers.Decode<Reducer.AdminCountInventoryItems>(encodedArgs),
+                "admin_create_building_spawns" => BSATNHelpers.Decode<Reducer.AdminCreateBuildingSpawns>(encodedArgs),
                 "admin_create_chat_message" => BSATNHelpers.Decode<Reducer.AdminCreateChatMessage>(encodedArgs),
                 "admin_create_player_report" => BSATNHelpers.Decode<Reducer.AdminCreatePlayerReport>(encodedArgs),
                 "admin_delete_all_items_of_type" => BSATNHelpers.Decode<Reducer.AdminDeleteAllItemsOfType>(encodedArgs),
@@ -928,6 +944,7 @@ namespace SpacetimeDB.Types
                 "admin_grant_all_claim_supplies" => BSATNHelpers.Decode<Reducer.AdminGrantAllClaimSupplies>(encodedArgs),
                 "admin_grant_collectibles" => BSATNHelpers.Decode<Reducer.AdminGrantCollectibles>(encodedArgs),
                 "admin_migrate_action_state" => BSATNHelpers.Decode<Reducer.AdminMigrateActionState>(encodedArgs),
+                "admin_migrate_trade_orders" => BSATNHelpers.Decode<Reducer.AdminMigrateTradeOrders>(encodedArgs),
                 "admin_modify_chat_message" => BSATNHelpers.Decode<Reducer.AdminModifyChatMessage>(encodedArgs),
                 "admin_patch_housing_costs" => BSATNHelpers.Decode<Reducer.AdminPatchHousingCosts>(encodedArgs),
                 "admin_rename_building" => BSATNHelpers.Decode<Reducer.AdminRenameBuilding>(encodedArgs),
@@ -947,6 +964,7 @@ namespace SpacetimeDB.Types
                 "admin_restore_all_collapsed_ruins" => BSATNHelpers.Decode<Reducer.AdminRestoreAllCollapsedRuins>(encodedArgs),
                 "admin_restore_player_state" => BSATNHelpers.Decode<Reducer.AdminRestorePlayerState>(encodedArgs),
                 "admin_restore_player_state_scheduled" => BSATNHelpers.Decode<Reducer.AdminRestorePlayerStateScheduled>(encodedArgs),
+                "admin_set_resource_world_target" => BSATNHelpers.Decode<Reducer.AdminSetResourceWorldTarget>(encodedArgs),
                 "admin_set_sign_text" => BSATNHelpers.Decode<Reducer.AdminSetSignText>(encodedArgs),
                 "admin_set_sign_text_coord" => BSATNHelpers.Decode<Reducer.AdminSetSignTextCoord>(encodedArgs),
                 "admin_set_sign_text_entity" => BSATNHelpers.Decode<Reducer.AdminSetSignTextEntity>(encodedArgs),
@@ -1061,6 +1079,8 @@ namespace SpacetimeDB.Types
                 "craft_initiate" => BSATNHelpers.Decode<Reducer.CraftInitiate>(encodedArgs),
                 "craft_initiate_start" => BSATNHelpers.Decode<Reducer.CraftInitiateStart>(encodedArgs),
                 "craft_set_public" => BSATNHelpers.Decode<Reducer.CraftSetPublic>(encodedArgs),
+                "crumb_tail_cleanup_agent_insert" => BSATNHelpers.Decode<Reducer.CrumbTailCleanupAgentInsert>(encodedArgs),
+                "crumb_tail_cleanup_agent_loop" => BSATNHelpers.Decode<Reducer.CrumbTailCleanupAgentLoop>(encodedArgs),
                 "current_version" => BSATNHelpers.Decode<Reducer.CurrentVersion>(encodedArgs),
                 "day_night_agent_loop" => BSATNHelpers.Decode<Reducer.DayNightAgentLoop>(encodedArgs),
                 "delete_all_npcs" => BSATNHelpers.Decode<Reducer.DeleteAllNpcs>(encodedArgs),
@@ -1125,6 +1145,8 @@ namespace SpacetimeDB.Types
                 "hide_deployable" => BSATNHelpers.Decode<Reducer.HideDeployable>(encodedArgs),
                 "identity_connected" => BSATNHelpers.Decode<Reducer.IdentityConnected>(encodedArgs),
                 "identity_disconnected" => BSATNHelpers.Decode<Reducer.IdentityDisconnected>(encodedArgs),
+                "import_ability_custom_desc" => BSATNHelpers.Decode<Reducer.ImportAbilityCustomDesc>(encodedArgs),
+                "import_ability_unlock_desc" => BSATNHelpers.Decode<Reducer.ImportAbilityUnlockDesc>(encodedArgs),
                 "import_achievement_desc" => BSATNHelpers.Decode<Reducer.ImportAchievementDesc>(encodedArgs),
                 "import_active_buff_state" => BSATNHelpers.Decode<Reducer.ImportActiveBuffState>(encodedArgs),
                 "import_admin_broadcast" => BSATNHelpers.Decode<Reducer.ImportAdminBroadcast>(encodedArgs),
@@ -1258,6 +1280,7 @@ namespace SpacetimeDB.Types
                 "import_private_parameters_desc" => BSATNHelpers.Decode<Reducer.ImportPrivateParametersDesc>(encodedArgs),
                 "import_progressive_action_state" => BSATNHelpers.Decode<Reducer.ImportProgressiveActionState>(encodedArgs),
                 "import_project_site_state" => BSATNHelpers.Decode<Reducer.ImportProjectSiteState>(encodedArgs),
+                "import_prospecting_desc" => BSATNHelpers.Decode<Reducer.ImportProspectingDesc>(encodedArgs),
                 "import_rent_state" => BSATNHelpers.Decode<Reducer.ImportRentState>(encodedArgs),
                 "import_reserved_name_desc" => BSATNHelpers.Decode<Reducer.ImportReservedNameDesc>(encodedArgs),
                 "import_resource_clump_desc" => BSATNHelpers.Decode<Reducer.ImportResourceClumpDesc>(encodedArgs),
@@ -1315,10 +1338,13 @@ namespace SpacetimeDB.Types
                 "log_claim_tier_leaderboard" => BSATNHelpers.Decode<Reducer.LogClaimTierLeaderboard>(encodedArgs),
                 "loot_chest_despawn" => BSATNHelpers.Decode<Reducer.LootChestDespawn>(encodedArgs),
                 "loot_chest_spawn" => BSATNHelpers.Decode<Reducer.LootChestSpawn>(encodedArgs),
+                "migrate_auto_attacks" => BSATNHelpers.Decode<Reducer.MigrateAutoAttacks>(encodedArgs),
                 "migrate_character_stats" => BSATNHelpers.Decode<Reducer.MigrateCharacterStats>(encodedArgs),
                 "migrate_claim_tech" => BSATNHelpers.Decode<Reducer.MigrateClaimTech>(encodedArgs),
+                "migrate_grant_default_collectibles" => BSATNHelpers.Decode<Reducer.MigrateGrantDefaultCollectibles>(encodedArgs),
                 "migrate_player_settings" => BSATNHelpers.Decode<Reducer.MigratePlayerSettings>(encodedArgs),
                 "migration_set_achievement_params" => BSATNHelpers.Decode<Reducer.MigrationSetAchievementParams>(encodedArgs),
+                "migration_set_building_desc_params" => BSATNHelpers.Decode<Reducer.MigrationSetBuildingDescParams>(encodedArgs),
                 "npc_ai_agent_loop" => BSATNHelpers.Decode<Reducer.NpcAiAgentLoop>(encodedArgs),
                 "on_durability_zero" => BSATNHelpers.Decode<Reducer.OnDurabilityZero>(encodedArgs),
                 "on_inter_module_message_processed" => BSATNHelpers.Decode<Reducer.OnInterModuleMessageProcessed>(encodedArgs),
@@ -1386,6 +1412,8 @@ namespace SpacetimeDB.Types
                 "project_site_advance_project_start" => BSATNHelpers.Decode<Reducer.ProjectSiteAdvanceProjectStart>(encodedArgs),
                 "project_site_cancel" => BSATNHelpers.Decode<Reducer.ProjectSiteCancel>(encodedArgs),
                 "project_site_place" => BSATNHelpers.Decode<Reducer.ProjectSitePlace>(encodedArgs),
+                "prospect" => BSATNHelpers.Decode<Reducer.Prospect>(encodedArgs),
+                "prospect_start" => BSATNHelpers.Decode<Reducer.ProspectStart>(encodedArgs),
                 "region_popuplation_agent_loop" => BSATNHelpers.Decode<Reducer.RegionPopuplationAgentLoop>(encodedArgs),
                 "rent_add_listing" => BSATNHelpers.Decode<Reducer.RentAddListing>(encodedArgs),
                 "rent_add_tenant" => BSATNHelpers.Decode<Reducer.RentAddTenant>(encodedArgs),
@@ -1420,6 +1448,8 @@ namespace SpacetimeDB.Types
                 "sign_in" => BSATNHelpers.Decode<Reducer.SignIn>(encodedArgs),
                 "sign_out" => BSATNHelpers.Decode<Reducer.SignOut>(encodedArgs),
                 "sleep" => BSATNHelpers.Decode<Reducer.Sleep>(encodedArgs),
+                "stage_ability_custom_desc" => BSATNHelpers.Decode<Reducer.StageAbilityCustomDesc>(encodedArgs),
+                "stage_ability_unlock_desc" => BSATNHelpers.Decode<Reducer.StageAbilityUnlockDesc>(encodedArgs),
                 "stage_achievement_desc" => BSATNHelpers.Decode<Reducer.StageAchievementDesc>(encodedArgs),
                 "stage_alert_desc" => BSATNHelpers.Decode<Reducer.StageAlertDesc>(encodedArgs),
                 "stage_biome_desc" => BSATNHelpers.Decode<Reducer.StageBiomeDesc>(encodedArgs),
@@ -1490,6 +1520,7 @@ namespace SpacetimeDB.Types
                 "stage_premium_item_desc" => BSATNHelpers.Decode<Reducer.StagePremiumItemDesc>(encodedArgs),
                 "stage_premium_service_desc" => BSATNHelpers.Decode<Reducer.StagePremiumServiceDesc>(encodedArgs),
                 "stage_private_parameters_desc" => BSATNHelpers.Decode<Reducer.StagePrivateParametersDesc>(encodedArgs),
+                "stage_prospecting_desc" => BSATNHelpers.Decode<Reducer.StageProspectingDesc>(encodedArgs),
                 "stage_reserved_name_desc" => BSATNHelpers.Decode<Reducer.StageReservedNameDesc>(encodedArgs),
                 "stage_resource_clump_desc" => BSATNHelpers.Decode<Reducer.StageResourceClumpDesc>(encodedArgs),
                 "stage_resource_desc" => BSATNHelpers.Decode<Reducer.StageResourceDesc>(encodedArgs),
@@ -1558,6 +1589,8 @@ namespace SpacetimeDB.Types
             var eventContext = (ReducerEventContext)context;
             return reducer switch
             {
+                Reducer.AbilityCustomActivate args => Reducers.InvokeAbilityCustomActivate(eventContext, args),
+                Reducer.AbilityCustomActivateStart args => Reducers.InvokeAbilityCustomActivateStart(eventContext, args),
                 Reducer.AbilityRemove args => Reducers.InvokeAbilityRemove(eventContext, args),
                 Reducer.AbilitySet args => Reducers.InvokeAbilitySet(eventContext, args),
                 Reducer.AchievementClaim args => Reducers.InvokeAchievementClaim(eventContext, args),
@@ -1583,6 +1616,7 @@ namespace SpacetimeDB.Types
                 Reducer.AdminCollapseRuins args => Reducers.InvokeAdminCollapseRuins(eventContext, args),
                 Reducer.AdminCompleteAllPassiveCrafts args => Reducers.InvokeAdminCompleteAllPassiveCrafts(eventContext, args),
                 Reducer.AdminCountInventoryItems args => Reducers.InvokeAdminCountInventoryItems(eventContext, args),
+                Reducer.AdminCreateBuildingSpawns args => Reducers.InvokeAdminCreateBuildingSpawns(eventContext, args),
                 Reducer.AdminCreateChatMessage args => Reducers.InvokeAdminCreateChatMessage(eventContext, args),
                 Reducer.AdminCreatePlayerReport args => Reducers.InvokeAdminCreatePlayerReport(eventContext, args),
                 Reducer.AdminDeleteAllItemsOfType args => Reducers.InvokeAdminDeleteAllItemsOfType(eventContext, args),
@@ -1596,6 +1630,7 @@ namespace SpacetimeDB.Types
                 Reducer.AdminGrantAllClaimSupplies args => Reducers.InvokeAdminGrantAllClaimSupplies(eventContext, args),
                 Reducer.AdminGrantCollectibles args => Reducers.InvokeAdminGrantCollectibles(eventContext, args),
                 Reducer.AdminMigrateActionState args => Reducers.InvokeAdminMigrateActionState(eventContext, args),
+                Reducer.AdminMigrateTradeOrders args => Reducers.InvokeAdminMigrateTradeOrders(eventContext, args),
                 Reducer.AdminModifyChatMessage args => Reducers.InvokeAdminModifyChatMessage(eventContext, args),
                 Reducer.AdminPatchHousingCosts args => Reducers.InvokeAdminPatchHousingCosts(eventContext, args),
                 Reducer.AdminRenameBuilding args => Reducers.InvokeAdminRenameBuilding(eventContext, args),
@@ -1615,6 +1650,7 @@ namespace SpacetimeDB.Types
                 Reducer.AdminRestoreAllCollapsedRuins args => Reducers.InvokeAdminRestoreAllCollapsedRuins(eventContext, args),
                 Reducer.AdminRestorePlayerState args => Reducers.InvokeAdminRestorePlayerState(eventContext, args),
                 Reducer.AdminRestorePlayerStateScheduled args => Reducers.InvokeAdminRestorePlayerStateScheduled(eventContext, args),
+                Reducer.AdminSetResourceWorldTarget args => Reducers.InvokeAdminSetResourceWorldTarget(eventContext, args),
                 Reducer.AdminSetSignText args => Reducers.InvokeAdminSetSignText(eventContext, args),
                 Reducer.AdminSetSignTextCoord args => Reducers.InvokeAdminSetSignTextCoord(eventContext, args),
                 Reducer.AdminSetSignTextEntity args => Reducers.InvokeAdminSetSignTextEntity(eventContext, args),
@@ -1729,6 +1765,8 @@ namespace SpacetimeDB.Types
                 Reducer.CraftInitiate args => Reducers.InvokeCraftInitiate(eventContext, args),
                 Reducer.CraftInitiateStart args => Reducers.InvokeCraftInitiateStart(eventContext, args),
                 Reducer.CraftSetPublic args => Reducers.InvokeCraftSetPublic(eventContext, args),
+                Reducer.CrumbTailCleanupAgentInsert args => Reducers.InvokeCrumbTailCleanupAgentInsert(eventContext, args),
+                Reducer.CrumbTailCleanupAgentLoop args => Reducers.InvokeCrumbTailCleanupAgentLoop(eventContext, args),
                 Reducer.CurrentVersion args => Reducers.InvokeCurrentVersion(eventContext, args),
                 Reducer.DayNightAgentLoop args => Reducers.InvokeDayNightAgentLoop(eventContext, args),
                 Reducer.DeleteAllNpcs args => Reducers.InvokeDeleteAllNpcs(eventContext, args),
@@ -1793,6 +1831,8 @@ namespace SpacetimeDB.Types
                 Reducer.HideDeployable args => Reducers.InvokeHideDeployable(eventContext, args),
                 Reducer.IdentityConnected args => Reducers.InvokeIdentityConnected(eventContext, args),
                 Reducer.IdentityDisconnected args => Reducers.InvokeIdentityDisconnected(eventContext, args),
+                Reducer.ImportAbilityCustomDesc args => Reducers.InvokeImportAbilityCustomDesc(eventContext, args),
+                Reducer.ImportAbilityUnlockDesc args => Reducers.InvokeImportAbilityUnlockDesc(eventContext, args),
                 Reducer.ImportAchievementDesc args => Reducers.InvokeImportAchievementDesc(eventContext, args),
                 Reducer.ImportActiveBuffState args => Reducers.InvokeImportActiveBuffState(eventContext, args),
                 Reducer.ImportAdminBroadcast args => Reducers.InvokeImportAdminBroadcast(eventContext, args),
@@ -1926,6 +1966,7 @@ namespace SpacetimeDB.Types
                 Reducer.ImportPrivateParametersDesc args => Reducers.InvokeImportPrivateParametersDesc(eventContext, args),
                 Reducer.ImportProgressiveActionState args => Reducers.InvokeImportProgressiveActionState(eventContext, args),
                 Reducer.ImportProjectSiteState args => Reducers.InvokeImportProjectSiteState(eventContext, args),
+                Reducer.ImportProspectingDesc args => Reducers.InvokeImportProspectingDesc(eventContext, args),
                 Reducer.ImportRentState args => Reducers.InvokeImportRentState(eventContext, args),
                 Reducer.ImportReservedNameDesc args => Reducers.InvokeImportReservedNameDesc(eventContext, args),
                 Reducer.ImportResourceClumpDesc args => Reducers.InvokeImportResourceClumpDesc(eventContext, args),
@@ -1983,10 +2024,13 @@ namespace SpacetimeDB.Types
                 Reducer.LogClaimTierLeaderboard args => Reducers.InvokeLogClaimTierLeaderboard(eventContext, args),
                 Reducer.LootChestDespawn args => Reducers.InvokeLootChestDespawn(eventContext, args),
                 Reducer.LootChestSpawn args => Reducers.InvokeLootChestSpawn(eventContext, args),
+                Reducer.MigrateAutoAttacks args => Reducers.InvokeMigrateAutoAttacks(eventContext, args),
                 Reducer.MigrateCharacterStats args => Reducers.InvokeMigrateCharacterStats(eventContext, args),
                 Reducer.MigrateClaimTech args => Reducers.InvokeMigrateClaimTech(eventContext, args),
+                Reducer.MigrateGrantDefaultCollectibles args => Reducers.InvokeMigrateGrantDefaultCollectibles(eventContext, args),
                 Reducer.MigratePlayerSettings args => Reducers.InvokeMigratePlayerSettings(eventContext, args),
                 Reducer.MigrationSetAchievementParams args => Reducers.InvokeMigrationSetAchievementParams(eventContext, args),
+                Reducer.MigrationSetBuildingDescParams args => Reducers.InvokeMigrationSetBuildingDescParams(eventContext, args),
                 Reducer.NpcAiAgentLoop args => Reducers.InvokeNpcAiAgentLoop(eventContext, args),
                 Reducer.OnDurabilityZero args => Reducers.InvokeOnDurabilityZero(eventContext, args),
                 Reducer.OnInterModuleMessageProcessed args => Reducers.InvokeOnInterModuleMessageProcessed(eventContext, args),
@@ -2054,6 +2098,8 @@ namespace SpacetimeDB.Types
                 Reducer.ProjectSiteAdvanceProjectStart args => Reducers.InvokeProjectSiteAdvanceProjectStart(eventContext, args),
                 Reducer.ProjectSiteCancel args => Reducers.InvokeProjectSiteCancel(eventContext, args),
                 Reducer.ProjectSitePlace args => Reducers.InvokeProjectSitePlace(eventContext, args),
+                Reducer.Prospect args => Reducers.InvokeProspect(eventContext, args),
+                Reducer.ProspectStart args => Reducers.InvokeProspectStart(eventContext, args),
                 Reducer.RegionPopuplationAgentLoop args => Reducers.InvokeRegionPopuplationAgentLoop(eventContext, args),
                 Reducer.RentAddListing args => Reducers.InvokeRentAddListing(eventContext, args),
                 Reducer.RentAddTenant args => Reducers.InvokeRentAddTenant(eventContext, args),
@@ -2088,6 +2134,8 @@ namespace SpacetimeDB.Types
                 Reducer.SignIn args => Reducers.InvokeSignIn(eventContext, args),
                 Reducer.SignOut args => Reducers.InvokeSignOut(eventContext, args),
                 Reducer.Sleep args => Reducers.InvokeSleep(eventContext, args),
+                Reducer.StageAbilityCustomDesc args => Reducers.InvokeStageAbilityCustomDesc(eventContext, args),
+                Reducer.StageAbilityUnlockDesc args => Reducers.InvokeStageAbilityUnlockDesc(eventContext, args),
                 Reducer.StageAchievementDesc args => Reducers.InvokeStageAchievementDesc(eventContext, args),
                 Reducer.StageAlertDesc args => Reducers.InvokeStageAlertDesc(eventContext, args),
                 Reducer.StageBiomeDesc args => Reducers.InvokeStageBiomeDesc(eventContext, args),
@@ -2158,6 +2206,7 @@ namespace SpacetimeDB.Types
                 Reducer.StagePremiumItemDesc args => Reducers.InvokeStagePremiumItemDesc(eventContext, args),
                 Reducer.StagePremiumServiceDesc args => Reducers.InvokeStagePremiumServiceDesc(eventContext, args),
                 Reducer.StagePrivateParametersDesc args => Reducers.InvokeStagePrivateParametersDesc(eventContext, args),
+                Reducer.StageProspectingDesc args => Reducers.InvokeStageProspectingDesc(eventContext, args),
                 Reducer.StageReservedNameDesc args => Reducers.InvokeStageReservedNameDesc(eventContext, args),
                 Reducer.StageResourceClumpDesc args => Reducers.InvokeStageResourceClumpDesc(eventContext, args),
                 Reducer.StageResourceDesc args => Reducers.InvokeStageResourceDesc(eventContext, args),

@@ -14,17 +14,17 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void ImportEmoteDescHandler(ReducerEventContext ctx, System.Collections.Generic.List<EmoteDescV2> records);
-        public event ImportEmoteDescHandler? OnImportEmoteDesc;
+        public delegate void ImportProspectingDescHandler(ReducerEventContext ctx, System.Collections.Generic.List<ProspectingDesc> records);
+        public event ImportProspectingDescHandler? OnImportProspectingDesc;
 
-        public void ImportEmoteDesc(System.Collections.Generic.List<EmoteDescV2> records)
+        public void ImportProspectingDesc(System.Collections.Generic.List<ProspectingDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportEmoteDesc(records), this.SetCallReducerFlags.ImportEmoteDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportProspectingDesc(records), this.SetCallReducerFlags.ImportProspectingDescFlags);
         }
 
-        public bool InvokeImportEmoteDesc(ReducerEventContext ctx, Reducer.ImportEmoteDesc args)
+        public bool InvokeImportProspectingDesc(ReducerEventContext ctx, Reducer.ImportProspectingDesc args)
         {
-            if (OnImportEmoteDesc == null)
+            if (OnImportProspectingDesc == null)
             {
                 if (InternalOnUnhandledReducerError != null)
                 {
@@ -36,7 +36,7 @@ namespace SpacetimeDB.Types
                 }
                 return false;
             }
-            OnImportEmoteDesc(
+            OnImportProspectingDesc(
                 ctx,
                 args.Records
             );
@@ -48,28 +48,28 @@ namespace SpacetimeDB.Types
     {
         [SpacetimeDB.Type]
         [DataContract]
-        public sealed partial class ImportEmoteDesc : Reducer, IReducerArgs
+        public sealed partial class ImportProspectingDesc : Reducer, IReducerArgs
         {
             [DataMember(Name = "records")]
-            public System.Collections.Generic.List<EmoteDescV2> Records;
+            public System.Collections.Generic.List<ProspectingDesc> Records;
 
-            public ImportEmoteDesc(System.Collections.Generic.List<EmoteDescV2> Records)
+            public ImportProspectingDesc(System.Collections.Generic.List<ProspectingDesc> Records)
             {
                 this.Records = Records;
             }
 
-            public ImportEmoteDesc()
+            public ImportProspectingDesc()
             {
                 this.Records = new();
             }
 
-            string IReducerArgs.ReducerName => "import_emote_desc";
+            string IReducerArgs.ReducerName => "import_prospecting_desc";
         }
     }
 
     public sealed partial class SetReducerFlags
     {
-        internal CallReducerFlags ImportEmoteDescFlags;
-        public void ImportEmoteDesc(CallReducerFlags flags) => ImportEmoteDescFlags = flags;
+        internal CallReducerFlags ImportProspectingDescFlags;
+        public void ImportProspectingDesc(CallReducerFlags flags) => ImportProspectingDescFlags = flags;
     }
 }

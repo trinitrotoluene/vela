@@ -15,27 +15,37 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteTables
     {
-        public sealed class StagedEmoteDescHandle : RemoteTableHandle<EventContext, EmoteDescV2>
+        public sealed class EmoteDescV2Handle : RemoteTableHandle<EventContext, EmoteDescV2>
         {
-            protected override string RemoteTableName => "staged_emote_desc";
+            protected override string RemoteTableName => "emote_desc_v2";
+
+            public sealed class EnabledByCollectibleIdIndex : BTreeIndexBase<int>
+            {
+                protected override int GetKey(EmoteDescV2 row) => row.EnabledByCollectibleId;
+
+                public EnabledByCollectibleIdIndex(EmoteDescV2Handle table) : base(table) { }
+            }
+
+            public readonly EnabledByCollectibleIdIndex EnabledByCollectibleId;
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {
                 protected override int GetKey(EmoteDescV2 row) => row.Id;
 
-                public IdUniqueIndex(StagedEmoteDescHandle table) : base(table) { }
+                public IdUniqueIndex(EmoteDescV2Handle table) : base(table) { }
             }
 
             public readonly IdUniqueIndex Id;
 
-            internal StagedEmoteDescHandle(DbConnection conn) : base(conn)
+            internal EmoteDescV2Handle(DbConnection conn) : base(conn)
             {
+                EnabledByCollectibleId = new(this);
                 Id = new(this);
             }
 
             protected override object GetPrimaryKey(EmoteDescV2 row) => row.Id;
         }
 
-        public readonly StagedEmoteDescHandle StagedEmoteDesc;
+        public readonly EmoteDescV2Handle EmoteDescV2;
     }
 }

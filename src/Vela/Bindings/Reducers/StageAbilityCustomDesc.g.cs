@@ -14,17 +14,17 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void ImportEmoteDescHandler(ReducerEventContext ctx, System.Collections.Generic.List<EmoteDescV2> records);
-        public event ImportEmoteDescHandler? OnImportEmoteDesc;
+        public delegate void StageAbilityCustomDescHandler(ReducerEventContext ctx, System.Collections.Generic.List<AbilityCustomDesc> records);
+        public event StageAbilityCustomDescHandler? OnStageAbilityCustomDesc;
 
-        public void ImportEmoteDesc(System.Collections.Generic.List<EmoteDescV2> records)
+        public void StageAbilityCustomDesc(System.Collections.Generic.List<AbilityCustomDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportEmoteDesc(records), this.SetCallReducerFlags.ImportEmoteDescFlags);
+            conn.InternalCallReducer(new Reducer.StageAbilityCustomDesc(records), this.SetCallReducerFlags.StageAbilityCustomDescFlags);
         }
 
-        public bool InvokeImportEmoteDesc(ReducerEventContext ctx, Reducer.ImportEmoteDesc args)
+        public bool InvokeStageAbilityCustomDesc(ReducerEventContext ctx, Reducer.StageAbilityCustomDesc args)
         {
-            if (OnImportEmoteDesc == null)
+            if (OnStageAbilityCustomDesc == null)
             {
                 if (InternalOnUnhandledReducerError != null)
                 {
@@ -36,7 +36,7 @@ namespace SpacetimeDB.Types
                 }
                 return false;
             }
-            OnImportEmoteDesc(
+            OnStageAbilityCustomDesc(
                 ctx,
                 args.Records
             );
@@ -48,28 +48,28 @@ namespace SpacetimeDB.Types
     {
         [SpacetimeDB.Type]
         [DataContract]
-        public sealed partial class ImportEmoteDesc : Reducer, IReducerArgs
+        public sealed partial class StageAbilityCustomDesc : Reducer, IReducerArgs
         {
             [DataMember(Name = "records")]
-            public System.Collections.Generic.List<EmoteDescV2> Records;
+            public System.Collections.Generic.List<AbilityCustomDesc> Records;
 
-            public ImportEmoteDesc(System.Collections.Generic.List<EmoteDescV2> Records)
+            public StageAbilityCustomDesc(System.Collections.Generic.List<AbilityCustomDesc> Records)
             {
                 this.Records = Records;
             }
 
-            public ImportEmoteDesc()
+            public StageAbilityCustomDesc()
             {
                 this.Records = new();
             }
 
-            string IReducerArgs.ReducerName => "import_emote_desc";
+            string IReducerArgs.ReducerName => "stage_ability_custom_desc";
         }
     }
 
     public sealed partial class SetReducerFlags
     {
-        internal CallReducerFlags ImportEmoteDescFlags;
-        public void ImportEmoteDesc(CallReducerFlags flags) => ImportEmoteDescFlags = flags;
+        internal CallReducerFlags StageAbilityCustomDescFlags;
+        public void StageAbilityCustomDesc(CallReducerFlags flags) => StageAbilityCustomDescFlags = flags;
     }
 }
