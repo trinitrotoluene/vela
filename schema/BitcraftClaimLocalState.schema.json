@@ -1,0 +1,46 @@
+{
+  "type": "object",
+  "properties": {
+    "Location": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "X": {
+          "type": "integer"
+        },
+        "Z": {
+          "type": "integer"
+        },
+        "Dimension": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "X",
+        "Z",
+        "Dimension"
+      ]
+    },
+    "Supplies": {
+      "type": "integer"
+    },
+    "Treasury": {
+      "type": "integer"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "Location",
+    "Supplies",
+    "Treasury",
+    "Id"
+  ],
+  "x-global-entity": true
+}

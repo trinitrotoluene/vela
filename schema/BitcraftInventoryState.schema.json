@@ -1,0 +1,39 @@
+{
+  "type": "object",
+  "properties": {
+    "Pockets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ItemId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "Quantity": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "ItemId",
+          "Quantity"
+        ]
+      }
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "Pockets",
+    "Id"
+  ]
+}

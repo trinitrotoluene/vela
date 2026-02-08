@@ -1,0 +1,43 @@
+{
+  "type": "object",
+  "properties": {
+    "OwnerId": {
+      "type": "string"
+    },
+    "ClaimId": {
+      "type": "string"
+    },
+    "Price": {
+      "type": "integer"
+    },
+    "Quantity": {
+      "type": "integer"
+    },
+    "StoredCoins": {
+      "type": "integer"
+    },
+    "ItemId": {
+      "type": "integer"
+    },
+    "IsCargoItem": {
+      "type": "boolean"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "OwnerId",
+    "ClaimId",
+    "Price",
+    "Quantity",
+    "StoredCoins",
+    "ItemId",
+    "IsCargoItem",
+    "Id"
+  ],
+  "x-global-entity": true
+}

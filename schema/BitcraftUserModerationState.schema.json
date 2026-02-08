@@ -1,0 +1,42 @@
+{
+  "type": "object",
+  "properties": {
+    "CreatedByEntityId": {
+      "type": "string"
+    },
+    "TargetEntityId": {
+      "type": "string"
+    },
+    "UserModerationPolicy": {
+      "enum": [
+        "permanentBlockLogin",
+        "temporaryBlockLogin",
+        "blockChat",
+        "blockConstruct"
+      ]
+    },
+    "CreatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ExpiresAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "CreatedByEntityId",
+    "TargetEntityId",
+    "UserModerationPolicy",
+    "CreatedAt",
+    "ExpiresAt",
+    "Id"
+  ],
+  "x-global-entity": true
+}

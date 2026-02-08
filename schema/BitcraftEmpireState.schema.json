@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "properties": {
+    "Name": {
+      "type": "string"
+    },
+    "ShardTreasury": {
+      "type": "integer"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "Name",
+    "ShardTreasury",
+    "Id"
+  ],
+  "x-global-entity": true
+}

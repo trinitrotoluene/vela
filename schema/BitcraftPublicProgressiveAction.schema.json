@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "properties": {
+    "BuildingEntityId": {
+      "type": "string"
+    },
+    "OwnerEntityId": {
+      "type": "string"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "BuildingEntityId",
+    "OwnerEntityId",
+    "Id"
+  ]
+}

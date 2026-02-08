@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "properties": {
+    "Username": {
+      "type": "string"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "Username",
+    "Id"
+  ],
+  "x-global-entity": true
+}

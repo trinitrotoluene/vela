@@ -1,0 +1,82 @@
+{
+  "type": "object",
+  "properties": {
+    "SubjectEntityId": {
+      "type": "string"
+    },
+    "SubjectName": {
+      "type": "string"
+    },
+    "SubjectType": {
+      "enum": [
+        "player"
+      ]
+    },
+    "ObjectEntityId": {
+      "type": "string"
+    },
+    "Action": {
+      "type": "object",
+      "required": [
+        "$type"
+      ],
+      "anyOf": [
+        {
+          "properties": {
+            "$type": {
+              "const": "DepositItemStateAction"
+            },
+            "ItemId": {
+              "type": "string"
+            },
+            "Quantity": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "ItemId",
+            "Quantity"
+          ]
+        },
+        {
+          "properties": {
+            "$type": {
+              "const": "WithdrawItemStateAction"
+            },
+            "ItemId": {
+              "type": "string"
+            },
+            "Quantity": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "ItemId",
+            "Quantity"
+          ]
+        },
+        {
+          "properties": {
+            "$type": {
+              "const": "UnknownItemStateAction"
+            }
+          }
+        }
+      ]
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "SubjectEntityId",
+    "SubjectName",
+    "SubjectType",
+    "ObjectEntityId",
+    "Action",
+    "Id"
+  ]
+}

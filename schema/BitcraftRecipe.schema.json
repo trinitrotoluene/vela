@@ -1,0 +1,110 @@
+{
+  "type": "object",
+  "properties": {
+    "NameFormatString": {
+      "type": "string"
+    },
+    "BuildingRequirement": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "BuildingType": {
+          "type": "integer"
+        },
+        "Tier": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "BuildingType",
+        "Tier"
+      ]
+    },
+    "LevelRequirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "SkillId": {
+            "type": "integer"
+          },
+          "Level": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "SkillId",
+          "Level"
+        ]
+      }
+    },
+    "ToolRequirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ToolType": {
+            "type": "integer"
+          },
+          "Level": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "ToolType",
+          "Level"
+        ]
+      }
+    },
+    "ConsumedItemStacks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ItemId": {
+            "type": "string"
+          },
+          "Quantity": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "ItemId",
+          "Quantity"
+        ]
+      }
+    },
+    "ProducedItemStacks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/properties/ConsumedItemStacks/items"
+      }
+    },
+    "IsPassive": {
+      "type": "boolean"
+    },
+    "ActionsRequired": {
+      "type": "integer"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "NameFormatString",
+    "BuildingRequirement",
+    "LevelRequirements",
+    "ToolRequirements",
+    "ConsumedItemStacks",
+    "ProducedItemStacks",
+    "IsPassive",
+    "ActionsRequired",
+    "Id"
+  ],
+  "x-global-entity": true
+}

@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "properties": {
+    "EmpireId": {
+      "type": "string"
+    },
+    "IsActive": {
+      "type": "boolean"
+    },
+    "BuildingEntityId": {
+      "type": "string"
+    },
+    "Energy": {
+      "type": "integer"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "EmpireId",
+    "IsActive",
+    "BuildingEntityId",
+    "Energy",
+    "Id"
+  ]
+}

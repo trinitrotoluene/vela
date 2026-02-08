@@ -8,6 +8,7 @@ namespace Vela.Events
     int Price,
     int Quantity,
     int StoredCoins,
-    int ItemId
+    int ItemId,
+    bool IsCargoItem
   ) : BitcraftEventBase(Id);
 }

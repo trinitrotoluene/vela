@@ -1,0 +1,55 @@
+{
+  "type": "object",
+  "properties": {
+    "Name": {
+      "type": "string"
+    },
+    "Description": {
+      "type": "string"
+    },
+    "Volume": {
+      "type": "integer"
+    },
+    "Tier": {
+      "type": "integer"
+    },
+    "Rarity": {
+      "enum": [
+        "default",
+        "common",
+        "uncommon",
+        "rare",
+        "epic",
+        "legendary",
+        "mythic"
+      ]
+    },
+    "Tag": {
+      "type": "string"
+    },
+    "NotPickupable": {
+      "type": "boolean"
+    },
+    "BlocksPath": {
+      "type": "boolean"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "Name",
+    "Description",
+    "Volume",
+    "Tier",
+    "Rarity",
+    "Tag",
+    "NotPickupable",
+    "BlocksPath",
+    "Id"
+  ],
+  "x-global-entity": true
+}

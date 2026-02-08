@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "properties": {
+    "ClaimEntityId": {
+      "type": "string"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "ClaimEntityId",
+    "Id"
+  ]
+}

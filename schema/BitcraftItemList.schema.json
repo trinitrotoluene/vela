@@ -1,0 +1,53 @@
+{
+  "type": "object",
+  "properties": {
+    "Name": {
+      "type": "string"
+    },
+    "Possibilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "Probability": {
+            "type": "number"
+          },
+          "Items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ItemId": {
+                  "type": "integer"
+                },
+                "Quantity": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "ItemId",
+                "Quantity"
+              ]
+            }
+          }
+        },
+        "required": [
+          "Probability",
+          "Items"
+        ]
+      }
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "Name",
+    "Possibilities",
+    "Id"
+  ],
+  "x-global-entity": true
+}

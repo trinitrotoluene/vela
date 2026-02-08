@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "properties": {
+    "X": {
+      "type": "integer"
+    },
+    "Z": {
+      "type": "integer"
+    },
+    "Dimension": {
+      "type": "integer"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "X",
+    "Z",
+    "Dimension",
+    "Id"
+  ]
+}

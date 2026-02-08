@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "properties": {
+    "RecipeId": {
+      "type": "string"
+    },
+    "CraftCount": {
+      "type": "integer"
+    },
+    "Progress": {
+      "type": "integer"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "RecipeId",
+    "CraftCount",
+    "Progress",
+    "Id"
+  ]
+}

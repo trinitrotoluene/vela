@@ -1,0 +1,20 @@
+{
+  "type": "object",
+  "properties": {
+    "Application": {
+      "type": "string"
+    },
+    "PublishedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "Seq": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "Application",
+    "PublishedAt",
+    "Seq"
+  ]
+}

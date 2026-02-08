@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "properties": {
+    "OwnerPlayerId": {
+      "type": "string"
+    },
+    "OwnerBuildingId": {
+      "type": "string"
+    },
+    "Name": {
+      "type": "string"
+    },
+    "IsNeutral": {
+      "type": "boolean"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "OwnerPlayerId",
+    "OwnerBuildingId",
+    "Name",
+    "IsNeutral",
+    "Id"
+  ],
+  "x-global-entity": true
+}

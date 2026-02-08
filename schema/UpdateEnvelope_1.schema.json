@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "properties": {
+    "Version": {
+      "enum": [
+        "v1"
+      ]
+    },
+    "Module": {
+      "type": "string"
+    },
+    "CallerIdentity": {
+      "type": "string"
+    },
+    "OldEntity": true,
+    "NewEntity": true
+  },
+  "required": [
+    "Version",
+    "Module",
+    "CallerIdentity",
+    "OldEntity",
+    "NewEntity"
+  ]
+}

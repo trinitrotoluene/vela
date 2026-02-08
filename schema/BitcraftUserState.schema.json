@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "properties": {
+    "UserEntityId": {
+      "type": "string"
+    },
+    "CanSignIn": {
+      "type": "boolean"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "UserEntityId",
+    "CanSignIn",
+    "Id"
+  ]
+}

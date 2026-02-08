@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "properties": {
+    "ChannelId": {
+      "type": "integer"
+    },
+    "SenderId": {
+      "type": "string"
+    },
+    "SenderUsername": {
+      "type": "string"
+    },
+    "Content": {
+      "type": "string"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "ChannelId",
+    "SenderId",
+    "SenderUsername",
+    "Content",
+    "Id"
+  ]
+}

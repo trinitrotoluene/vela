@@ -14,7 +14,8 @@ namespace Vela.Mappers
         Price: entity.PriceThreshold,
         Quantity: entity.Quantity,
         StoredCoins: entity.StoredCoins,
-        ItemId: entity.ItemId
+        ItemId: entity.ItemId,
+        IsCargoItem: entity.ItemType != 0
       );
   }
 }
