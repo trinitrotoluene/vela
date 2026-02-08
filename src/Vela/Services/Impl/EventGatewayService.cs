@@ -91,7 +91,8 @@ public class EventGatewayService : BackgroundService
             ON e.building_entity_id = b.entity_id",
         "SELECT * FROM user_state",
         "SELECT * from building_desc",
-        "SELECT t.* from claim_state t WHERE t.neutral = FALSE",
+        @"SELECT t.* from claim_state t INNER JOIN claim_local_state l ON t.entity_id = l.entity_id 
+WHERE l.building_description_id = 405 OR l.building_description_id = 292245080",
         "SELECT * FROM claim_local_state",
         "SELECT * from player_username_state",
         $"SELECT t.* from chat_message_state t WHERE t.channel_id >= 0 AND t.timestamp > {nowUnixSeconds}",
