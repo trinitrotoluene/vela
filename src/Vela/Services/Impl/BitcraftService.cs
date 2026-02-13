@@ -69,14 +69,10 @@ public class BitcraftService : BackgroundService
       yield return backoff + jitter;
     }
 
-    // Switch to periodic retry with jitter after exponential phase
-    var periodicRetryInterval = TimeSpan.FromMinutes(30);
-    var retryDuration = TimeSpan.FromHours(12);
-    var retries = (int)(retryDuration.TotalMinutes / periodicRetryInterval.TotalMinutes);
-
-    for (int i = 0; i < retries; i++)
+    // Retry indefinitely every 30 minutes with jitter after exponential phase
+    while (true)
     {
-      yield return periodicRetryInterval.Add(TimeSpan.FromSeconds(Random.Shared.Next(0, 30)));
+      yield return TimeSpan.FromMinutes(10).Add(TimeSpan.FromSeconds(Random.Shared.Next(0, 30)));
     }
   }
 
