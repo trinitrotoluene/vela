@@ -12,7 +12,7 @@ env:
 jobs:
   build-and-push:
     name: Build and Push to GHCR
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     environment: prod
     permissions:
       contents: read
@@ -31,14 +31,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: "10.0.x"
-      - name: Restore dependencies
-        run: dotnet restore
-      - name: Build project
-        run: dotnet build --no-restore --configuration Release
       - name: Extract image tag
         id: meta
         run: |
@@ -47,13 +39,18 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
-          platforms: linux/arm64
           context: .
           file: ./Dockerfile
           push: true
           tags: |
             ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tag }}
             ${{ env.IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
       - name: Generate JSON Schema
         run: dotnet run --project src/Vela.Gen -- generate-json-schema --outDir ./schema-output
       - name: Upload JSON Schema Artifacts
