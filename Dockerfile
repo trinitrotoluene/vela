@@ -7,6 +7,7 @@ COPY src/Vela/Vela.csproj src/Vela/
 COPY src/Vela.Gen/Vela.Gen.csproj src/Vela.Gen/
 COPY src/Vela.AppHost/Vela.AppHost.csproj src/Vela.AppHost/
 COPY src/SpacetimeDB.ClientSDK/SpacetimeDB.ClientSDK.csproj src/SpacetimeDB.ClientSDK/
+COPY src/SpacetimeDB.ClientSDK/Directory.Build.props src/SpacetimeDB.ClientSDK/
 RUN dotnet restore src/Vela/Vela.csproj
 
 COPY . .
