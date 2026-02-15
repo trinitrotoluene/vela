@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using SpacetimeDB;
 using SpacetimeDB.Types;
 using StackExchange.Redis;
+using Vela.Data;
 using Vela.Events;
 using Vela.Mappers;
 using Vela.Services.Contracts;
@@ -17,6 +18,7 @@ public class EventSubscriberService : IEventSubscriber
   private readonly Counter<long> _eventCounter;
   private readonly ILogger<EventGatewayService> _logger;
   private readonly IDatabase _cache;
+  private readonly IEntityDbWriter _dbWriter;
   private readonly List<object> _eventMappings;
   private readonly IOptions<BitcraftServiceOptions> _options;
   private readonly JsonSerializerOptions _jsonOptions;
@@ -27,10 +29,12 @@ public class EventSubscriberService : IEventSubscriber
     IOptions<BitcraftServiceOptions> options,
     IMeterFactory metricsFactory,
     IMetricHelpers metricHelpers,
+    IEntityDbWriter dbWriter,
     JsonSerializerOptions jsonOptions)
   {
     _logger = logger;
     _options = options;
+    _dbWriter = dbWriter;
 
     _cache = multiplexer.GetDatabase();
     _eventMappings = LoadMappings();
@@ -136,7 +140,7 @@ public class EventSubscriberService : IEventSubscriber
       await _cache.KeyDeleteAsync(regionKey);
     }
 
-    _logger.LogInformation("Populating caches");
+    _logger.LogInformation("Populating storage");
 
     var dbType = conn.Db.GetType();
     var handleFields = dbType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
@@ -183,7 +187,7 @@ public class EventSubscriberService : IEventSubscriber
       }
 
       var populateMethod = GetType()
-            .GetMethod(nameof(PopulateBaseCacheForHandleAsync), BindingFlags.Instance | BindingFlags.NonPublic)?
+            .GetMethod(nameof(PopulateForHandleAsync), BindingFlags.Instance | BindingFlags.NonPublic)?
             .MakeGenericMethod(rowType, outputType);
 
       var task = (Task?)populateMethod?.Invoke(this, [cacheKey, iterResult, mapper]);
@@ -194,7 +198,7 @@ public class EventSubscriberService : IEventSubscriber
     await Task.WhenAll(populateTasks);
   }
 
-  private async Task PopulateBaseCacheForHandleAsync<TFrom, TTo>(
+  private async Task PopulateForHandleAsync<TFrom, TTo>(
     string cacheKey,
     IEnumerable<TFrom> fromItems,
     MappedDbEntityBase<TFrom, TTo> mapper
@@ -202,20 +206,32 @@ public class EventSubscriberService : IEventSubscriber
   {
     await Task.Yield();
 
-    List<HashEntry> hashEntries = [];
+    var mapped = new List<TTo>();
 
     foreach (var item in fromItems.ToArray())
     {
       var mappedItem = mapper.Map(item);
       mappedItem.Module = _options.Value.Module;
-
-      var serializedItem = JsonSerializer.Serialize(mappedItem, _jsonOptions);
-
-      hashEntries.Add(new HashEntry(mappedItem.Id, serializedItem));
+      mapped.Add(mappedItem);
     }
 
-    _logger.LogInformation("Populating cache key {cacheKey} with {count} initial values", cacheKey, hashEntries.Count);
-    await _cache.HashSetAsync(cacheKey, [.. hashEntries]);
+    var storageTarget = BitcraftEventBase.GetStorageTarget(typeof(TTo));
+
+    if (storageTarget.HasFlag(StorageTarget.Cache))
+    {
+      var hashEntries = mapped
+        .Select(m => new HashEntry(m.Id, JsonSerializer.Serialize(m, _jsonOptions)))
+        .ToArray();
+
+      _logger.LogInformation("Populating cache key {cacheKey} with {count} initial values", cacheKey, hashEntries.Length);
+      await _cache.HashSetAsync(cacheKey, hashEntries);
+    }
+
+    if (storageTarget.HasFlag(StorageTarget.Database))
+    {
+      _logger.LogInformation("Populating database for {type} with {count} initial values", typeof(TTo).Name, mapped.Count);
+      await _dbWriter.BulkUpsertAsync(mapped);
+    }
   }
 
   private void RegisterEventHandlers<TEntity, TOutput>(
@@ -338,25 +354,52 @@ public class EventSubscriberService : IEventSubscriber
         Entity: payload,
         CallerIdentity: callerIdentity
       ), _jsonOptions);
-      var cacheJson = JsonSerializer.Serialize(payload, _jsonOptions);
-      var cacheKey = BitcraftEventBase.CacheKey(payload, _options.Value.Module);
 
-      if (delete)
+      var storageTarget = BitcraftEventBase.GetStorageTarget(typeof(T));
+
+      // Redis cache operations
+      if (storageTarget.HasFlag(StorageTarget.Cache))
       {
-        _logger.LogDebug("Deleting {cacheJson} from {cacheKey}", cacheJson, cacheKey);
-        _cache.HashDelete(cacheKey, payload.Id, CommandFlags.FireAndForget);
-      }
-      else
-      {
-        _logger.LogDebug("Caching {cacheJson} in {cacheKey}", cacheJson, cacheKey);
-        _cache.HashSet(
-          cacheKey,
-          [new HashEntry(payload.Id, cacheJson)],
-          CommandFlags.FireAndForget
-        );
+        var cacheJson = JsonSerializer.Serialize(payload, _jsonOptions);
+        var cacheKey = BitcraftEventBase.CacheKey(payload, _options.Value.Module);
+
+        if (delete)
+        {
+          _logger.LogDebug("Deleting from cache {cacheKey}", cacheKey);
+          _cache.HashDelete(cacheKey, payload.Id, CommandFlags.FireAndForget);
+        }
+        else
+        {
+          _logger.LogDebug("Caching in {cacheKey}", cacheKey);
+          _cache.HashSet(
+            cacheKey,
+            [new HashEntry(payload.Id, cacheJson)],
+            CommandFlags.FireAndForget
+          );
+        }
       }
 
-      _logger.LogDebug("Publishing {json} to {topic}", json, topic);
+      // Database operations (fire-and-forget to match Redis pattern)
+      if (storageTarget.HasFlag(StorageTarget.Database))
+      {
+        _ = Task.Run(async () =>
+        {
+          try
+          {
+            if (delete)
+              await _dbWriter.DeleteAsync(payload);
+            else
+              await _dbWriter.UpsertAsync(payload);
+          }
+          catch (Exception ex)
+          {
+            _logger.LogError(ex, "DB write failed for {type} {id}", typeof(T).Name, payload.Id);
+          }
+        });
+      }
+
+      // Always publish to pub/sub
+      _logger.LogDebug("Publishing to {topic}", topic);
       _eventCounter.Add(1, new TagList { { "topic", topic } });
       _ = _cache.Publish(RedisChannel.Literal(topic), json, CommandFlags.FireAndForget);
     }
@@ -386,17 +429,41 @@ public class EventSubscriberService : IEventSubscriber
         OldEntity: oldEntity,
         NewEntity: newEntity
       ), _jsonOptions);
-      var cacheJson = JsonSerializer.Serialize(newEntity, _jsonOptions);
-      var cacheKey = BitcraftEventBase.CacheKey(newEntity, _options.Value.Module);
 
-      _logger.LogDebug("Caching {cacheJson} in {cacheKey}", cacheJson, cacheKey);
-      _cache.HashSet(
-        cacheKey,
-        [new HashEntry(newEntity.Id, cacheJson)],
-        CommandFlags.FireAndForget
-      );
+      var storageTarget = BitcraftEventBase.GetStorageTarget(typeof(T));
 
-      _logger.LogDebug("Publishing {json} to {topic}", json, topic);
+      // Redis cache operations
+      if (storageTarget.HasFlag(StorageTarget.Cache))
+      {
+        var cacheJson = JsonSerializer.Serialize(newEntity, _jsonOptions);
+        var cacheKey = BitcraftEventBase.CacheKey(newEntity, _options.Value.Module);
+
+        _logger.LogDebug("Caching in {cacheKey}", cacheKey);
+        _cache.HashSet(
+          cacheKey,
+          [new HashEntry(newEntity.Id, cacheJson)],
+          CommandFlags.FireAndForget
+        );
+      }
+
+      // Database operations (fire-and-forget)
+      if (storageTarget.HasFlag(StorageTarget.Database))
+      {
+        _ = Task.Run(async () =>
+        {
+          try
+          {
+            await _dbWriter.UpsertAsync(newEntity);
+          }
+          catch (Exception ex)
+          {
+            _logger.LogError(ex, "DB write failed for {type} {id}", typeof(T).Name, newEntity.Id);
+          }
+        });
+      }
+
+      // Always publish to pub/sub
+      _logger.LogDebug("Publishing to {topic}", topic);
       _eventCounter.Add(1, new TagList { { "topic", topic } });
       _ = _cache.Publish(RedisChannel.Literal(topic), json, CommandFlags.FireAndForget);
     }

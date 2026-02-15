@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace Vela.Events;
 
+[Storage(StorageTarget.Cache)]
 public record BitcraftActionLogState(
   string Id,
   string SubjectEntityId,

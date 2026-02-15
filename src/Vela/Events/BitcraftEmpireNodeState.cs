@@ -1,5 +1,6 @@
 namespace Vela.Events;
 
+[Storage(StorageTarget.Cache)]
 public record BitcraftEmpireNodeState(
   string Id,
   string EmpireId,

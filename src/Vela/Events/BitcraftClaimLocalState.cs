@@ -1,6 +1,6 @@
 namespace Vela.Events
 {
-  [GlobalEntity]
+  [GlobalEntity, Storage(StorageTarget.Database)]
   public record BitcraftClaimLocalState(
     string Id,
     BitcraftLocation? Location,

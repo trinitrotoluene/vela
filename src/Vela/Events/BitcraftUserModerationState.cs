@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace Vela.Events
 {
-  [GlobalEntity]
+  [GlobalEntity, Storage(StorageTarget.Database)]
   public record BitcraftUserModerationState(
     string Id,
     string CreatedByEntityId,

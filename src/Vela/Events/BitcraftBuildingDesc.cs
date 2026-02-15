@@ -1,5 +1,6 @@
 namespace Vela.Events
 {
+  [Storage(StorageTarget.Database)]
   public record BitcraftBuildingDesc(
     string Id,
     string Name,

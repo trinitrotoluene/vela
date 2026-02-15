@@ -1,5 +1,6 @@
 using Vela.Events;
 
+[Storage(StorageTarget.Cache)]
 public record BitcraftLocationState(
   string Id,
   int X,

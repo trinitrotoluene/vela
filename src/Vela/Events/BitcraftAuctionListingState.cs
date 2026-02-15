@@ -1,6 +1,6 @@
 namespace Vela.Events
 {
-  [GlobalEntity]
+  [GlobalEntity, Storage(StorageTarget.Database)]
   public record BitcraftAuctionListingState(
     string Id,
     string OwnerId,

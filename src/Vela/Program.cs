@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using Serilog;
 using Serilog.Sinks.OpenTelemetry;
+using Vela.Data;
 using Vela.Services.Contracts;
 using Vela.Services.Impl;
 
@@ -70,6 +72,11 @@ builder.Services.AddOpenTelemetry()
             });
     });
 
+builder.Services.AddDbContextFactory<VelaDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("VelaDb"))
+           .UseSnakeCaseNamingConvention());
+
+builder.Services.AddSingleton<IEntityDbWriter, EntityDbWriter>();
 builder.Services.AddSingleton<IDbConnectionAccessor, DbConnectionAccessor>();
 builder.Services.AddSingleton<IEventSubscriber, EventSubscriberService>();
 builder.Services.AddSingleton<IMetricHelpers, MetricHelpers>();
@@ -83,4 +90,11 @@ builder.Services.AddHostedService<BitcraftService>();
 builder.Services.AddHostedService<EventGatewayService>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<IDbContextFactory<VelaDbContext>>().CreateDbContext();
+    await dbContext.Database.MigrateAsync();
+}
+
 await app.RunAsync();

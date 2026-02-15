@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace Vela.Events
 {
-  [GlobalEntity]
+  [GlobalEntity, Storage(StorageTarget.Database)]
   public record BitcraftItem(
     string Id,
     string Name,
@@ -14,7 +14,7 @@ namespace Vela.Events
     bool HasCompendiumEntry
   ) : BitcraftEventBase(Id);
 
-  [GlobalEntity]
+  [GlobalEntity, Storage(StorageTarget.Database)]
   public record BitcraftCargoItem(
     string Id,
     string Name,
