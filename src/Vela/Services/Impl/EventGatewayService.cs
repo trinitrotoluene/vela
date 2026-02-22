@@ -82,11 +82,11 @@ public class EventGatewayService : BackgroundService
       .OnApplied((ctx) => Task.Run(() => OnBaseSubscriptionsApplied(ctx, conn, cancellationToken)))
       .OnError(OnBaseSubscriptionsErrored)
       .Subscribe([
-        "SELECT ls.* from location_state ls INNER JOIN public_progressive_action_state ppas ON ppas.building_entity_id = ls.entity_id",
-        "SELECT * from item_desc",
-        "SELECT * from cargo_desc",
-        "SELECT * from crafting_recipe_desc",
-        "SELECT * from item_list_desc",
+        "SELECT ls.* FROM location_state ls INNER JOIN public_progressive_action_state ppas ON ppas.building_entity_id = ls.entity_id",
+        "SELECT * FROM item_desc",
+        "SELECT * FROM cargo_desc",
+        "SELECT * FROM crafting_recipe_desc",
+        "SELECT * FROM item_list_desc",
         @"SELECT e.* FROM empire_state e
           JOIN claim_state c
             ON e.capital_building_entity_id = c.owner_building_entity_id",
@@ -95,16 +95,17 @@ public class EventGatewayService : BackgroundService
           JOIN building_state b
             ON e.building_entity_id = b.entity_id",
         "SELECT * FROM user_state",
-        "SELECT * from building_desc",
-        @"SELECT t.* from claim_state t INNER JOIN claim_local_state l ON t.entity_id = l.entity_id 
+        "SELECT * FROM building_desc",
+        @"SELECT t.* FROM claim_state t INNER JOIN claim_local_state l ON t.entity_id = l.entity_id 
 WHERE l.building_description_id = 405 OR l.building_description_id = 292245080",
         "SELECT * FROM claim_local_state",
-        "SELECT * from player_username_state",
-        $"SELECT t.* from chat_message_state t WHERE t.channel_id >= 0 AND t.timestamp > {nowUnixSeconds}",
-        $"SELECT * from user_moderation_state",
-        "SELECT * from buy_order_state",
-        "SELECT * from sell_order_state",
-        "SELECT * from building_state",
+        "SELECT * FROM player_username_state",
+        $"SELECT t.* FROM chat_message_state t WHERE t.channel_id >= 0 AND t.timestamp > {nowUnixSeconds}",
+        $"SELECT * FROM user_moderation_state",
+        "SELECT * FROM buy_order_state",
+        "SELECT * FROM sell_order_state",
+        "SELECT * FROM closed_listing_state",
+        "SELECT * FROM building_state",
         @"SELECT s.* FROM progressive_action_state s
 INNER JOIN public_progressive_action_state p
   ON s.entity_id = p.entity_id
