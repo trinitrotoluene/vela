@@ -2,6 +2,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SpacetimeDB.Types;
+using Vela.Data;
 using Vela.Events;
 using Vela.Services.Contracts;
 
@@ -11,12 +12,14 @@ public class EventGatewayService : BackgroundService
   private readonly ILogger<EventGatewayService> _logger;
   private readonly IDbConnectionAccessor _accessor;
   private readonly IEventSubscriber _subscriber;
+  private readonly IEntityDbWriter _dbWriter;
   private readonly IOptions<BitcraftServiceOptions> _options;
 
   public EventGatewayService(
     ILogger<EventGatewayService> logger,
     IDbConnectionAccessor accessor,
     IEventSubscriber subscriber,
+    IEntityDbWriter dbWriter,
     IOptions<BitcraftServiceOptions> options,
     IMetricHelpers metrics
   )
@@ -24,6 +27,7 @@ public class EventGatewayService : BackgroundService
     _logger = logger;
     _accessor = accessor;
     _subscriber = subscriber;
+    _dbWriter = dbWriter;
     _options = options;
     _metrics = metrics;
   }
@@ -50,6 +54,7 @@ public class EventGatewayService : BackgroundService
           await Task.Delay(1000, cancellationToken);
         }
 
+        await _dbWriter.StopFlushLoopAsync();
         _logger.LogInformation("Connection lost, waiting for reconnection");
       }
       catch (OperationCanceledException)
@@ -144,6 +149,7 @@ ON p.entity_id = s.entity_id
 
       _logger.LogInformation("Registering update handlers");
       _subscriber.SubscribeToChanges(conn);
+      _dbWriter.StartFlushLoop();
     }
     catch (Exception ex)
     {
@@ -151,9 +157,9 @@ ON p.entity_id = s.entity_id
     }
   }
 
-  public override Task StopAsync(CancellationToken cancellationToken)
+  public override async Task StopAsync(CancellationToken cancellationToken)
   {
-    return Task.CompletedTask;
+    await _dbWriter.StopFlushLoopAsync();
   }
 
   private async Task HeartbeatAsync(DbConnection currentConn, CancellationToken cancellationToken)

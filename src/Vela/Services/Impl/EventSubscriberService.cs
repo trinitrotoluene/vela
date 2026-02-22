@@ -387,23 +387,13 @@ public class EventSubscriberService : IEventSubscriber
         }
       }
 
-      // Database operations (fire-and-forget to match Redis pattern)
+      // Buffered database operations (coalesced and flushed periodically)
       if (storageTarget.HasFlag(StorageTarget.Database))
       {
-        _ = Task.Run(async () =>
-        {
-          try
-          {
-            if (delete)
-              await _dbWriter.DeleteAsync(payload);
-            else
-              await _dbWriter.UpsertAsync(payload);
-          }
-          catch (Exception ex)
-          {
-            _logger.LogError(ex, "DB write failed for {type} {id}", typeof(T).Name, payload.Id);
-          }
-        });
+        if (delete)
+          _dbWriter.EnqueueDelete(payload);
+        else
+          _dbWriter.EnqueueUpsert(payload);
       }
 
       // Always publish to pub/sub
@@ -460,20 +450,10 @@ public class EventSubscriberService : IEventSubscriber
         );
       }
 
-      // Database operations (fire-and-forget)
+      // Buffered database operations (coalesced and flushed periodically)
       if (storageTarget.HasFlag(StorageTarget.Database))
       {
-        _ = Task.Run(async () =>
-        {
-          try
-          {
-            await _dbWriter.UpsertAsync(newEntity);
-          }
-          catch (Exception ex)
-          {
-            _logger.LogError(ex, "DB write failed for {type} {id}", typeof(T).Name, newEntity.Id);
-          }
-        });
+        _dbWriter.EnqueueUpsert(newEntity);
       }
 
       // Always publish to pub/sub
