@@ -4,6 +4,7 @@ namespace Vela.Events
     EnvelopeVersion Version,
     string Module,
     string CallerIdentity,
+    string Reducer,
     T OldEntity,
     T NewEntity
   );

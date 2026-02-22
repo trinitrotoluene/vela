@@ -4,6 +4,7 @@ namespace Vela.Events
     EnvelopeVersion Version,
     string Module,
     T Entity,
-    string CallerIdentity
+    string CallerIdentity,
+    string Reducer
   );
 }

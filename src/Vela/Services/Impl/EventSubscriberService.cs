@@ -324,6 +324,7 @@ public class EventSubscriberService : IEventSubscriber
         Version: EnvelopeVersion.V1,
         Module: _options.Value.Module,
         CallerIdentity: "SYSTEM",
+        Reducer: "SYSTEM",
         Entity: payload
       ), _jsonOptions);
 
@@ -343,16 +344,23 @@ public class EventSubscriberService : IEventSubscriber
     try
     {
       payload.Module = _options.Value.Module;
-      var callerIdentity = ctx.Event is Event<Reducer>.Reducer reducerCtx
-        ? reducerCtx.ReducerEvent.CallerIdentity.ToString()
-        : null!;
+
+      string callerIdentity = "UNKNOWN";
+      string reducer = "UNKNOWN";
+
+      if (ctx.Event is Event<Reducer>.Reducer reducerCtx)
+      {
+        callerIdentity = reducerCtx.ReducerEvent.CallerIdentity.ToString();
+        reducer = reducerCtx.ReducerEvent.Reducer.GetType().Name ?? "UNKNOWN";
+      }
 
       var json = JsonSerializer.Serialize(new Envelope<T>
       (
         Version: EnvelopeVersion.V1,
         Module: _options.Value.Module,
         Entity: payload,
-        CallerIdentity: callerIdentity
+        CallerIdentity: callerIdentity,
+        Reducer: reducer
       ), _jsonOptions);
 
       var storageTarget = BitcraftEventBase.GetStorageTarget(typeof(T));
@@ -418,14 +426,20 @@ public class EventSubscriberService : IEventSubscriber
       oldEntity.Module = _options.Value.Module;
       newEntity.Module = _options.Value.Module;
 
-      var callerIdentity = ctx.Event is Event<Reducer>.Reducer reducerCtx
-        ? reducerCtx.ReducerEvent.CallerIdentity.ToString()
-        : null!;
+      string callerIdentity = "UNKNOWN";
+      string reducer = "UNKNOWN";
+
+      if (ctx.Event is Event<Reducer>.Reducer reducerCtx)
+      {
+        callerIdentity = reducerCtx.ReducerEvent.CallerIdentity.ToString();
+        reducer = reducerCtx.ReducerEvent.Reducer.GetType().Name ?? "UNKNOWN";
+      }
 
       var json = JsonSerializer.Serialize(new UpdateEnvelope<T>(
         Version: EnvelopeVersion.V1,
         Module: _options.Value.Module,
         CallerIdentity: callerIdentity,
+        Reducer: reducer,
         OldEntity: oldEntity,
         NewEntity: newEntity
       ), _jsonOptions);

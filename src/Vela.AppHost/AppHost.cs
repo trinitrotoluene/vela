@@ -1,7 +1,8 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
 var valkeyPassword = builder.AddParameter("valkeyPassword", "password");
-var valkey = builder.AddValkey("Valkey", port: 6379, password: valkeyPassword);
+var valkey = builder.AddValkey("Valkey", password: valkeyPassword)
+  .WithEndpoint(port: 6379, targetPort: 6379, name: "valkey");
 
 var pgPassword = builder.AddParameter("pgPassword", "password");
 var postgres = builder.AddPostgres("postgres", password: pgPassword)
