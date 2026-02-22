@@ -14,7 +14,7 @@ public class EntityDbWriter : IEntityDbWriter
   private readonly IDbContextFactory<VelaDbContext> _factory;
   private readonly ILogger<EntityDbWriter> _logger;
   private readonly ConcurrentDictionary<Type, EntitySqlDefinition> _definitions = new();
-  private readonly ConcurrentDictionary<string, BufferedWrite> _writeBuffer = new();
+  private readonly ConcurrentDictionary<(Type Type, string Id), BufferedWrite> _writeBuffer = new();
 
   private PeriodicTimer? _flushTimer;
   private CancellationTokenSource? _flushCts;
@@ -121,14 +121,12 @@ public class EntityDbWriter : IEntityDbWriter
 
   public void EnqueueUpsert<T>(T entity) where T : BitcraftEventBase
   {
-    var key = $"{typeof(T).Name}:{entity.Id}";
-    _writeBuffer[key] = new BufferedWrite(typeof(T), entity, IsDelete: false);
+    _writeBuffer[(typeof(T), entity.Id)] = new BufferedWrite(entity, IsDelete: false);
   }
 
   public void EnqueueDelete<T>(T entity) where T : BitcraftEventBase
   {
-    var key = $"{typeof(T).Name}:{entity.Id}";
-    _writeBuffer[key] = new BufferedWrite(typeof(T), entity, IsDelete: true);
+    _writeBuffer[(typeof(T), entity.Id)] = new BufferedWrite(entity, IsDelete: true);
   }
 
   public void StartFlushLoop()
@@ -182,11 +180,11 @@ public class EntityDbWriter : IEntityDbWriter
   private async Task FlushBufferAsync()
   {
     // Snapshot and clear the buffer
-    var items = new List<BufferedWrite>();
-    foreach (var key in _writeBuffer.Keys)
+    var items = new List<(Type EntityType, BufferedWrite Write)>(_writeBuffer.Count);
+    foreach (var kvp in _writeBuffer)
     {
-      if (_writeBuffer.TryRemove(key, out var write))
-        items.Add(write);
+      if (_writeBuffer.TryRemove(kvp.Key, out var write))
+        items.Add((kvp.Key.Type, write));
     }
 
     if (items.Count == 0) return;
@@ -197,11 +195,11 @@ public class EntityDbWriter : IEntityDbWriter
       var conn = (NpgsqlConnection)dbContext.Database.GetDbConnection();
       await conn.OpenAsync();
 
-      var groups = items.GroupBy(w => (w.EntityType, w.IsDelete));
+      var groups = items.GroupBy(i => (i.EntityType, i.Write.IsDelete));
 
       foreach (var group in groups)
       {
-        var entities = group.Select(w => w.Entity).ToList();
+        var entities = group.Select(i => i.Write.Entity).ToList();
 
         if (group.Key.IsDelete)
         {
@@ -372,7 +370,7 @@ public class EntityDbWriter : IEntityDbWriter
     return current;
   }
 
-  private record BufferedWrite(Type EntityType, BitcraftEventBase Entity, bool IsDelete);
+  private readonly record struct BufferedWrite(BitcraftEventBase Entity, bool IsDelete);
 
   private record ColumnDef(
     string ColumnName,
