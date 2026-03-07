@@ -8,6 +8,7 @@ namespace Vela.Events
 
   public record BitcraftInventoryPocket(
     string? ItemId,
-    int? Quantity
+    int? Quantity,
+    string? ItemType
   );
 }

@@ -230,6 +230,7 @@ public class EventSubscriberService : IEventSubscriber
     if (storageTarget.HasFlag(StorageTarget.Database))
     {
       _logger.LogInformation("Populating database for {type} with {count} initial values", typeof(TTo).Name, mapped.Count);
+      await _dbWriter.DeleteStaleAsync<TTo>(_options.Value.Module, mapped.Select(m => m.Id).ToList());
       await _dbWriter.BulkUpsertAsync(mapped);
     }
   }

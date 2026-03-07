@@ -11,7 +11,8 @@ namespace Vela.Mappers
         Id: entity.OwnerEntityId.ToString(),
         Pockets: [.. entity.Pockets.Select(x => new BitcraftInventoryPocket(
           ItemId: x.Contents?.ItemId.ToString(),
-          Quantity: x.Contents?.Quantity
+          Quantity: x.Contents?.Quantity,
+          ItemType: x.Contents?.ItemType.ToString()
         ))]
       );
   }

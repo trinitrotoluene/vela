@@ -119,6 +119,31 @@ public class EntityDbWriter : IEntityDbWriter
     }
   }
 
+  public async Task DeleteStaleAsync<T>(string module, IReadOnlyList<string> currentIds) where T : BitcraftEventBase
+  {
+    var def = GetOrBuildDefinition(typeof(T));
+
+    try
+    {
+      await using var dbContext = await _factory.CreateDbContextAsync();
+      var conn = (NpgsqlConnection)dbContext.Database.GetDbConnection();
+      await conn.OpenAsync();
+
+      await using var cmd = new NpgsqlCommand(
+        $"DELETE FROM {def.TableName} WHERE \"module\" = @module AND \"id\" != ALL(@ids)", conn);
+      cmd.Parameters.AddWithValue("@module", module);
+      cmd.Parameters.AddWithValue("@ids", currentIds.ToArray());
+
+      var deleted = await cmd.ExecuteNonQueryAsync();
+      if (deleted > 0)
+        _logger.LogInformation("Deleted {Count} stale {Type} rows for module {Module}", deleted, typeof(T).Name, module);
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Failed to delete stale {Type} rows for module {Module}", typeof(T).Name, module);
+    }
+  }
+
   public void EnqueueUpsert<T>(T entity) where T : BitcraftEventBase
   {
     _writeBuffer[(typeof(T), entity.Id)] = new BufferedWrite(entity, IsDelete: false);
