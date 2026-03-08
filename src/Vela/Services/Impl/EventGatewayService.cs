@@ -14,6 +14,7 @@ public class EventGatewayService : BackgroundService
   private readonly IEventSubscriber _subscriber;
   private readonly IEntityDbWriter _dbWriter;
   private readonly IOptions<BitcraftServiceOptions> _options;
+  private readonly IHttpClientFactory _httpClientFactory;
 
   public EventGatewayService(
     ILogger<EventGatewayService> logger,
@@ -21,7 +22,8 @@ public class EventGatewayService : BackgroundService
     IEventSubscriber subscriber,
     IEntityDbWriter dbWriter,
     IOptions<BitcraftServiceOptions> options,
-    IMetricHelpers metrics
+    IMetricHelpers metrics,
+    IHttpClientFactory httpClientFactory
   )
   {
     _logger = logger;
@@ -30,6 +32,7 @@ public class EventGatewayService : BackgroundService
     _dbWriter = dbWriter;
     _options = options;
     _metrics = metrics;
+    _httpClientFactory = httpClientFactory;
   }
 
   protected override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -179,6 +182,9 @@ ON p.entity_id = s.entity_id
           DateTime.UtcNow,
           Seq: seq++
         ));
+
+        if (!string.IsNullOrEmpty(_options.Value.HeartbeatUrl))
+          _ = PingHeartbeatUrlAsync();
       }
       catch (TaskCanceledException)
       {
@@ -201,5 +207,18 @@ ON p.entity_id = s.entity_id
     }
 
     _logger.LogInformation("Heartbeat cancelled");
+  }
+
+  private async Task PingHeartbeatUrlAsync()
+  {
+    try
+    {
+      using var client = _httpClientFactory.CreateClient("Heartbeat");
+      await client.GetAsync(_options.Value.HeartbeatUrl);
+    }
+    catch (Exception ex)
+    {
+      _logger.LogWarning(ex, "Failed to ping heartbeat URL");
+    }
   }
 }

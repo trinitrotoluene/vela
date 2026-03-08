@@ -81,6 +81,11 @@ builder.Services.AddSingleton<IDbConnectionAccessor, DbConnectionAccessor>();
 builder.Services.AddSingleton<IEventSubscriber, EventSubscriberService>();
 builder.Services.AddSingleton<IMetricHelpers, MetricHelpers>();
 
+builder.Services.AddHttpClient("Heartbeat", client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(10);
+});
+
 builder.Services.AddOptions<BitcraftServiceOptions>()
     .Bind(builder.Configuration.GetSection("Bitcraft"))
     .ValidateDataAnnotations()

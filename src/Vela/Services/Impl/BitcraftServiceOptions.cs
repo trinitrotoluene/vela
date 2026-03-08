@@ -10,4 +10,6 @@ public class BitcraftServiceOptions
 
   [Required]
   public required string Module { get; set; }
+
+  public string? HeartbeatUrl { get; set; }
 }
