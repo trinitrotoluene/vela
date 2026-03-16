@@ -15,6 +15,7 @@ using Vela.Services.Contracts;
 
 public class EventSubscriberService : IEventSubscriber
 {
+  private static readonly SemaphoreSlim _populateSemaphore = new(3, 3);
   private readonly Counter<long> _eventCounter;
   private readonly ILogger<EventGatewayService> _logger;
   private readonly IDatabase _cache;
@@ -127,20 +128,10 @@ public class EventSubscriberService : IEventSubscriber
 
   public async Task PopulateBaseCachesAsync(DbConnection conn)
   {
-    _logger.LogInformation("Clearing region-specific caches");
-
-    var keys = _cache.Multiplexer.GetServers().FirstOrDefault()?
-      .Keys(pattern: "*")
-      .Select(x => x.ToString())
-      .Where(x => x.EndsWith(_options.Value.Module));
-
-    foreach (var regionKey in keys ?? [])
-    {
-      _logger.LogInformation("Clearing cached key: {key}", regionKey);
-      await _cache.KeyDeleteAsync(regionKey);
-    }
-
     _logger.LogInformation("Populating storage");
+
+    // Phase 1: Map all entities from all table handles, merging by output type
+    var merged = new Dictionary<(Type OutputType, string CacheKey), List<BitcraftEventBase>>();
 
     var dbType = conn.Db.GetType();
     var handleFields = dbType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
@@ -148,8 +139,6 @@ public class EventSubscriberService : IEventSubscriber
           x.FieldType.BaseType?.IsGenericType == true &&
           x.FieldType.BaseType.GetGenericTypeDefinition() == typeof(RemoteTableHandle<,>)
       );
-
-    List<Task> populateTasks = [];
 
     foreach (var handleField in handleFields)
     {
@@ -186,52 +175,83 @@ public class EventSubscriberService : IEventSubscriber
         continue;
       }
 
-      var populateMethod = GetType()
-            .GetMethod(nameof(PopulateForHandleAsync), BindingFlags.Instance | BindingFlags.NonPublic)?
+      var mapMethod = GetType()
+            .GetMethod(nameof(MapForHandle), BindingFlags.Instance | BindingFlags.NonPublic)?
             .MakeGenericMethod(rowType, outputType);
 
-      var task = (Task?)populateMethod?.Invoke(this, [cacheKey, iterResult, mapper]);
-      if (task != null)
-        populateTasks.Add(task);
+      if (mapMethod?.Invoke(this, [fromItems, mapper]) is not List<BitcraftEventBase> mappedEntities)
+        continue;
+
+      var key = (outputType, cacheKey);
+      if (!merged.TryGetValue(key, out var list))
+      {
+        list = [];
+        merged[key] = list;
+      }
+      list.AddRange(mappedEntities);
     }
+
+    // Phase 2: Populate cache + DB once per output type with the merged set
+    var populateTasks = merged.Select(kvp =>
+      PopulateMergedAsync(kvp.Key.CacheKey, kvp.Key.OutputType, kvp.Value));
 
     await Task.WhenAll(populateTasks);
   }
 
-  private async Task PopulateForHandleAsync<TFrom, TTo>(
-    string cacheKey,
+  private List<BitcraftEventBase> MapForHandle<TFrom, TTo>(
     IEnumerable<TFrom> fromItems,
     MappedDbEntityBase<TFrom, TTo> mapper
   ) where TTo : BitcraftEventBase
   {
-    await Task.Yield();
-
-    var mapped = new List<TTo>();
-
+    var mapped = new List<BitcraftEventBase>();
     foreach (var item in fromItems.ToArray())
     {
       var mappedItem = mapper.Map(item);
       mappedItem.Module = _options.Value.Module;
       mapped.Add(mappedItem);
     }
+    return mapped;
+  }
 
-    var storageTarget = BitcraftEventBase.GetStorageTarget(typeof(TTo));
+  private async Task PopulateMergedAsync(
+    string cacheKey, Type outputType, List<BitcraftEventBase> entities)
+  {
+    await Task.Yield();
+
+    var storageTarget = BitcraftEventBase.GetStorageTarget(outputType);
 
     if (storageTarget.HasFlag(StorageTarget.Cache))
     {
-      var hashEntries = mapped
+      var hashEntries = entities
         .Select(m => new HashEntry(m.Id, JsonSerializer.Serialize(m, _jsonOptions)))
         .ToArray();
 
       _logger.LogInformation("Populating cache key {cacheKey} with {count} initial values", cacheKey, hashEntries.Length);
       await _cache.HashSetAsync(cacheKey, hashEntries);
+
+      // Remove stale entries that no longer exist in SpacetimeDB
+      var existingFields = await _cache.HashKeysAsync(cacheKey);
+      var validIds = entities.Select(m => (RedisValue)m.Id).ToHashSet();
+      var staleFields = existingFields.Where(f => !validIds.Contains(f)).ToArray();
+      if (staleFields.Length > 0)
+      {
+        _logger.LogInformation("Removing {count} stale entries from {cacheKey}", staleFields.Length, cacheKey);
+        await _cache.HashDeleteAsync(cacheKey, staleFields);
+      }
     }
 
     if (storageTarget.HasFlag(StorageTarget.Database))
     {
-      _logger.LogInformation("Populating database for {type} with {count} initial values", typeof(TTo).Name, mapped.Count);
-      await _dbWriter.DeleteStaleAsync<TTo>(_options.Value.Module, mapped.Select(m => m.Id).ToList());
-      await _dbWriter.BulkUpsertAsync(mapped);
+      await _populateSemaphore.WaitAsync();
+      try
+      {
+        _logger.LogInformation("Populating database for {type} with {count} initial values", outputType.Name, entities.Count);
+        await _dbWriter.PopulateAsync(outputType, _options.Value.Module, entities);
+      }
+      finally
+      {
+        _populateSemaphore.Release();
+      }
     }
   }
 

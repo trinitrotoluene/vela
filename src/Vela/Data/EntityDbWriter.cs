@@ -1,10 +1,13 @@
 using System.Collections.Concurrent;
+using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 using NpgsqlTypes;
+using Polly;
+using Polly.Retry;
 using Vela.Events;
 
 namespace Vela.Data;
@@ -15,6 +18,7 @@ public class EntityDbWriter : IEntityDbWriter
   private readonly ILogger<EntityDbWriter> _logger;
   private readonly ConcurrentDictionary<Type, EntitySqlDefinition> _definitions = new();
   private readonly ConcurrentDictionary<(Type Type, string Id), BufferedWrite> _writeBuffer = new();
+  private readonly ResiliencePipeline _dbRetryPipeline;
 
   private PeriodicTimer? _flushTimer;
   private CancellationTokenSource? _flushCts;
@@ -26,121 +30,59 @@ public class EntityDbWriter : IEntityDbWriter
   {
     _factory = factory;
     _logger = logger;
-  }
-
-  public async Task UpsertAsync<T>(T entity) where T : BitcraftEventBase
-  {
-    var def = GetOrBuildDefinition(typeof(T));
-
-    try
-    {
-      await using var dbContext = await _factory.CreateDbContextAsync();
-      var conn = (NpgsqlConnection)dbContext.Database.GetDbConnection();
-      await conn.OpenAsync();
-
-      await using var cmd = new NpgsqlCommand(def.UpsertSql, conn);
-      AddParameters(cmd, def, entity);
-      await cmd.ExecuteNonQueryAsync();
-    }
-    catch (Exception ex)
-    {
-      _logger.LogError(ex, "Failed to upsert {Type} with Id {Id}", typeof(T).Name, entity.Id);
-    }
-  }
-
-  public async Task DeleteAsync<T>(T entity) where T : BitcraftEventBase
-  {
-    var def = GetOrBuildDefinition(typeof(T));
-
-    try
-    {
-      await using var dbContext = await _factory.CreateDbContextAsync();
-      var conn = (NpgsqlConnection)dbContext.Database.GetDbConnection();
-      await conn.OpenAsync();
-
-      await using var cmd = new NpgsqlCommand(def.DeleteSql, conn);
-      cmd.Parameters.AddWithValue("@p_id", entity.Id);
-      await cmd.ExecuteNonQueryAsync();
-    }
-    catch (Exception ex)
-    {
-      _logger.LogError(ex, "Failed to delete {Type} with Id {Id}", typeof(T).Name, entity.Id);
-    }
-  }
-
-  public async Task BulkUpsertAsync<T>(IReadOnlyList<T> entities) where T : BitcraftEventBase
-  {
-    if (entities.Count == 0) return;
-
-    var def = GetOrBuildDefinition(typeof(T));
-    const int batchSize = 500;
-
-    try
-    {
-      await using var dbContext = await _factory.CreateDbContextAsync();
-      var conn = (NpgsqlConnection)dbContext.Database.GetDbConnection();
-      await conn.OpenAsync();
-
-      for (var offset = 0; offset < entities.Count; offset += batchSize)
+    _dbRetryPipeline = new ResiliencePipelineBuilder()
+      .AddRetry(new RetryStrategyOptions
       {
-        var batch = entities.Skip(offset).Take(batchSize).ToList();
-
-        var valueClauses = new List<string>();
-        await using var cmd = new NpgsqlCommand();
-        cmd.Connection = conn;
-
-        for (var i = 0; i < batch.Count; i++)
+        MaxRetryAttempts = 4,
+        BackoffType = DelayBackoffType.Exponential,
+        Delay = TimeSpan.FromSeconds(1),
+        UseJitter = true,
+        ShouldHandle = new PredicateBuilder().Handle<NpgsqlException>(ex =>
+          ex.SqlState is "53300" or "53000" or "40001" or "08000" or "08001" or "08003" or "08004" or "08006"),
+        OnRetry = args =>
         {
-          var paramNames = def.Columns.Select((_, colIdx) => $"@p_{colIdx}_{i}").ToArray();
-          valueClauses.Add($"({string.Join(", ", paramNames)})");
+          _logger.LogWarning(args.Outcome.Exception,
+            "Retrying DB operation (attempt {Attempt}) after {Delay}s",
+            args.AttemptNumber + 1, args.RetryDelay.TotalSeconds);
+          return ValueTask.CompletedTask;
+        }
+      })
+      .Build();
+  }
 
-          for (var colIdx = 0; colIdx < def.Columns.Length; colIdx++)
-          {
-            var col = def.Columns[colIdx];
-            var value = ResolvePropertyValue(batch[i], col.PropertyPath);
-            AddTypedParameter(cmd, $"@p_{colIdx}_{i}", value, col);
-          }
+  public async Task PopulateAsync(Type entityType, string module, IReadOnlyList<BitcraftEventBase> entities)
+  {
+    var def = GetOrBuildDefinition(entityType);
+
+    try
+    {
+      await _dbRetryPipeline.ExecuteAsync(async ct =>
+      {
+        await using var dbContext = await _factory.CreateDbContextAsync(ct);
+        var conn = (NpgsqlConnection)dbContext.Database.GetDbConnection();
+        await conn.OpenAsync(ct);
+
+        // Delete stale rows
+        await using (var cmd = new NpgsqlCommand(
+          $"DELETE FROM {def.TableName} WHERE \"module\" = @module AND \"id\" != ALL(@ids)", conn))
+        {
+          cmd.Parameters.AddWithValue("@module", module);
+          cmd.Parameters.AddWithValue("@ids", entities.Select(e => e.Id).ToArray());
+          var deleted = await cmd.ExecuteNonQueryAsync(ct);
+          if (deleted > 0)
+            _logger.LogInformation("Deleted {Count} stale {Type} rows for module {Module}", deleted, entityType.Name, module);
         }
 
-        cmd.CommandText = $"""
-          INSERT INTO {def.TableName} ({def.ColumnList})
-          VALUES {string.Join(", ", valueClauses)}
-          ON CONFLICT (id) DO UPDATE SET {def.UpdateSet}
-          """;
+        // Bulk upsert on same connection
+        if (entities.Count > 0)
+          await BulkUpsertOnConnectionAsync(conn, entityType, entities.ToList(), ct);
+      });
 
-        await cmd.ExecuteNonQueryAsync();
-      }
-
-      _logger.LogInformation("Bulk upserted {Count} {Type} entities", entities.Count, typeof(T).Name);
+      _logger.LogInformation("Populated {Count} {Type} entities for module {Module}", entities.Count, entityType.Name, module);
     }
     catch (Exception ex)
     {
-      _logger.LogError(ex, "Failed to bulk upsert {Count} {Type} entities", entities.Count, typeof(T).Name);
-    }
-  }
-
-  public async Task DeleteStaleAsync<T>(string module, IReadOnlyList<string> currentIds) where T : BitcraftEventBase
-  {
-    var def = GetOrBuildDefinition(typeof(T));
-
-    try
-    {
-      await using var dbContext = await _factory.CreateDbContextAsync();
-      var conn = (NpgsqlConnection)dbContext.Database.GetDbConnection();
-      await conn.OpenAsync();
-
-      await using var cmd = new NpgsqlCommand(
-        $"DELETE FROM {def.TableName} WHERE \"module\" = @module AND \"id\" != ALL(@ids)", conn);
-      cmd.Parameters.AddWithValue("@module", module);
-      cmd.Parameters.AddWithValue("@ids", currentIds.ToArray());
-
-      var deleted = await cmd.ExecuteNonQueryAsync();
-      if (deleted > 0)
-        _logger.LogInformation("Deleted {Count} stale {Type} rows for module {Module}", deleted, typeof(T).Name, module);
-    }
-    catch (Exception ex)
-    {
-      _logger.LogError(ex, "Failed to delete stale {Type} rows for module {Module}", typeof(T).Name, module);
+      _logger.LogError(ex, "Failed to populate {Count} {Type} entities for module {Module}", entities.Count, entityType.Name, module);
     }
   }
 
@@ -204,7 +146,7 @@ public class EntityDbWriter : IEntityDbWriter
 
   private async Task FlushBufferAsync()
   {
-    // Snapshot and clear the buffer
+    // Snapshot and clear the buffer (done once, outside retry)
     var items = new List<(Type EntityType, BufferedWrite Write)>(_writeBuffer.Count);
     foreach (var kvp in _writeBuffer)
     {
@@ -216,31 +158,35 @@ public class EntityDbWriter : IEntityDbWriter
 
     try
     {
-      await using var dbContext = await _factory.CreateDbContextAsync();
-      var conn = (NpgsqlConnection)dbContext.Database.GetDbConnection();
-      await conn.OpenAsync();
-
-      var groups = items.GroupBy(i => (i.EntityType, i.Write.IsDelete));
-
-      foreach (var group in groups)
+      // Retry wraps only the DB write — snapshot is not re-taken on retry
+      await _dbRetryPipeline.ExecuteAsync(async ct =>
       {
-        var entities = group.Select(i => i.Write.Entity).ToList();
+        await using var dbContext = await _factory.CreateDbContextAsync(ct);
+        var conn = (NpgsqlConnection)dbContext.Database.GetDbConnection();
+        await conn.OpenAsync(ct);
 
-        if (group.Key.IsDelete)
+        var groups = items.GroupBy(i => (i.EntityType, i.Write.IsDelete));
+
+        foreach (var group in groups)
         {
-          var def = GetOrBuildDefinition(group.Key.EntityType);
-          foreach (var entity in entities)
+          var entities = group.Select(i => i.Write.Entity).ToList();
+
+          if (group.Key.IsDelete)
           {
-            await using var cmd = new NpgsqlCommand(def.DeleteSql, conn);
-            cmd.Parameters.AddWithValue("@p_id", entity.Id);
-            await cmd.ExecuteNonQueryAsync();
+            var def = GetOrBuildDefinition(group.Key.EntityType);
+            foreach (var entity in entities)
+            {
+              await using var cmd = new NpgsqlCommand(def.DeleteSql, conn);
+              cmd.Parameters.AddWithValue("@p_id", entity.Id);
+              await cmd.ExecuteNonQueryAsync(ct);
+            }
+          }
+          else
+          {
+            await BulkUpsertOnConnectionAsync(conn, group.Key.EntityType, entities, ct);
           }
         }
-        else
-        {
-          await BulkUpsertOnConnectionAsync(conn, group.Key.EntityType, entities);
-        }
-      }
+      });
 
       _logger.LogDebug("Flushed {Count} buffered writes", items.Count);
     }
@@ -251,7 +197,8 @@ public class EntityDbWriter : IEntityDbWriter
   }
 
   private async Task BulkUpsertOnConnectionAsync(
-    NpgsqlConnection conn, Type entityType, List<BitcraftEventBase> entities)
+    NpgsqlConnection conn, Type entityType, List<BitcraftEventBase> entities,
+    CancellationToken ct = default)
   {
     var def = GetOrBuildDefinition(entityType);
     const int batchSize = 500;
@@ -272,7 +219,7 @@ public class EntityDbWriter : IEntityDbWriter
         for (var colIdx = 0; colIdx < def.Columns.Length; colIdx++)
         {
           var col = def.Columns[colIdx];
-          var value = ResolvePropertyValue(batch[i], col.PropertyPath);
+          var value = col.Getter(batch[i]);
           AddTypedParameter(cmd, $"@p_{colIdx}_{i}", value, col);
         }
       }
@@ -283,7 +230,7 @@ public class EntityDbWriter : IEntityDbWriter
         ON CONFLICT (id) DO UPDATE SET {def.UpdateSet}
         """;
 
-      await cmd.ExecuteNonQueryAsync();
+      await cmd.ExecuteNonQueryAsync(ct);
     }
   }
 
@@ -313,27 +260,20 @@ public class EntityDbWriter : IEntityDbWriter
 
       var converter = property.GetValueConverter();
       var storeType = property.GetColumnType();
+      var getter = CompileGetter(clrProperty);
 
-      columns.Add(new ColumnDef(columnName, clrProperty, [clrProperty.Name], converter, storeType));
+      columns.Add(new ColumnDef(columnName, getter, converter, storeType));
     }
 
     var columnNames = columns.Select(c => $"\"{c.ColumnName}\"").ToArray();
-    var paramNames = columns.Select((c, i) => $"@p_{i}").ToArray();
     var updateParts = columns
       .Where(c => c.ColumnName != "id")
       .Select(c => $"\"{c.ColumnName}\" = EXCLUDED.\"{c.ColumnName}\"")
       .ToArray();
 
-    var upsertSql = $"""
-      INSERT INTO {fullTableName} ({string.Join(", ", columnNames)})
-      VALUES ({string.Join(", ", paramNames)})
-      ON CONFLICT (id) DO UPDATE SET {string.Join(", ", updateParts)}
-      """;
-
     var deleteSql = $"DELETE FROM {fullTableName} WHERE id = @p_id";
 
     return new EntitySqlDefinition(
-      UpsertSql: upsertSql,
       DeleteSql: deleteSql,
       TableName: fullTableName,
       ColumnList: string.Join(", ", columnNames),
@@ -342,14 +282,13 @@ public class EntityDbWriter : IEntityDbWriter
     );
   }
 
-  private static void AddParameters(NpgsqlCommand cmd, EntitySqlDefinition def, BitcraftEventBase entity)
+  private static Func<object, object?> CompileGetter(PropertyInfo property)
   {
-    for (var i = 0; i < def.Columns.Length; i++)
-    {
-      var col = def.Columns[i];
-      var value = ResolvePropertyValue(entity, col.PropertyPath);
-      AddTypedParameter(cmd, $"@p_{i}", value, col);
-    }
+    var param = Expression.Parameter(typeof(object), "obj");
+    var cast = Expression.Convert(param, property.DeclaringType!);
+    var access = Expression.Property(cast, property);
+    var boxed = Expression.Convert(access, typeof(object));
+    return Expression.Lambda<Func<object, object?>>(boxed, param).Compile();
   }
 
   private static void AddTypedParameter(NpgsqlCommand cmd, string paramName, object? value, ColumnDef col)
@@ -382,31 +321,16 @@ public class EntityDbWriter : IEntityDbWriter
     cmd.Parameters.Add(param);
   }
 
-  private static object? ResolvePropertyValue(object? obj, string[] propertyPath)
-  {
-    var current = obj;
-    foreach (var segment in propertyPath)
-    {
-      if (current == null) return null;
-      var prop = current.GetType().GetProperty(segment);
-      if (prop == null) return null;
-      current = prop.GetValue(current);
-    }
-    return current;
-  }
-
   private readonly record struct BufferedWrite(BitcraftEventBase Entity, bool IsDelete);
 
   private record ColumnDef(
     string ColumnName,
-    PropertyInfo PropertyInfo,
-    string[] PropertyPath,
+    Func<object, object?> Getter,
     ValueConverter? Converter,
     string? StoreType
   );
 
   private record EntitySqlDefinition(
-    string UpsertSql,
     string DeleteSql,
     string TableName,
     string ColumnList,

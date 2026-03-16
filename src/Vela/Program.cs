@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -73,8 +74,16 @@ builder.Services.AddOpenTelemetry()
     });
 
 builder.Services.AddDbContextFactory<VelaDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("VelaDb"))
-           .UseSnakeCaseNamingConvention());
+{
+    var connString = new NpgsqlConnectionStringBuilder(
+        builder.Configuration.GetConnectionString("VelaDb"))
+    {
+        MaxPoolSize = 10,
+        Timeout = 30
+    };
+    options.UseNpgsql(connString.ConnectionString)
+           .UseSnakeCaseNamingConvention();
+});
 
 builder.Services.AddSingleton<IEntityDbWriter, EntityDbWriter>();
 builder.Services.AddSingleton<IDbConnectionAccessor, DbConnectionAccessor>();
