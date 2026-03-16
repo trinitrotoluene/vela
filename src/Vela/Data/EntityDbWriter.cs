@@ -178,6 +178,7 @@ public class EntityDbWriter : IEntityDbWriter
             {
               await using var cmd = new NpgsqlCommand(def.DeleteSql, conn);
               cmd.Parameters.AddWithValue("@p_id", entity.Id);
+              cmd.Parameters.AddWithValue("@p_module", entity.Module);
               await cmd.ExecuteNonQueryAsync(ct);
             }
           }
@@ -271,7 +272,7 @@ public class EntityDbWriter : IEntityDbWriter
       .Select(c => $"\"{c.ColumnName}\" = EXCLUDED.\"{c.ColumnName}\"")
       .ToArray();
 
-    var deleteSql = $"DELETE FROM {fullTableName} WHERE id = @p_id";
+    var deleteSql = $"DELETE FROM {fullTableName} WHERE id = @p_id AND \"module\" = @p_module";
 
     return new EntitySqlDefinition(
       DeleteSql: deleteSql,
