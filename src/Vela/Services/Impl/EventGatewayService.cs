@@ -82,7 +82,25 @@ public class EventGatewayService : BackgroundService
 
     // Configure base subscription
     conn.SubscriptionBuilder()
-      .OnApplied((ctx) => Task.Run(() => OnBaseSubscriptionsApplied(ctx, conn, cancellationToken)))
+      .OnApplied((ctx) =>
+      {
+        try
+        {
+          // Runs inline on the SpacetimeDB callback thread (which blocks further
+          // message processing) so tables are stable during iteration and change
+          // handlers are registered before any updates can arrive.
+          LogIdentity(ctx, conn);
+          var snapshot = _subscriber.SnapshotBaseCaches(conn);
+          _subscriber.SubscribeToChanges(conn);
+          _dbWriter.StartFlushLoop();
+          _ = Task.Run(() => HeartbeatAsync(conn, cancellationToken), cancellationToken);
+          _ = Task.Run(() => OnBaseSubscriptionsApplied(snapshot));
+        }
+        catch (Exception ex)
+        {
+          _logger.LogError(ex, "Fatal error during subscription init");
+        }
+      })
       .OnError(OnBaseSubscriptionsErrored)
       .Subscribe([
         "SELECT ls.* FROM location_state ls INNER JOIN public_progressive_action_state ppas ON ppas.building_entity_id = ls.entity_id",
@@ -125,34 +143,33 @@ ON p.entity_id = s.entity_id
     _logger.LogError(ex, "Error applying base subscriptions");
   }
 
-  private async Task OnBaseSubscriptionsApplied(SubscriptionEventContext ctx, DbConnection conn, CancellationToken cancellationToken)
+  private void LogIdentity(SubscriptionEventContext ctx, DbConnection conn)
+  {
+    var currentIdentity = ctx.Identity ?? new SpacetimeDB.Identity();
+    var userState = conn.Db.UserState.Identity.Find(currentIdentity);
+    if (userState != null)
+    {
+      var username = conn.Db.PlayerUsernameState.EntityId.Find(userState.EntityId);
+      _logger.LogInformation(
+        "Signed in with identity {identity} as {username} ({entityId})",
+        currentIdentity,
+        username?.Username,
+        userState.EntityId
+      );
+    }
+    else
+    {
+      _logger.LogInformation("Signed in with unknown credentials");
+    }
+  }
+
+  private async Task OnBaseSubscriptionsApplied(
+    Dictionary<(Type OutputType, string CacheKey), List<BitcraftEventBase>> snapshot)
   {
     try
     {
       _logger.LogInformation("Base subscriptions applied");
-      var currentIdentity = ctx.Identity ?? new SpacetimeDB.Identity();
-      var userState = conn.Db.UserState.Identity.Find(currentIdentity);
-      if (userState != null)
-      {
-        var username = conn.Db.PlayerUsernameState.EntityId.Find(userState.EntityId);
-        _logger.LogInformation(
-          "Signed in with identity {identity} as {username} ({entityId})",
-          currentIdentity,
-          username?.Username,
-          userState.EntityId
-        );
-      }
-      else
-      {
-        _logger.LogInformation("Signed in with unknown credentials");
-      }
-
-      await _subscriber.PopulateBaseCachesAsync(conn);
-      _ = Task.Run(() => HeartbeatAsync(conn, cancellationToken), cancellationToken);
-
-      _logger.LogInformation("Registering update handlers");
-      _subscriber.SubscribeToChanges(conn);
-      _dbWriter.StartFlushLoop();
+      await _subscriber.PopulateBaseCachesAsync(snapshot);
     }
     catch (Exception ex)
     {

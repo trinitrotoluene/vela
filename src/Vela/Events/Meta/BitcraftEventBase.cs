@@ -51,6 +51,11 @@ namespace Vela.Events
       return CacheKey(t.GetType(), module);
     }
 
+    public static bool IsGlobalCacheKey(Type t)
+    {
+      return CacheKeys.TryGetValue(t, out var cacheKey) && cacheKey.IsGlobal;
+    }
+
     public static string CacheKey(Type t, string module)
     {
       if (!CacheKeys.TryGetValue(t, out var cacheKey))

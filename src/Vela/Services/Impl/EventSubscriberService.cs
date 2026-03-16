@@ -126,11 +126,10 @@ public class EventSubscriberService : IEventSubscriber
     _logger.LogInformation("Done setting up subscriptions");
   }
 
-  public async Task PopulateBaseCachesAsync(DbConnection conn)
+  public Dictionary<(Type OutputType, string CacheKey), List<BitcraftEventBase>> SnapshotBaseCaches(DbConnection conn)
   {
-    _logger.LogInformation("Populating storage");
+    _logger.LogInformation("Snapshotting table data");
 
-    // Phase 1: Map all entities from all table handles, merging by output type
     var merged = new Dictionary<(Type OutputType, string CacheKey), List<BitcraftEventBase>>();
 
     var dbType = conn.Db.GetType();
@@ -191,7 +190,14 @@ public class EventSubscriberService : IEventSubscriber
       list.AddRange(mappedEntities);
     }
 
-    // Phase 2: Populate cache + DB once per output type with the merged set
+    return merged;
+  }
+
+  public async Task PopulateBaseCachesAsync(
+    Dictionary<(Type OutputType, string CacheKey), List<BitcraftEventBase>> merged)
+  {
+    _logger.LogInformation("Populating storage");
+
     var populateTasks = merged.Select(kvp =>
       PopulateMergedAsync(kvp.Key.CacheKey, kvp.Key.OutputType, kvp.Value));
 
@@ -227,16 +233,24 @@ public class EventSubscriberService : IEventSubscriber
         .ToArray();
 
       _logger.LogInformation("Populating cache key {cacheKey} with {count} initial values", cacheKey, hashEntries.Length);
+
+      // Capture existing fields before writing so concurrent additions aren't swept as stale
+      var existingFields = !BitcraftEventBase.IsGlobalCacheKey(outputType)
+        ? await _cache.HashKeysAsync(cacheKey)
+        : null;
+
       await _cache.HashSetAsync(cacheKey, hashEntries);
 
-      // Remove stale entries that no longer exist in SpacetimeDB
-      var existingFields = await _cache.HashKeysAsync(cacheKey);
-      var validIds = entities.Select(m => (RedisValue)m.Id).ToHashSet();
-      var staleFields = existingFields.Where(f => !validIds.Contains(f)).ToArray();
-      if (staleFields.Length > 0)
+      if (existingFields != null)
       {
-        _logger.LogInformation("Removing {count} stale entries from {cacheKey}", staleFields.Length, cacheKey);
-        await _cache.HashDeleteAsync(cacheKey, staleFields);
+        // Module-scoped keys are exclusive — remove stale entries left by a previous snapshot
+        var validIds = entities.Select(m => (RedisValue)m.Id).ToHashSet();
+        var staleFields = existingFields.Where(f => !validIds.Contains(f)).ToArray();
+        if (staleFields.Length > 0)
+        {
+          _logger.LogInformation("Removing {count} stale entries from {cacheKey}", staleFields.Length, cacheKey);
+          await _cache.HashDeleteAsync(cacheKey, staleFields);
+        }
       }
     }
 
