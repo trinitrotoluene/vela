@@ -229,7 +229,7 @@ public class EventSubscriberService : IEventSubscriber
     if (storageTarget.HasFlag(StorageTarget.Cache))
     {
       var hashEntries = entities
-        .Select(m => new HashEntry(m.Id, JsonSerializer.Serialize(m, _jsonOptions)))
+        .Select(m => new HashEntry(m.Id, JsonSerializer.Serialize(m, m.GetType(), _jsonOptions)))
         .ToArray();
 
       _logger.LogInformation("Populating cache key {cacheKey} with {count} initial values", cacheKey, hashEntries.Length);
