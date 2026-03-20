@@ -1,3 +1,4 @@
+.bitcraft/
 appsettings.*.json
 
 bin/

@@ -10,7 +10,7 @@ namespace Vela.Mappers
     ) => new(
         Id: entity.EntityId.ToString(),
         OwnerPlayerId: entity.OwnerPlayerEntityId.ToString(),
-        OwnerBuildingId: entity.OwnerPlayerEntityId.ToString(),
+        OwnerBuildingId: entity.OwnerBuildingEntityId.ToString(),
         Name: entity.Name,
         IsNeutral: entity.Neutral
       );
