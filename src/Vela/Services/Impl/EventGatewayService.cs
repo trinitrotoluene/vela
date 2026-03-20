@@ -136,8 +136,11 @@ ON p.entity_id = s.entity_id
   WHERE s.craft_count > 50",
         "SELECT i.* FROM inventory_state i INNER JOIN building_state b ON i.owner_entity_id = b.entity_id",
         "SELECT ls.* FROM location_state ls INNER JOIN claim_state cs ON cs.owner_building_entity_id = ls.entity_id",
+        "SELECT ls.* FROM location_state ls INNER JOIN paved_tile_state pts ON pts.entity_id = ls.entity_id",
         "SELECT * FROM claim_tech_state",
-        "SELECT * FROM claim_tech_desc"
+        "SELECT * FROM claim_tech_desc",
+        "SELECT * FROM paved_tile_state",
+        "SELECT * FROM paving_tile_desc"
       ]);
   }
 
