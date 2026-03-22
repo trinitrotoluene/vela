@@ -255,7 +255,7 @@ public class EventSubscriberService : IEventSubscriber
 
       if (existingFields != null)
       {
-        // Module-scoped keys are exclusive — remove stale entries left by a previous snapshot
+        // Module-scoped keys are exclusive - remove stale entries left by a previous snapshot
         var validIds = entities.Select(m => (RedisValue)m.Id).ToHashSet();
         var staleFields = existingFields.Where(f => !validIds.Contains(f)).ToArray();
         if (staleFields.Length > 0)

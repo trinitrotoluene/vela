@@ -170,7 +170,7 @@ public class EntityDbWriter : IEntityDbWriter
     var sw = Stopwatch.StartNew();
     try
     {
-      // Retry wraps only the DB write — snapshot is not re-taken on retry
+      // Retry wraps only the DB write - snapshot is not re-taken on retry
       await _dbRetryPipeline.ExecuteAsync(async ct =>
       {
         await using var dbContext = await _factory.CreateDbContextAsync(ct);
@@ -217,38 +217,50 @@ public class EntityDbWriter : IEntityDbWriter
     NpgsqlConnection conn, Type entityType, List<BitcraftEventBase> entities,
     CancellationToken ct = default)
   {
+    if (entities.Count == 0) return;
+
     var def = GetOrBuildDefinition(entityType);
-    const int batchSize = 500;
 
-    for (var offset = 0; offset < entities.Count; offset += batchSize)
+    await using var tx = await conn.BeginTransactionAsync(ct);
+
+    // Staging table - dropped automatically on commit or rollback
+    await using (var cmd = new NpgsqlCommand(
+      $"CREATE TEMP TABLE _vela_staging (LIKE {def.TableName}) ON COMMIT DROP", conn, tx))
     {
-      var batch = entities.Skip(offset).Take(batchSize).ToList();
-
-      var valueClauses = new List<string>();
-      await using var cmd = new NpgsqlCommand();
-      cmd.Connection = conn;
-
-      for (var i = 0; i < batch.Count; i++)
-      {
-        var paramNames = def.Columns.Select((_, colIdx) => $"@p_{colIdx}_{i}").ToArray();
-        valueClauses.Add($"({string.Join(", ", paramNames)})");
-
-        for (var colIdx = 0; colIdx < def.Columns.Length; colIdx++)
-        {
-          var col = def.Columns[colIdx];
-          var value = col.Getter(batch[i]);
-          AddTypedParameter(cmd, $"@p_{colIdx}_{i}", value, col);
-        }
-      }
-
-      cmd.CommandText = $"""
-        INSERT INTO {def.TableName} ({def.ColumnList})
-        VALUES {string.Join(", ", valueClauses)}
-        ON CONFLICT (id) DO UPDATE SET {def.UpdateSet}
-        """;
-
       await cmd.ExecuteNonQueryAsync(ct);
     }
+
+    // Binary COPY into staging
+    await using (var writer = await conn.BeginBinaryImportAsync(
+      $"COPY _vela_staging ({def.ColumnList}) FROM STDIN (FORMAT BINARY)", ct))
+    {
+      foreach (var entity in entities)
+      {
+        await writer.StartRowAsync(ct);
+        foreach (var col in def.Columns)
+        {
+          var value = ConvertValue(col.Getter(entity), col);
+          if (value == null)
+            await writer.WriteNullAsync(ct);
+          else
+            await writer.WriteAsync(value, col.DbType, ct);
+        }
+      }
+      await writer.CompleteAsync(ct);
+    }
+
+    // Merge staging into target
+    await using (var cmd = new NpgsqlCommand(
+      $"""
+      INSERT INTO {def.TableName} ({def.ColumnList})
+      SELECT {def.ColumnList} FROM _vela_staging
+      ON CONFLICT (id) DO UPDATE SET {def.UpdateSet}
+      """, conn, tx))
+    {
+      await cmd.ExecuteNonQueryAsync(ct);
+    }
+
+    await tx.CommitAsync(ct);
   }
 
   private EntitySqlDefinition GetOrBuildDefinition(Type type)
@@ -279,7 +291,7 @@ public class EntityDbWriter : IEntityDbWriter
       var storeType = property.GetColumnType();
       var getter = CompileGetter(clrProperty);
 
-      columns.Add(new ColumnDef(columnName, getter, converter, storeType));
+      columns.Add(new ColumnDef(columnName, getter, converter, storeType, MapStoreType(storeType)));
     }
 
     var columnNames = columns.Select(c => $"\"{c.ColumnName}\"").ToArray();
@@ -308,34 +320,46 @@ public class EntityDbWriter : IEntityDbWriter
     return Expression.Lambda<Func<object, object?>>(boxed, param).Compile();
   }
 
-  private static void AddTypedParameter(NpgsqlCommand cmd, string paramName, object? value, ColumnDef col)
+  private static object? ConvertValue(object? value, ColumnDef col)
   {
-    // Apply value converter (handles JSONB serialization for arrays and nested types)
     if (col.Converter != null && value != null)
       value = col.Converter.ConvertToProvider(value);
 
-    // Handle CLR types that Npgsql can't write directly:
-    // - Enums without a converter (or where GetValueConverter() returned null)
-    // - Unsigned integers (PostgreSQL has no unsigned types)
-    if (value != null)
-    {
-      var valueType = value.GetType();
-      if (valueType.IsEnum)
-        value = value.ToString()!;
-      else if (value is uint u)
-        value = (long)u;
-      else if (value is ulong ul)
-        value = (decimal)ul;
-      else if (value is ushort us)
-        value = (int)us;
-    }
+    if (value == null) return null;
 
-    var param = new NpgsqlParameter(paramName, value ?? DBNull.Value);
+    var valueType = value.GetType();
+    if (valueType.IsEnum)
+      return value.ToString()!;
+    if (value is uint u)
+      return (long)u;
+    if (value is ulong ul)
+      return (decimal)ul;
+    if (value is ushort us)
+      return (int)us;
 
-    if (string.Equals(col.StoreType, "jsonb", StringComparison.OrdinalIgnoreCase))
-      param.NpgsqlDbType = NpgsqlDbType.Jsonb;
+    return value;
+  }
 
-    cmd.Parameters.Add(param);
+  private static NpgsqlDbType MapStoreType(string? storeType)
+  {
+    if (string.IsNullOrEmpty(storeType)) return NpgsqlDbType.Text;
+
+    var s = storeType.ToLowerInvariant();
+    if (s == "jsonb") return NpgsqlDbType.Jsonb;
+    if (s == "json") return NpgsqlDbType.Json;
+    if (s is "integer" or "int4") return NpgsqlDbType.Integer;
+    if (s is "bigint" or "int8") return NpgsqlDbType.Bigint;
+    if (s is "smallint" or "int2") return NpgsqlDbType.Smallint;
+    if (s is "boolean" or "bool") return NpgsqlDbType.Boolean;
+    if (s is "double precision" or "float8") return NpgsqlDbType.Double;
+    if (s is "real" or "float4") return NpgsqlDbType.Real;
+    if (s == "numeric" || s.StartsWith("numeric(")) return NpgsqlDbType.Numeric;
+    if (s == "uuid") return NpgsqlDbType.Uuid;
+    if (s is "timestamp with time zone" or "timestamptz") return NpgsqlDbType.TimestampTz;
+    if (s is "timestamp without time zone" or "timestamp") return NpgsqlDbType.Timestamp;
+    if (s == "date") return NpgsqlDbType.Date;
+    if (s == "bytea") return NpgsqlDbType.Bytea;
+    return NpgsqlDbType.Text;
   }
 
   private readonly record struct BufferedWrite(BitcraftEventBase Entity, bool IsDelete);
@@ -344,7 +368,8 @@ public class EntityDbWriter : IEntityDbWriter
     string ColumnName,
     Func<object, object?> Getter,
     ValueConverter? Converter,
-    string? StoreType
+    string? StoreType,
+    NpgsqlDbType DbType
   );
 
   private record EntitySqlDefinition(
