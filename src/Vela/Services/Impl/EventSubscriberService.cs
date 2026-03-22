@@ -17,6 +17,8 @@ public class EventSubscriberService : IEventSubscriber
 {
   private static readonly SemaphoreSlim _populateSemaphore = new(3, 3);
   private readonly Counter<long> _eventCounter;
+  private readonly Counter<long> _snapshotEntityCounter;
+  private readonly Histogram<double> _snapshotDuration;
   private readonly ILogger<EventGatewayService> _logger;
   private readonly IDatabase _cache;
   private readonly IEntityDbWriter _dbWriter;
@@ -44,6 +46,10 @@ public class EventSubscriberService : IEventSubscriber
     ]);
 
     _eventCounter = metrics.CreateCounter<long>("vela_event_published");
+    _snapshotEntityCounter = metrics.CreateCounter<long>("vela_snapshot_entities",
+      description: "Total entities loaded during snapshot operations");
+    _snapshotDuration = metrics.CreateHistogram<double>("vela_snapshot_duration_seconds",
+      unit: "s", description: "Time taken to snapshot and populate base caches");
     _jsonOptions = jsonOptions;
   }
 
@@ -129,6 +135,7 @@ public class EventSubscriberService : IEventSubscriber
   public Dictionary<(Type OutputType, string CacheKey), List<BitcraftEventBase>> SnapshotBaseCaches(DbConnection conn)
   {
     _logger.LogInformation("Snapshotting table data");
+    var sw = Stopwatch.StartNew();
 
     var merged = new Dictionary<(Type OutputType, string CacheKey), List<BitcraftEventBase>>();
 
@@ -189,6 +196,11 @@ public class EventSubscriberService : IEventSubscriber
       }
       list.AddRange(mappedEntities);
     }
+
+    var totalEntities = merged.Values.Sum(l => l.Count);
+    _snapshotEntityCounter.Add(totalEntities);
+    _snapshotDuration.Record(sw.Elapsed.TotalSeconds);
+    _logger.LogInformation("Snapshot complete: {Count} entities in {Elapsed:F2}s", totalEntities, sw.Elapsed.TotalSeconds);
 
     return merged;
   }

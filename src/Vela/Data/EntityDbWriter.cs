@@ -1,4 +1,6 @@
 using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +21,7 @@ public class EntityDbWriter : IEntityDbWriter
   private readonly ConcurrentDictionary<Type, EntitySqlDefinition> _definitions = new();
   private readonly ConcurrentDictionary<(Type Type, string Id), BufferedWrite> _writeBuffer = new();
   private readonly ResiliencePipeline _dbRetryPipeline;
+  private readonly Histogram<double> _flushDuration;
 
   private PeriodicTimer? _flushTimer;
   private CancellationTokenSource? _flushCts;
@@ -26,10 +29,18 @@ public class EntityDbWriter : IEntityDbWriter
 
   public EntityDbWriter(
     IDbContextFactory<VelaDbContext> factory,
-    ILogger<EntityDbWriter> logger)
+    ILogger<EntityDbWriter> logger,
+    IMeterFactory metricsFactory)
   {
     _factory = factory;
     _logger = logger;
+
+    var metrics = metricsFactory.Create("Vela");
+    metrics.CreateObservableGauge("vela_write_buffer_depth", () => _writeBuffer.Count,
+      description: "Number of pending writes in the flush buffer");
+    _flushDuration = metrics.CreateHistogram<double>("vela_flush_duration_seconds",
+      unit: "s", description: "Time taken to flush the write buffer to the database");
+
     _dbRetryPipeline = new ResiliencePipelineBuilder()
       .AddRetry(new RetryStrategyOptions
       {
@@ -156,6 +167,7 @@ public class EntityDbWriter : IEntityDbWriter
 
     if (items.Count == 0) return;
 
+    var sw = Stopwatch.StartNew();
     try
     {
       // Retry wraps only the DB write — snapshot is not re-taken on retry
@@ -194,6 +206,10 @@ public class EntityDbWriter : IEntityDbWriter
     catch (Exception ex)
     {
       _logger.LogError(ex, "Failed to flush {Count} buffered writes", items.Count);
+    }
+    finally
+    {
+      _flushDuration.Record(sw.Elapsed.TotalSeconds);
     }
   }
 
