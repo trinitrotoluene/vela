@@ -13,7 +13,8 @@ namespace Vela.Mappers
         Treasury: entity.Treasury,
         Location: entity.Location != null
           ? new BitcraftLocation(entity.Location.X, entity.Location.Z, entity.Location.Dimension)
-          : null
+          : null,
+        BuildingDescriptionId: entity.BuildingDescriptionId
       );
   }
 }

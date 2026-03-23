@@ -5,7 +5,8 @@ namespace Vela.Events
     string Id,
     BitcraftLocation? Location,
     int Supplies,
-    uint Treasury
+    uint Treasury,
+    int BuildingDescriptionId
   ) : BitcraftEventBase(Id);
 
   public record BitcraftLocation(
