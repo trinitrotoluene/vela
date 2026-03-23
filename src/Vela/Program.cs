@@ -55,6 +55,11 @@ builder.Services.AddOpenTelemetry()
     {
         metrics.AddRuntimeInstrumentation()
             .AddMeter("Vela")
+            .AddView("vela_flush_duration_seconds",
+                new ExplicitBucketHistogramConfiguration
+                {
+                    Boundaries = [0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0]
+                })
             .AddOtlpExporter((options, readerOptions) =>
             {
                 var overrideHost = builder.Configuration.GetValue<string>("Otel:Endpoint");
