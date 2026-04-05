@@ -103,7 +103,7 @@ public class EventGatewayService : BackgroundService
       })
       .OnError(OnBaseSubscriptionsErrored)
       .Subscribe([
-        "SELECT ls.* FROM location_state ls INNER JOIN public_progressive_action_state ppas ON ppas.building_entity_id = ls.entity_id",
+        // "SELECT ls.* FROM location_state ls INNER JOIN public_progressive_action_state ppas ON ppas.building_entity_id = ls.entity_id",
         "SELECT * FROM item_desc",
         "SELECT * FROM cargo_desc",
         "SELECT * FROM crafting_recipe_desc",
@@ -135,8 +135,8 @@ JOIN progressive_action_state s
 ON p.entity_id = s.entity_id
   WHERE s.craft_count > 50",
         "SELECT i.* FROM inventory_state i INNER JOIN building_state b ON i.owner_entity_id = b.entity_id",
-        "SELECT ls.* FROM location_state ls INNER JOIN claim_state cs ON cs.owner_building_entity_id = ls.entity_id",
-        "SELECT ls.* FROM location_state ls INNER JOIN paved_tile_state pts ON pts.entity_id = ls.entity_id",
+        // "SELECT ls.* FROM location_state ls INNER JOIN claim_state cs ON cs.owner_building_entity_id = ls.entity_id",
+        // "SELECT ls.* FROM location_state ls INNER JOIN paved_tile_state pts ON pts.entity_id = ls.entity_id",
         "SELECT * FROM claim_tech_state",
         "SELECT * FROM claim_tech_desc",
         "SELECT * FROM paved_tile_state",
