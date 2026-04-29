@@ -139,7 +139,7 @@ ON p.entity_id = s.entity_id
         // "SELECT ls.* FROM location_state ls INNER JOIN paved_tile_state pts ON pts.entity_id = ls.entity_id",
         "SELECT * FROM claim_tech_state",
         "SELECT * FROM claim_tech_desc",
-        "SELECT * FROM paved_tile_state",
+        // "SELECT * FROM paved_tile_state",
         "SELECT * FROM paving_tile_desc"
       ]);
   }
