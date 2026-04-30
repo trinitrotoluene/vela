@@ -1,6 +1,7 @@
 services:
   gateway:
     image: vela:latest
+    restart: unless-stopped
     environment:
       VELA_Otel__Endpoint: http://alloy:4318
       VELA_Aspire__StackExchange__Redis__Valkey__ConnectionString: cache:6379,password=password

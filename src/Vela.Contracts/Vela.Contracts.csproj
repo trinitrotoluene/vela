@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <PackageId>Vela.Contracts</PackageId>
+    <Authors>Bitcraft</Authors>
+    <Description>Shared entity contracts for the Vela service.</Description>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Convergence.Client" Version="0.14.0" />
+    <PackageReference Include="Convergence.Client.Generators" Version="0.14.0" OutputItemType="Analyzer" ReferenceOutputAssembly="false">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

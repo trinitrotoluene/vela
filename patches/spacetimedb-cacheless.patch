@@ -1,0 +1,187 @@
+diff --git a/src/Table.cs b/src/Table.cs
+index 3621901..b66a359 100644
+--- a/src/Table.cs
++++ b/src/Table.cs
+@@ -198,12 +198,11 @@ namespace SpacetimeDB
+         // These are provided by RemoteTableHandle.
+         Type IRemoteTableHandle.ClientTableType => typeof(Row);
+ 
+-        // THE DATA IN THE TABLE.
+-        // The keys of this map are:
+-        // - Primary keys, if we have them.
+-        // - The entire row itself, if we don't.
+-        // But really, the keys are whatever SpacetimeDBClient chooses to give us.
+-        private readonly MultiDictionary<object, Row> Entries = new(EqualityComparer<object>.Default, EqualityComparer<Row>.Default);
++        // MULTIPLICITY TRACKER.
++        // Tracks which primary keys are present and how many overlapping subscriptions
++        // reference them. Row data comes from the delta, not this dictionary.
++        // Keys are primary keys if available, otherwise the entire row.
++        private readonly Dictionary<object, uint> _multiplicities = new();
+ 
+         private static IReadWrite<Row>? _serializer;
+ 
+@@ -372,9 +371,9 @@ namespace SpacetimeDB
+             remove => OnUpdateHandler.RemoveListener(value);
+         }
+ 
+-        public int Count => (int)Entries.CountDistinct;
++        public int Count => _multiplicities.Count;
+ 
+-        public IEnumerable<Row> Iter() => Entries.Entries.Select(entry => (Row)entry.Value);
++        public IEnumerable<Row> Iter() => Enumerable.Empty<Row>();
+ 
+         public Task<Row[]> RemoteQuery(string query) =>
+             conn.RemoteQuery<Row>($"SELECT {RemoteTableName}.* FROM {RemoteTableName} {query}");
+@@ -441,9 +440,22 @@ namespace SpacetimeDB
+         {
+             Debug.Assert(wasInserted.Count == 0 && wasUpdated.Count == 0 && wasRemoved.Count == 0, "Call Apply and PostApply before calling PreApply again");
+             var delta = (ParsedTableUpdate)parsedTableUpdate;
+-            foreach (var (_, value) in Entries.WillRemove(delta.Delta))
++            foreach (var (key, keyDelta) in delta.Delta.Entries)
+             {
+-                InvokeBeforeDelete(context, value);
++                if (keyDelta.IsValueChange) continue;
++                var nonValueChange = keyDelta.NonValueChange;
++                if (nonValueChange.Delta >= 0) continue;
++                if (_multiplicities.TryGetValue(key, out var mult))
++                {
++                    if ((int)mult + nonValueChange.Delta <= 0)
++                    {
++                        InvokeBeforeDelete(context, nonValueChange.Value);
++                    }
++                }
++                else
++                {
++                    Log.Warn($"Want to remove row with key {key}, but it doesn't exist!");
++                }
+             }
+         }
+ 
+@@ -457,62 +469,78 @@ namespace SpacetimeDB
+             try
+             {
+                 var delta = (ParsedTableUpdate)parsedTableUpdate;
+-                Entries.Apply(delta.Delta, wasInserted, wasUpdated, wasRemoved);
++                foreach (var (key, their) in delta.Delta.Entries)
++                {
++                    if (_multiplicities.TryGetValue(key, out var myMultiplicity))
++                    {
++                        if (their.IsValueChange)
++                        {
++                            var (before, after) = their.ValueChange;
++                            var reducedMultiplicity = (int)myMultiplicity + before.Delta;
++                            if (reducedMultiplicity != 0)
++                            {
++                                Log.Warn($"Attempted to apply {their} to multiplicity {myMultiplicity}, but this resulted in a reduced multiplicity of {reducedMultiplicity}");
++                                Debug.Assert(false);
++                            }
++                            _multiplicities[key] = (uint)after.Delta;
++                            wasUpdated.Add((key, before.Value, after.Value));
++                        }
++                        else
++                        {
++                            var theirDelta = their.NonValueChange;
++                            var newMultiplicity = (int)myMultiplicity + theirDelta.Delta;
++                            if (newMultiplicity > 0)
++                            {
++                                _multiplicities[key] = (uint)newMultiplicity;
++                            }
++                            else
++                            {
++                                if (newMultiplicity < 0)
++                                {
++                                    Log.Warn($"Internal error: Removing row with key {key} {-theirDelta.Delta} times, but it is only present {myMultiplicity} times.");
++                                    Debug.Assert(false);
++                                }
++                                _multiplicities.Remove(key);
++                                wasRemoved.Add(new(key, theirDelta.Value));
++                            }
++                        }
++                    }
++                    else
++                    {
++                        if (their.IsValueChange)
++                        {
++                            Log.Warn($"Internal error: Can't perform a value change on a nonexistent key {key} (change: {their}).");
++                            Debug.Assert(false);
++                        }
++                        else
++                        {
++                            var theirDelta = their.NonValueChange;
++                            if (theirDelta.Delta == 0)
++                            {
++                                // Do nothing.
++                            }
++                            else if (theirDelta.Delta < 0)
++                            {
++                                Log.Warn($"Internal error: Can't remove nonexistent key {theirDelta.Value}");
++                                Debug.Assert(false);
++                            }
++                            else
++                            {
++                                _multiplicities[key] = (uint)theirDelta.Delta;
++                                wasInserted.Add(new(key, theirDelta.Value));
++                            }
++                        }
++                    }
++                }
+             }
+             catch (Exception e)
+             {
+                 var deltaString = parsedTableUpdate.ToString();
+                 deltaString = deltaString[..Math.Min(deltaString.Length, 10_000)];
+-                var entriesString = Entries.ToString();
+-                entriesString = entriesString[..Math.Min(entriesString.Length, 10_000)];
+-                throw new Exception($"While table `{RemoteTableName}` was applying:\n{deltaString} \nto:\n{entriesString}", e);
++                throw new Exception($"While table `{RemoteTableName}` was applying delta:\n{deltaString}", e);
+             }
+ 
+-            // Update indices.
+-            // This is a local operation -- it only looks at our indices and doesn't invoke user code.
+-            // So we don't need to wait for other tables to be updated to do it.
+-            // (And we need to do it before any PostApply is called.)
+-            // Reminder: We need to loop through the removed entries to delete them prior to inserting the new entries,
+-            // in order to avoid keys an error with the same key already added.
+-            foreach (var (_, value) in wasRemoved)
+-            {
+-                if (value is Row oldRow)
+-                {
+-                    OnInternalDeleteHandler.Invoke(oldRow);
+-                }
+-            }
+-            foreach (var (_, value) in wasInserted)
+-            {
+-                if (value is Row newRow)
+-                {
+-                    OnInternalInsertHandler.Invoke(newRow);
+-                }
+-                else
+-                {
+-                    throw new Exception($"Invalid row type for table {RemoteTableName}: {value.GetType().Name}");
+-                }
+-            }
+-            foreach (var (_, oldValue, newValue) in wasUpdated)
+-            {
+-                if (oldValue is Row oldRow)
+-                {
+-                    OnInternalDeleteHandler.Invoke(oldRow);
+-                }
+-                else
+-                {
+-                    throw new Exception($"Invalid row type for table {RemoteTableName}: {oldValue.GetType().Name}");
+-                }
+-
+-
+-                if (newValue is Row newRow)
+-                {
+-                    OnInternalInsertHandler.Invoke(newRow);
+-                }
+-                else
+-                {
+-                    throw new Exception($"Invalid row type for table {RemoteTableName}: {newValue.GetType().Name}");
+-                }
+-            }
++            // Index updates skipped -- cacheless mode does not maintain index caches.
+         }
+ 
+         /// <summary>

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,6 +12,7 @@ using Serilog.Sinks.OpenTelemetry;
 using Vela.Data;
 using Vela.Services.Contracts;
 using Vela.Services.Impl;
+using Convergence.Client;
 
 var builder = Host.CreateApplicationBuilder();
 
@@ -23,6 +24,8 @@ builder.Configuration
     .AddEnvironmentVariables("VELA_");
 
 Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", Serilog.Events.LogEventLevel.Warning)
     .Enrich.FromLogContext()
     .WriteTo.Console()
     .WriteTo.OpenTelemetry(options =>
@@ -47,7 +50,6 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Logging.ClearProviders().AddSerilog();
 
-builder.AddRedisClient("Valkey");
 builder.Services.AddJsonSerializer();
 builder.Services.AddOpenTelemetry()
     .ConfigureResource(x => x.AddService(builder.Configuration.GetValue<string>("Bitcraft:Module")!))
@@ -55,11 +57,6 @@ builder.Services.AddOpenTelemetry()
     {
         metrics.AddRuntimeInstrumentation()
             .AddMeter("Vela")
-            .AddView("vela_flush_duration_seconds",
-                new ExplicitBucketHistogramConfiguration
-                {
-                    Boundaries = [0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0]
-                })
             .AddOtlpExporter((options, readerOptions) =>
             {
                 var overrideHost = builder.Configuration.GetValue<string>("Otel:Endpoint");
@@ -78,6 +75,7 @@ builder.Services.AddOpenTelemetry()
             });
     });
 
+// PostgreSQL - descriptor entities only (items, recipes, building descs, etc.)
 builder.Services.AddDbContextFactory<VelaDbContext>(options =>
 {
     var connString = new NpgsqlConnectionStringBuilder(
@@ -87,10 +85,18 @@ builder.Services.AddDbContextFactory<VelaDbContext>(options =>
         Timeout = 30
     };
     options.UseNpgsql(connString.ConnectionString)
-           .UseSnakeCaseNamingConvention();
+           .UseSnakeCaseNamingConvention()
+           .EnableSensitiveDataLogging(false);
 });
 
-builder.Services.AddSingleton<IEntityDbWriter, EntityDbWriter>();
+// ConvergeDB - dynamic game state entities
+builder.Services.AddOptions<ConvergeDbOptions>()
+    .Bind(builder.Configuration.GetSection("ConvergeDb"))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+
+builder.Services.AddSingleton<IConvergeDbWriter, ConvergeDbWriter>();
+builder.Services.AddSingleton<IDescriptorDbWriter, DescriptorDbWriter>();
 builder.Services.AddSingleton<IDbConnectionAccessor, DbConnectionAccessor>();
 builder.Services.AddSingleton<IEventSubscriber, EventSubscriberService>();
 builder.Services.AddSingleton<IMetricHelpers, MetricHelpers>();
@@ -108,12 +114,22 @@ builder.Services.AddOptions<BitcraftServiceOptions>()
 builder.Services.AddHostedService<BitcraftService>();
 builder.Services.AddHostedService<EventGatewayService>();
 
+// Any unhandled exception in a BackgroundService stops the host → non-zero exit →
+// Docker's restart policy re-runs the startup path (including the ConvergeDB
+// EpochAsync-wrapped populate that cleanly re-seeds state from scratch).
+builder.Services.Configure<HostOptions>(o =>
+    o.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.StopHost);
+
 var app = builder.Build();
 
+// Schema setup - run before hosted services start
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<IDbContextFactory<VelaDbContext>>().CreateDbContext();
     await dbContext.Database.MigrateAsync();
 }
+
+var convergeWriter = app.Services.GetRequiredService<IConvergeDbWriter>();
+await convergeWriter.InitializeAsync(CancellationToken.None);
 
 await app.RunAsync();

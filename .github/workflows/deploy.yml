@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
   workflow_dispatch:
 
 env:
@@ -11,18 +14,21 @@ env:
 
 jobs:
   build-and-push:
-    name: Build and Push to GHCR
+    name: Build and Push to GHCR (:next)
     runs-on: ubuntu-24.04-arm
-    environment: prod
     permissions:
       contents: read
       packages: write
       id-token: write
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           submodules: true
+      - name: Apply SDK patch
+        run: |
+          cd src/SpacetimeDB.ClientSDK
+          git apply ../../patches/spacetimedb-cacheless.patch
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Log in to GitHub Container Registry
@@ -44,11 +50,13 @@ jobs:
           push: true
           tags: |
             ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.tag }}
-            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:next
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          secrets: |
+            nuget_token=${{ secrets.GITHUB_TOKEN }}
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
         with:
           dotnet-version: "10.0.x"
       - name: Generate JSON Schema
