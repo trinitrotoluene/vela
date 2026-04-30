@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.6
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 WORKDIR /app
@@ -10,12 +11,7 @@ COPY src/Vela.Gen/Vela.Gen.csproj src/Vela.Gen/
 COPY src/Vela.AppHost/Vela.AppHost.csproj src/Vela.AppHost/
 COPY src/SpacetimeDB.ClientSDK/SpacetimeDB.ClientSDK.csproj src/SpacetimeDB.ClientSDK/
 COPY src/SpacetimeDB.ClientSDK/Directory.Build.props src/SpacetimeDB.ClientSDK/
-RUN --mount=type=secret,id=nuget_token \
-    dotnet nuget update source github \
-      --username "docker" \
-      --password "$(cat /run/secrets/nuget_token)" \
-      --configfile nuget.config \
-      --store-password-in-clear-text && \
+RUN --mount=type=secret,id=nuget_token,env=NUGET_TOKEN \
     dotnet restore src/Vela/Vela.csproj
 
 COPY . .
