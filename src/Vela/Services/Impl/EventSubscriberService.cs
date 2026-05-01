@@ -33,7 +33,7 @@ public class EventSubscriberService : IEventSubscriber
 
   private readonly object _snapshotLock = new();
   private bool _snapshotComplete = false;
-  private Dictionary<(Type OutputType, string CacheKey), Dictionary<string, BitcraftEventBase>> _snapshotBuffer = new();
+  private Dictionary<Type, Dictionary<string, BitcraftEventBase>> _snapshotBuffer = new();
   private Stopwatch? _snapshotStopwatch;
 
   public EventSubscriberService(
@@ -65,6 +65,27 @@ public class EventSubscriberService : IEventSubscriber
     _assertDispatchers = BuildAssertDispatchers();
     _retractDispatchers = BuildRetractDispatchers();
     _batchAssertDispatchers = BuildBatchAssertDispatchers();
+
+    ValidateConvergeDbDispatcherCoverage();
+  }
+
+  private void ValidateConvergeDbDispatcherCoverage()
+  {
+    var missing = new List<string>();
+    foreach (var type in BitcraftEventBase.ConvergeDbTypes)
+    {
+      var gaps = new List<string>();
+      if (!_assertDispatchers.ContainsKey(type)) gaps.Add("assert");
+      if (!_retractDispatchers.ContainsKey(type)) gaps.Add("retract");
+      if (!_batchAssertDispatchers.ContainsKey(type)) gaps.Add("batch-assert");
+      if (gaps.Count > 0)
+        missing.Add($"{type.Name} missing: {string.Join(", ", gaps)}");
+    }
+
+    if (missing.Count > 0)
+      throw new InvalidOperationException(
+        "EventSubscriberService dispatcher coverage gap — every [ConvergeDb] type must be wired into all three dispatcher maps:\n  "
+        + string.Join("\n  ", missing));
   }
 
   private Dictionary<Type, Func<BitcraftEventBase, string, EntityMetadata?, Task>> BuildAssertDispatchers()
@@ -271,9 +292,9 @@ public class EventSubscriberService : IEventSubscriber
     _logger.LogInformation("Done registering event handlers");
   }
 
-  public Dictionary<(Type OutputType, string CacheKey), List<BitcraftEventBase>> DrainSnapshotBuffer()
+  public Dictionary<Type, List<BitcraftEventBase>> DrainSnapshotBuffer()
   {
-    Dictionary<(Type OutputType, string CacheKey), Dictionary<string, BitcraftEventBase>> taken;
+    Dictionary<Type, Dictionary<string, BitcraftEventBase>> taken;
     TimeSpan elapsed;
     lock (_snapshotLock)
     {
@@ -284,7 +305,7 @@ public class EventSubscriberService : IEventSubscriber
       _snapshotStopwatch = null;
     }
 
-    var merged = new Dictionary<(Type OutputType, string CacheKey), List<BitcraftEventBase>>(taken.Count);
+    var merged = new Dictionary<Type, List<BitcraftEventBase>>(taken.Count);
     foreach (var kvp in taken)
     {
       merged[kvp.Key] = [.. kvp.Value.Values];
@@ -299,7 +320,7 @@ public class EventSubscriberService : IEventSubscriber
   }
 
   public async Task PopulateBaseCachesAsync(
-    Dictionary<(Type OutputType, string CacheKey), List<BitcraftEventBase>> merged)
+    Dictionary<Type, List<BitcraftEventBase>> merged)
   {
     _logger.LogInformation("Populating storage");
 
@@ -308,14 +329,14 @@ public class EventSubscriberService : IEventSubscriber
     await using var batch = _convergeWriter.Batch();
     foreach (var kvp in merged)
     {
-      var outputType = kvp.Key.OutputType;
+      var outputType = kvp.Key;
       var entities = kvp.Value;
 
-      if (DescriptorDbWriter.IsDescriptorType(outputType))
+      if (BitcraftEventBase.PostgresTypes.Contains(outputType))
       {
         // Descriptor entities → PostgreSQL
         _logger.LogInformation("Populating PostgreSQL for {Type} with {Count} descriptors", outputType.Name, entities.Count);
-        await _descriptorWriter.PopulateAsync(outputType, module, entities);
+        await _descriptorWriter.PopulateAsync(outputType, entities);
       }
       else if (_batchAssertDispatchers.ContainsKey(outputType))
       {
@@ -341,7 +362,7 @@ public class EventSubscriberService : IEventSubscriber
     var updateEvent = tableType.GetEvent("OnUpdate");
     var deleteEvent = tableType.GetEvent("OnDelete");
 
-    var bufferKey = (typeof(TOutput), BitcraftEventBase.CacheKey(typeof(TOutput), _options.Value.Module));
+    var bufferKey = typeof(TOutput);
 
     if (insertEvent != null)
     {
@@ -411,7 +432,7 @@ public class EventSubscriberService : IEventSubscriber
 
   private bool TryBufferSnapshotRow(
     EventContext ctx,
-    (Type OutputType, string CacheKey) bufferKey,
+    Type bufferKey,
     BitcraftEventBase mapped)
   {
     if (ctx.Event is not Event<Reducer>.SubscribeApplied) return false;
@@ -466,7 +487,7 @@ public class EventSubscriberService : IEventSubscriber
         );
       }
 
-      if (DescriptorDbWriter.IsDescriptorType(entityType))
+      if (BitcraftEventBase.PostgresTypes.Contains(entityType))
       {
         // Descriptor → PostgreSQL
         if (delete)

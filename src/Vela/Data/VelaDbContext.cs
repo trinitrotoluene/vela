@@ -10,7 +10,7 @@ public class VelaDbContext(DbContextOptions<VelaDbContext> options, JsonSerializ
 {
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
-    foreach (var type in BitcraftEventBase.DatabaseTypes)
+    foreach (var type in BitcraftEventBase.PostgresTypes)
     {
       var entity = modelBuilder.Entity(type);
       entity.HasKey("Id");

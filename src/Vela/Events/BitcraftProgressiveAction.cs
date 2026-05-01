@@ -1,6 +1,6 @@
 using Vela.Events;
 
-[Storage(StorageTarget.Cache)]
+[ConvergeDb]
 public record BitcraftProgressiveAction(
   string Id,
   string RecipeId,

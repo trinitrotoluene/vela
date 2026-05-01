@@ -1,6 +1,6 @@
 namespace Vela.Events
 {
-  [GlobalEntity, Storage(StorageTarget.Database)]
+  [Postgres]
   public record BitcraftPavingTileDesc(
     string Id,
     string Name,

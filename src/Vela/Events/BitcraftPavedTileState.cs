@@ -1,6 +1,6 @@
 namespace Vela.Events
 {
-  [Storage(StorageTarget.Cache)]
+  [ConvergeDb]
   public record BitcraftPavedTileState(
     string Id,
     int TileTypeId,

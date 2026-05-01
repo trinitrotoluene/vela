@@ -1,6 +1,6 @@
 namespace Vela.Events
 {
-  [Storage(StorageTarget.Cache)]
+  [ConvergeDb]
   public record BitcraftBuildingState(
     string Id,
     string ClaimEntityId

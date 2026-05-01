@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace Vela.Events;
 
-[Storage(StorageTarget.Cache)]
+[ConvergeDb]
 public record BitcraftActionLogState(
   string Id,
   string SubjectEntityId,

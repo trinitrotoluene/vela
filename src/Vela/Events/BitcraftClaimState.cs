@@ -1,6 +1,6 @@
 namespace Vela.Events
 {
-  [GlobalEntity, Storage(StorageTarget.Database)]
+  [ConvergeDb]
   public record BitcraftClaimState(
     string Id,
     string OwnerPlayerId,

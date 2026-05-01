@@ -1,6 +1,6 @@
 namespace Vela.Events
 {
-  [GlobalEntity, Storage(StorageTarget.Database)]
+  [Postgres]
   public record BitcraftItemList(
     string Id,
     string Name,

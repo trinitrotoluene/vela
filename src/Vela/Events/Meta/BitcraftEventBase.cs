@@ -1,13 +1,14 @@
-using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 
 namespace Vela.Events
 {
   public abstract record BitcraftEventBase(string Id)
   {
-    private record CacheKeyValue(string Value, bool IsGlobal);
-
-    // This is dynamically set when publishing to avoid having to copy the object
+    // Set on every event before publish so ConvergeDB writes carry the module tag.
+    // Not mapped to Postgres — descriptor tables are global and shouldn't carry a module column,
+    // so on the Postgres path this assignment is a harmless no-op.
+    [NotMapped]
     public string Module { get; set; } = null!;
 
     public static readonly Type[] SchemaTypes = [.. Assembly.GetExecutingAssembly()!
@@ -15,53 +16,37 @@ namespace Vela.Events
       .Where(x => x.IsAssignableTo(typeof(BitcraftEventBase)) && !x.IsAbstract
     )];
 
-    private static readonly IReadOnlyDictionary<Type, CacheKeyValue> CacheKeys;
-    private static readonly IReadOnlyDictionary<Type, StorageTarget> StorageTargets;
-
-    public static readonly Type[] DatabaseTypes;
+    public static readonly Type[] PostgresTypes;
+    public static readonly Type[] ConvergeDbTypes;
 
     static BitcraftEventBase()
     {
-      var cacheKeys = new Dictionary<Type, CacheKeyValue>();
-      var storageTargets = new Dictionary<Type, StorageTarget>();
+      var postgres = new List<Type>();
+      var convergeDb = new List<Type>();
+      var violations = new List<string>();
 
       foreach (var type in SchemaTypes)
       {
-        cacheKeys.Add(type, new(
-          Value: $"cache:{type.Name}",
-          IsGlobal: type.GetCustomAttribute<GlobalEntityAttribute>() != null
-        ));
+        var hasPostgres = type.GetCustomAttribute<PostgresAttribute>() != null;
+        var hasConvergeDb = type.GetCustomAttribute<ConvergeDbAttribute>() != null;
 
-        var storageAttr = type.GetCustomAttribute<StorageAttribute>();
-        storageTargets.Add(type, storageAttr?.Target ?? StorageTarget.Cache);
+        if (hasPostgres && hasConvergeDb)
+          violations.Add($"{type.Name} has both [Postgres] and [ConvergeDb] — pick one");
+        else if (!hasPostgres && !hasConvergeDb)
+          violations.Add($"{type.Name} has neither [Postgres] nor [ConvergeDb] — every entity must declare its storage");
+        else if (hasPostgres)
+          postgres.Add(type);
+        else
+          convergeDb.Add(type);
       }
 
-      CacheKeys = new ReadOnlyDictionary<Type, CacheKeyValue>(cacheKeys);
-      StorageTargets = new ReadOnlyDictionary<Type, StorageTarget>(storageTargets);
-      DatabaseTypes = [.. SchemaTypes.Where(t => GetStorageTarget(t).HasFlag(StorageTarget.Database))];
-    }
+      if (violations.Count > 0)
+        throw new InvalidOperationException(
+          "BitcraftEventBase storage marker validation failed:\n  " +
+          string.Join("\n  ", violations));
 
-    public static StorageTarget GetStorageTarget(Type t)
-    {
-      return StorageTargets.TryGetValue(t, out var target) ? target : StorageTarget.Cache;
-    }
-
-    public static string CacheKey<TEvent>(TEvent t, string module) where TEvent : BitcraftEventBase
-    {
-      return CacheKey(t.GetType(), module);
-    }
-
-    public static bool IsGlobalCacheKey(Type t)
-    {
-      return CacheKeys.TryGetValue(t, out var cacheKey) && cacheKey.IsGlobal;
-    }
-
-    public static string CacheKey(Type t, string module)
-    {
-      if (!CacheKeys.TryGetValue(t, out var cacheKey))
-        throw new InvalidDataException($"Attempted to create a cache key for unsupported type {t.Name}");
-
-      return $"{cacheKey.Value}:{(cacheKey.IsGlobal ? "global" : module)}";
+      PostgresTypes = [.. postgres];
+      ConvergeDbTypes = [.. convergeDb];
     }
   };
 }

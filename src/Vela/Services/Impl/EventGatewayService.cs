@@ -179,7 +179,7 @@ ON p.entity_id = s.entity_id
 
 
   private async Task OnBaseSubscriptionsApplied(
-    Dictionary<(Type OutputType, string CacheKey), List<BitcraftEventBase>> snapshot)
+    Dictionary<Type, List<BitcraftEventBase>> snapshot)
   {
     try
     {

@@ -1,7 +1,5 @@
 using System.CommandLine;
-using System.Reflection;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Schema;
 using Microsoft.Extensions.DependencyInjection;
 using Vela.Events;
@@ -72,18 +70,6 @@ public static class GenerateJsonSchema
       var exporterOptions = new JsonSchemaExporterOptions
       {
         TreatNullObliviousAsNonNullable = true,
-        TransformSchemaNode = (context, node) =>
-        {
-          if (context.TypeInfo.Type.GetCustomAttribute<GlobalEntityAttribute>() != null)
-          {
-            if (node is JsonObject objNode)
-            {
-              objNode["x-global-entity"] = true;
-            }
-          }
-
-          return node;
-        }
       };
 
       var schema = options.GetJsonSchemaAsNode(type, exporterOptions);

@@ -1,6 +1,6 @@
 namespace Vela.Events
 {
-  [Storage(StorageTarget.Cache)]
+  [ConvergeDb]
   public record BitcraftInventoryState(
     string Id,
     BitcraftInventoryPocket[] Pockets

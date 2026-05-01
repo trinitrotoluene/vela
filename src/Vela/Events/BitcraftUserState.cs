@@ -1,6 +1,6 @@
 namespace Vela.Events;
 
-[Storage(StorageTarget.Database)]
+[ConvergeDb]
 public record BitcraftUserState(
   string Id,
   string UserEntityId,
