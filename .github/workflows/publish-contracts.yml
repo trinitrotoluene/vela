@@ -3,12 +3,8 @@ name: Publish Vela.Contracts
 on:
   push:
     branches: [master, next]
-    paths:
-      - "src/Vela.Contracts/**"
-  pull_request:
-    branches: [master, next]
-    paths:
-      - "src/Vela.Contracts/**"
+    # paths:
+    #   - "src/Vela.Contracts/**"
   workflow_dispatch:
 
 concurrency:
