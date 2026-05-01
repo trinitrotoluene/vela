@@ -59,10 +59,3 @@ jobs:
         uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
         with:
           dotnet-version: "10.0.x"
-      - name: Generate JSON Schema
-        run: dotnet run --project src/Vela.Gen -- generate-json-schema --outDir ./schema-output
-      - name: Upload JSON Schema Artifacts
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: json-schema-files
-          path: ./schema-output
