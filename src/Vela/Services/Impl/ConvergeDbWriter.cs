@@ -15,6 +15,7 @@ public class ConvergeDbWriter : IConvergeDbWriter
     private readonly IOptions<ConvergeDbOptions> _options;
     private ConvergenceClient? _client;
     private readonly ConcurrentDictionary<Type, object> _kindHandles = new();
+    private int _activeEpochs;
 
     public ConvergeDbWriter(
         ILogger<ConvergeDbWriter> logger,
@@ -62,7 +63,6 @@ public class ConvergeDbWriter : IConvergeDbWriter
         await RegisterKindAsync<ConvergeLocationState>(ct);
         await RegisterKindAsync<ConvergeProgressiveAction>(ct);
         await RegisterKindAsync<ConvergePublicProgressiveAction>(ct);
-        await RegisterKindAsync<ConvergePavedTileState>(ct);
         await RegisterKindAsync<ConvergeChatMessage>(ct);
         await RegisterKindAsync<ConvergeActionLogState>(ct);
         await RegisterKindAsync<ConvergeAuctionListingState>(ct);
@@ -100,6 +100,28 @@ public class ConvergeDbWriter : IConvergeDbWriter
     public async Task EpochAsync(Func<Task> body)
     {
         await _client!.EpochAsync(body);
+    }
+
+    public async Task BeginEpochAsync(CancellationToken ct = default)
+    {
+        if (Interlocked.Increment(ref _activeEpochs) > 1)
+        {
+            Interlocked.Decrement(ref _activeEpochs);
+            throw new InvalidOperationException("Cannot begin a ConvergeDB epoch while another is already open");
+        }
+        await _client!.EpochBeginAsync(ct);
+    }
+
+    public async Task EndEpochAsync(CancellationToken ct = default)
+    {
+        try
+        {
+            await _client!.EpochEndAsync(ct);
+        }
+        finally
+        {
+            Interlocked.Decrement(ref _activeEpochs);
+        }
     }
 
     public ConvergenceBatch Batch() => _client!.Batch();

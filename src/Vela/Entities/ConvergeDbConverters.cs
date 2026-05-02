@@ -76,14 +76,6 @@ public static class ConvergeDbConverters
         OwnerEntityId = ulong.Parse(e.OwnerEntityId),
     };
 
-    public static ConvergePavedTileState ToConverge(BitcraftPavedTileState e, string module) => new()
-    {
-        EntityId = NumericId(e.Id),
-        Module = module,
-        TileTypeId = e.TileTypeId,
-        RelatedEntityId = ulong.Parse(e.RelatedEntityId),
-    };
-
     public static ConvergeClosedListingState ToConverge(BitcraftClosedListingState e, string module) => new()
     {
         EntityId = NumericId(e.Id),

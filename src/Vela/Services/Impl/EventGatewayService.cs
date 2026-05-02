@@ -53,7 +53,7 @@ public class EventGatewayService : BackgroundService
         }
         _logger.LogInformation("Acquired connection");
 
-        RunConnectionLifecycle(conn, cancellationToken);
+        await RunConnectionLifecycle(conn, cancellationToken);
 
         while (conn != null && _accessor.TryGet(out var currentConn) && conn == currentConn)
         {
@@ -75,13 +75,20 @@ public class EventGatewayService : BackgroundService
     }
   }
 
-  private void RunConnectionLifecycle(DbConnection conn, CancellationToken cancellationToken)
+  private async Task RunConnectionLifecycle(DbConnection conn, CancellationToken cancellationToken)
   {
     _logger.LogInformation("Start connection lifecycle");
 
-    // Register handlers BEFORE subscribing so OnInsert/OnUpdate fire into the snapshot buffer
-    // as the cacheless SDK delivers initial-subscription rows via PostApply (no .Iter() cache).
+    // Register handlers BEFORE subscribing so OnInsert/OnUpdate fire as the cacheless SDK
+    // delivers initial-subscription rows via PostApply (no .Iter() cache).
     _subscriber.RegisterAllEventHandlers(conn);
+
+    // Open the epoch + streaming snapshot BEFORE the first Subscribe so OnInsert handlers
+    // can stream-write directly into the open ConvergenceBatch. The epoch closes on the last
+    // batch's OnApplied; ConvergeDB retracts anything in the prior baseline that wasn't
+    // re-asserted during streaming.
+    await _convergeWriter.BeginEpochAsync(cancellationToken);
+    _subscriber.BeginStreamingSnapshot();
 
     var nowUnixSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
     var batches = BuildSubscriptionBatches(nowUnixSeconds);
@@ -101,27 +108,38 @@ public class EventGatewayService : BackgroundService
 
           if (Interlocked.Decrement(ref remaining) == 0)
           {
-            try
-            {
-              _logger.LogInformation("All subscription batches applied, initializing");
-              var snapshot = _subscriber.DrainSnapshotBuffer();
-              _ = Task.Run(() => HeartbeatAsync(conn, cancellationToken), cancellationToken);
-              _ = Task.Run(() => OnBaseSubscriptionsApplied(snapshot));
-            }
-            catch (Exception ex)
-            {
-              _logger.LogError(ex, "Fatal error during subscription init - shutting down host for clean restart");
-              _hostLifetime.StopApplication();
-            }
+            // OnApplied is a synchronous SDK callback on the FrameTick thread. Hand the async
+            // finalize work off to a Task so we don't block FrameTick — and so any awaitable
+            // exceptions surface cleanly.
+            _ = Task.Run(() => FinalizeSnapshotAsync(conn, cancellationToken));
           }
         })
         .OnError((err, ex) =>
         {
           _logger.LogError(ex, "Error applying subscription batch {Index}/{Total}",
             batchIndex + 1, batches.Length);
+          // Drop the connection — process restart will abandon the open epoch on the server
+          // and re-seed from a fresh epoch on next startup.
           conn.Disconnect();
         })
         .Subscribe(batches[batchIndex]);
+    }
+  }
+
+  private async Task FinalizeSnapshotAsync(DbConnection conn, CancellationToken cancellationToken)
+  {
+    try
+    {
+      _logger.LogInformation("All subscription batches applied — finalizing streaming snapshot");
+      await _subscriber.EndStreamingSnapshotAsync();
+      await _convergeWriter.EndEpochAsync(cancellationToken);
+      _logger.LogInformation("Epoch complete - ConvergeDB and PostgreSQL populated");
+      _ = Task.Run(() => HeartbeatAsync(conn, cancellationToken), cancellationToken);
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "Fatal error finalizing snapshot epoch — shutting down host for clean restart");
+      _hostLifetime.StopApplication();
     }
   }
 
@@ -144,7 +162,6 @@ public class EventGatewayService : BackgroundService
         "SELECT * FROM closed_listing_state",
         "SELECT * FROM building_state",
         "SELECT * FROM claim_tech_state",
-        "SELECT * FROM paved_tile_state",
                 @"SELECT e.* FROM empire_state e
           JOIN claim_state c
             ON e.capital_building_entity_id = c.owner_building_entity_id",
@@ -170,39 +187,10 @@ ON p.entity_id = s.entity_id
       ],
       [
         "SELECT ls.* FROM location_state ls INNER JOIN claim_state cs ON cs.owner_building_entity_id = ls.entity_id",
-      ],
-      [
-        "SELECT ls.* FROM location_state ls INNER JOIN paved_tile_state pts ON pts.entity_id = ls.entity_id"
       ]
     ];
   }
 
-
-  private async Task OnBaseSubscriptionsApplied(
-    Dictionary<Type, List<BitcraftEventBase>> snapshot)
-  {
-    try
-    {
-      _logger.LogInformation("Base subscriptions applied");
-
-      // Wrap dynamic entity population in a ConvergeDB Epoch.
-      // The Epoch auto-retracts any entities from this source that are not re-asserted,
-      // cleanly handling stale entity cleanup on reconnection.
-      await _convergeWriter.EpochAsync(async () =>
-      {
-        await _subscriber.PopulateBaseCachesAsync(snapshot);
-      });
-
-      _logger.LogInformation("Epoch complete - ConvergeDB and PostgreSQL populated");
-    }
-    catch (Exception ex)
-    {
-      // Epoch failure means ConvergeDB state is in an undefined/abandoned state.
-      // Stop the host so Docker restarts the container and a fresh epoch re-seeds cleanly.
-      _logger.LogError(ex, "Exception thrown by subscriber init - shutting down host for clean restart");
-      _hostLifetime.StopApplication();
-    }
-  }
 
   public override Task StopAsync(CancellationToken cancellationToken)
   {

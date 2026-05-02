@@ -8,6 +8,8 @@ public interface IConvergeDbWriter
     Task AssertAsync<T>(T entity, EntityMetadata? metadata = null) where T : struct, IConvergenceEntity<T>;
     Task RetractAsync<T>(ReadOnlyMemory<byte> entityId, EntityMetadata? metadata = null) where T : struct, IConvergenceEntity<T>;
     Task EpochAsync(Func<Task> body);
+    Task BeginEpochAsync(CancellationToken ct = default);
+    Task EndEpochAsync(CancellationToken ct = default);
     ConvergenceBatch Batch();
     KindHandle<T> GetKind<T>() where T : struct, IConvergenceEntity<T>;
 }

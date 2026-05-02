@@ -31,10 +31,20 @@ public class EventSubscriberService : IEventSubscriber
   private readonly Dictionary<Type, Func<BitcraftEventBase, string, EntityMetadata?, Task>> _retractDispatchers;
   private readonly Dictionary<Type, Func<ConvergenceBatch, BitcraftEventBase, string, Task>> _batchAssertDispatchers;
 
-  private readonly object _snapshotLock = new();
-  private bool _snapshotComplete = false;
-  private Dictionary<Type, Dictionary<string, BitcraftEventBase>> _snapshotBuffer = new();
-  private Stopwatch? _snapshotStopwatch;
+  // Streaming snapshot state.
+  // Dynamic (ConvergeDB) rows are written directly into a rolled-over ConvergenceBatch under
+  // a single open epoch. Descriptor (Postgres) rows are still buffered per-type because
+  // DescriptorDbWriter.PopulateAsync needs the full set in one transaction (advisory lock +
+  // bulk upsert + prune-not-in-set). Descriptor volume is small so the buffer cost is trivial.
+  private readonly object _streamLock = new();
+  private bool _streamingActive;
+  private ConvergenceBatch? _streamBatch;
+  private int _streamBufferedRows;
+  private long _streamTotalRows;
+  private Dictionary<Type, long> _streamTypeCounts = new();
+  private Dictionary<Type, Dictionary<string, BitcraftEventBase>> _descriptorBuffer = new();
+  private Stopwatch? _streamStopwatch;
+  private const int FlushThresholdRows = 10_000;
 
   public EventSubscriberService(
     ILogger<EventGatewayService> logger,
@@ -116,8 +126,6 @@ public class EventSubscriberService : IEventSubscriber
         await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftProgressiveAction)e, m), md),
       [typeof(BitcraftPublicProgressiveAction)] = async (e, m, md) =>
         await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftPublicProgressiveAction)e, m), md),
-      [typeof(BitcraftPavedTileState)] = async (e, m, md) =>
-        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftPavedTileState)e, m), md),
       [typeof(BitcraftChatMessage)] = async (e, m, md) =>
         await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftChatMessage)e, m), md),
       [typeof(BitcraftActionLogState)] = async (e, m, md) =>
@@ -160,8 +168,6 @@ public class EventSubscriberService : IEventSubscriber
         await _convergeWriter.RetractAsync<ConvergeProgressiveAction>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id)), md),
       [typeof(BitcraftPublicProgressiveAction)] = async (e, m, md) =>
         await _convergeWriter.RetractAsync<ConvergePublicProgressiveAction>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id)), md),
-      [typeof(BitcraftPavedTileState)] = async (e, m, md) =>
-        await _convergeWriter.RetractAsync<ConvergePavedTileState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id)), md),
       [typeof(BitcraftChatMessage)] = async (e, m, md) =>
         await _convergeWriter.RetractAsync<ConvergeChatMessage>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id)), md),
       [typeof(BitcraftActionLogState)] = async (e, m, md) =>
@@ -203,8 +209,6 @@ public class EventSubscriberService : IEventSubscriber
         await batch.AssertAsync(_convergeWriter.GetKind<ConvergeProgressiveAction>(), ConvergeDbConverters.ToConverge((BitcraftProgressiveAction)e, m)),
       [typeof(BitcraftPublicProgressiveAction)] = async (batch, e, m) =>
         await batch.AssertAsync(_convergeWriter.GetKind<ConvergePublicProgressiveAction>(), ConvergeDbConverters.ToConverge((BitcraftPublicProgressiveAction)e, m)),
-      [typeof(BitcraftPavedTileState)] = async (batch, e, m) =>
-        await batch.AssertAsync(_convergeWriter.GetKind<ConvergePavedTileState>(), ConvergeDbConverters.ToConverge((BitcraftPavedTileState)e, m)),
       [typeof(BitcraftChatMessage)] = async (batch, e, m) =>
         await batch.AssertAsync(_convergeWriter.GetKind<ConvergeChatMessage>(), ConvergeDbConverters.ToConverge((BitcraftChatMessage)e, m)),
       [typeof(BitcraftActionLogState)] = async (batch, e, m) =>
@@ -292,64 +296,123 @@ public class EventSubscriberService : IEventSubscriber
     _logger.LogInformation("Done registering event handlers");
   }
 
-  public Dictionary<Type, List<BitcraftEventBase>> DrainSnapshotBuffer()
+  public void BeginStreamingSnapshot()
   {
-    Dictionary<Type, Dictionary<string, BitcraftEventBase>> taken;
-    TimeSpan elapsed;
-    lock (_snapshotLock)
+    lock (_streamLock)
     {
-      taken = _snapshotBuffer;
-      _snapshotBuffer = new();
-      _snapshotComplete = true;
-      elapsed = _snapshotStopwatch?.Elapsed ?? TimeSpan.Zero;
-      _snapshotStopwatch = null;
+      if (_streamingActive)
+        throw new InvalidOperationException("Streaming snapshot already active");
+      _streamBatch = _convergeWriter.Batch();
+      _streamBufferedRows = 0;
+      _streamTotalRows = 0;
+      _streamTypeCounts = new();
+      _descriptorBuffer = new();
+      _streamStopwatch = Stopwatch.StartNew();
+      _streamingActive = true;
     }
-
-    var merged = new Dictionary<Type, List<BitcraftEventBase>>(taken.Count);
-    foreach (var kvp in taken)
-    {
-      merged[kvp.Key] = [.. kvp.Value.Values];
-    }
-
-    var totalEntities = merged.Values.Sum(l => l.Count);
-    _snapshotEntityCounter.Add(totalEntities);
-    _snapshotDuration.Record(elapsed.TotalSeconds);
-    _logger.LogInformation("Snapshot complete: {Count} entities in {Elapsed:F2}s", totalEntities, elapsed.TotalSeconds);
-
-    return merged;
+    _logger.LogInformation("Streaming snapshot started (flush threshold: {Threshold} rows)", FlushThresholdRows);
   }
 
-  public async Task PopulateBaseCachesAsync(
-    Dictionary<Type, List<BitcraftEventBase>> merged)
+  public async Task EndStreamingSnapshotAsync()
   {
-    _logger.LogInformation("Populating storage");
+    ConvergenceBatch? finalBatch;
+    Dictionary<Type, Dictionary<string, BitcraftEventBase>> descriptors;
+    Dictionary<Type, long> typeCounts;
+    Stopwatch? sw;
+    long totalRows;
+    lock (_streamLock)
+    {
+      if (!_streamingActive)
+        throw new InvalidOperationException("Streaming snapshot is not active");
+      finalBatch = _streamBatch;
+      descriptors = _descriptorBuffer;
+      typeCounts = _streamTypeCounts;
+      sw = _streamStopwatch;
+      totalRows = _streamTotalRows;
+      _streamBatch = null;
+      _descriptorBuffer = new();
+      _streamTypeCounts = new();
+      _streamStopwatch = null;
+      _streamingActive = false;
+    }
 
-    var module = _options.Value.Module;
+    // Flush the final ConvergeDB batch (auto-flushes on dispose).
+    if (finalBatch != null)
+      await finalBatch.DisposeAsync();
 
-    await using var batch = _convergeWriter.Batch();
-    foreach (var kvp in merged)
+    // Populate Postgres descriptors. PopulateAsync requires the full per-type set in one
+    // transaction (advisory lock + bulk upsert + prune-not-in-set), so these stay buffered.
+    foreach (var kvp in descriptors)
     {
       var outputType = kvp.Key;
-      var entities = kvp.Value;
+      var entities = kvp.Value.Values.ToList();
+      _logger.LogInformation("Populating PostgreSQL for {Type} with {Count} descriptors", outputType.Name, entities.Count);
+      await _descriptorWriter.PopulateAsync(outputType, entities);
+      totalRows += entities.Count;
+    }
 
-      if (BitcraftEventBase.PostgresTypes.Contains(outputType))
+    foreach (var kvp in descriptors)
+      typeCounts[kvp.Key] = kvp.Value.Count;
+
+    var perTypeSummary = string.Join(", ",
+      typeCounts.OrderByDescending(kv => kv.Value).Select(kv => $"{kv.Key.Name}={kv.Value}"));
+
+    var elapsed = sw?.Elapsed ?? TimeSpan.Zero;
+    _snapshotEntityCounter.Add(totalRows);
+    _snapshotDuration.Record(elapsed.TotalSeconds);
+    _logger.LogInformation("Snapshot complete: {Count} entities in {Elapsed:F2}s [{PerType}]",
+      totalRows, elapsed.TotalSeconds, perTypeSummary);
+  }
+
+  // Called from OnInsert/OnUpdate during the SubscribeApplied window. Sync-over-async to match
+  // PublishEvent's threading model (FrameTick thread). Postgres descriptors buffer; ConvergeDB
+  // rows assert directly into the rolled-over streaming batch.
+  private void WriteStreamingRow(Type bufferKey, BitcraftEventBase mapped, string module)
+  {
+    if (BitcraftEventBase.PostgresTypes.Contains(bufferKey))
+    {
+      lock (_streamLock)
       {
-        // Descriptor entities → PostgreSQL
-        _logger.LogInformation("Populating PostgreSQL for {Type} with {Count} descriptors", outputType.Name, entities.Count);
-        await _descriptorWriter.PopulateAsync(outputType, entities);
-      }
-      else if (_batchAssertDispatchers.ContainsKey(outputType))
-      {
-        // Dynamic entities → ConvergeDB (batched within Epoch by EventGatewayService)
-        foreach (var entity in entities)
+        if (!_streamingActive) return;
+        if (!_descriptorBuffer.TryGetValue(bufferKey, out var byId))
         {
-          entity.Module = module;
-          await _batchAssertDispatchers[outputType](batch, entity, module);
+          byId = new Dictionary<string, BitcraftEventBase>();
+          _descriptorBuffer[bufferKey] = byId;
         }
-        _logger.LogInformation("Asserted {Count} {Type} entities to ConvergeDB (batched)", entities.Count, outputType.Name);
+        byId[mapped.Id] = mapped;
+      }
+      return;
+    }
+
+    if (!_batchAssertDispatchers.TryGetValue(bufferKey, out var dispatch))
+      return;
+
+    ConvergenceBatch batchToAssert;
+    ConvergenceBatch? batchToFlush = null;
+    lock (_streamLock)
+    {
+      if (!_streamingActive || _streamBatch == null) return;
+      batchToAssert = _streamBatch;
+    }
+
+    dispatch(batchToAssert, mapped, module).GetAwaiter().GetResult();
+
+    lock (_streamLock)
+    {
+      if (!_streamingActive) return;
+      _streamBufferedRows++;
+      _streamTotalRows++;
+      _streamTypeCounts[bufferKey] = _streamTypeCounts.GetValueOrDefault(bufferKey) + 1;
+      if (_streamBufferedRows >= FlushThresholdRows)
+      {
+        batchToFlush = _streamBatch;
+        _streamBatch = _convergeWriter.Batch();
+        _streamBufferedRows = 0;
       }
     }
-    // batch auto-flushes on DisposeAsync
+
+    if (batchToFlush != null)
+      batchToFlush.DisposeAsync().AsTask().GetAwaiter().GetResult();
   }
 
   private void RegisterEventHandlers<TEntity, TOutput>(
@@ -371,9 +434,14 @@ public class EventSubscriberService : IEventSubscriber
       {
         try
         {
+          var module = _options.Value.Module;
           var mapped = mapper.Map(entity);
-          mapped.Module = _options.Value.Module;
-          if (TryBufferSnapshotRow(ctx, bufferKey, mapped)) return;
+          mapped.Module = module;
+          if (ctx.Event is Event<Reducer>.SubscribeApplied)
+          {
+            WriteStreamingRow(bufferKey, mapped, module);
+            return;
+          }
           PublishEvent(ctx, mapped, delete: false);
         }
         catch (Exception ex)
@@ -393,9 +461,14 @@ public class EventSubscriberService : IEventSubscriber
       {
         try
         {
+          var module = _options.Value.Module;
           var mapped = mapper.Map(newEntity);
-          mapped.Module = _options.Value.Module;
-          if (TryBufferSnapshotRow(ctx, bufferKey, mapped)) return;
+          mapped.Module = module;
+          if (ctx.Event is Event<Reducer>.SubscribeApplied)
+          {
+            WriteStreamingRow(bufferKey, mapped, module);
+            return;
+          }
           PublishEvent(ctx, mapped, delete: false);
         }
         catch (Exception ex)
@@ -428,29 +501,6 @@ public class EventSubscriberService : IEventSubscriber
 
       deleteEvent.AddEventHandler(table, handlerDelegate);
     }
-  }
-
-  private bool TryBufferSnapshotRow(
-    EventContext ctx,
-    Type bufferKey,
-    BitcraftEventBase mapped)
-  {
-    if (ctx.Event is not Event<Reducer>.SubscribeApplied) return false;
-
-    lock (_snapshotLock)
-    {
-      if (_snapshotComplete) return false;
-
-      _snapshotStopwatch ??= Stopwatch.StartNew();
-
-      if (!_snapshotBuffer.TryGetValue(bufferKey, out var byId))
-      {
-        byId = new Dictionary<string, BitcraftEventBase>();
-        _snapshotBuffer[bufferKey] = byId;
-      }
-      byId[mapped.Id] = mapped;
-    }
-    return true;
   }
 
   private static Delegate CreateCompatibleDelegate(EventInfo eventInfo, Delegate handler)
