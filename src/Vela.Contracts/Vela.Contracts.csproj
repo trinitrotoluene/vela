@@ -12,8 +12,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Convergence.Client" Version="0.14.0" />
-    <PackageReference Include="Convergence.Client.Generators" Version="0.14.0" OutputItemType="Analyzer" ReferenceOutputAssembly="false">
+    <PackageReference Include="Convergence.Client" Version="0.16.0" />
+    <PackageReference Include="Convergence.Client.Generators" Version="0.16.0" OutputItemType="Analyzer" ReferenceOutputAssembly="false">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
