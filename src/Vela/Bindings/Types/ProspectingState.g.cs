@@ -31,6 +31,8 @@ namespace SpacetimeDB.Types
         public SpacetimeDB.Timestamp LastProspectionTimestamp;
         [DataMember(Name = "contribution")]
         public int Contribution;
+        [DataMember(Name = "to_next_node")]
+        public float ToNextNode;
 
         public ProspectingState(
             ulong EntityId,
@@ -41,7 +43,8 @@ namespace SpacetimeDB.Types
             int TotalSteps,
             System.Collections.Generic.List<float> NextCrumbAngle,
             SpacetimeDB.Timestamp LastProspectionTimestamp,
-            int Contribution
+            int Contribution,
+            float ToNextNode
         )
         {
             this.EntityId = EntityId;
@@ -53,6 +56,7 @@ namespace SpacetimeDB.Types
             this.NextCrumbAngle = NextCrumbAngle;
             this.LastProspectionTimestamp = LastProspectionTimestamp;
             this.Contribution = Contribution;
+            this.ToNextNode = ToNextNode;
         }
 
         public ProspectingState()

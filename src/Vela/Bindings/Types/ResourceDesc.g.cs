@@ -55,6 +55,14 @@ namespace SpacetimeDB.Types
         public bool NotRespawning;
         [DataMember(Name = "show_time_left")]
         public bool ShowTimeLeft;
+        [DataMember(Name = "on_destroy_yield_resource_chance")]
+        public float OnDestroyYieldResourceChance;
+        [DataMember(Name = "on_destroy_yield_resource_min_radius")]
+        public int OnDestroyYieldResourceMinRadius;
+        [DataMember(Name = "on_destroy_yield_resource_max_radius")]
+        public int OnDestroyYieldResourceMaxRadius;
+        [DataMember(Name = "light_radius")]
+        public int LightRadius;
 
         public ResourceDesc(
             int Id,
@@ -77,7 +85,11 @@ namespace SpacetimeDB.Types
             System.Collections.Generic.List<int> EnemyParamsId,
             float ScheduledRespawnTime,
             bool NotRespawning,
-            bool ShowTimeLeft
+            bool ShowTimeLeft,
+            float OnDestroyYieldResourceChance,
+            int OnDestroyYieldResourceMinRadius,
+            int OnDestroyYieldResourceMaxRadius,
+            int LightRadius
         )
         {
             this.Id = Id;
@@ -101,6 +113,10 @@ namespace SpacetimeDB.Types
             this.ScheduledRespawnTime = ScheduledRespawnTime;
             this.NotRespawning = NotRespawning;
             this.ShowTimeLeft = ShowTimeLeft;
+            this.OnDestroyYieldResourceChance = OnDestroyYieldResourceChance;
+            this.OnDestroyYieldResourceMinRadius = OnDestroyYieldResourceMinRadius;
+            this.OnDestroyYieldResourceMaxRadius = OnDestroyYieldResourceMaxRadius;
+            this.LightRadius = LightRadius;
         }
 
         public ResourceDesc()

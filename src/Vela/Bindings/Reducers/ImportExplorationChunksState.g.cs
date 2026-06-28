@@ -12,10 +12,10 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void ImportExplorationChunksStateHandler(ReducerEventContext ctx, System.Collections.Generic.List<SpacetimeDB.Types.ExplorationChunksState> records);
+        public delegate void ImportExplorationChunksStateHandler(ReducerEventContext ctx, System.Collections.Generic.List<SpacetimeDB.Types.ExplorationChunksStateV2> records);
         public event ImportExplorationChunksStateHandler? OnImportExplorationChunksState;
 
-        public void ImportExplorationChunksState(System.Collections.Generic.List<SpacetimeDB.Types.ExplorationChunksState> records)
+        public void ImportExplorationChunksState(System.Collections.Generic.List<SpacetimeDB.Types.ExplorationChunksStateV2> records)
         {
             conn.InternalCallReducer(new Reducer.ImportExplorationChunksState(records), this.SetCallReducerFlags.ImportExplorationChunksStateFlags);
         }
@@ -49,9 +49,9 @@ namespace SpacetimeDB.Types
         public sealed partial class ImportExplorationChunksState : Reducer, IReducerArgs
         {
             [DataMember(Name = "records")]
-            public System.Collections.Generic.List<ExplorationChunksState> Records;
+            public System.Collections.Generic.List<ExplorationChunksStateV2> Records;
 
-            public ImportExplorationChunksState(System.Collections.Generic.List<ExplorationChunksState> Records)
+            public ImportExplorationChunksState(System.Collections.Generic.List<ExplorationChunksStateV2> Records)
             {
                 this.Records = Records;
             }

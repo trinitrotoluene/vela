@@ -12,10 +12,10 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void ProcessInterModuleMessageHandler(ReducerEventContext ctx, byte sender, SpacetimeDB.Types.InterModuleMessage message);
+        public delegate void ProcessInterModuleMessageHandler(ReducerEventContext ctx, byte sender, SpacetimeDB.Types.InterModuleMessageV4 message);
         public event ProcessInterModuleMessageHandler? OnProcessInterModuleMessage;
 
-        public void ProcessInterModuleMessage(byte sender, SpacetimeDB.Types.InterModuleMessage message)
+        public void ProcessInterModuleMessage(byte sender, SpacetimeDB.Types.InterModuleMessageV4 message)
         {
             conn.InternalCallReducer(new Reducer.ProcessInterModuleMessage(sender, message), this.SetCallReducerFlags.ProcessInterModuleMessageFlags);
         }
@@ -52,11 +52,11 @@ namespace SpacetimeDB.Types
             [DataMember(Name = "sender")]
             public byte Sender;
             [DataMember(Name = "message")]
-            public InterModuleMessage Message;
+            public InterModuleMessageV4 Message;
 
             public ProcessInterModuleMessage(
                 byte Sender,
-                InterModuleMessage Message
+                InterModuleMessageV4 Message
             )
             {
                 this.Sender = Sender;
