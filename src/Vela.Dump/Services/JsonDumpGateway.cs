@@ -63,9 +63,10 @@ public class JsonDumpGateway : BackgroundService
 
   private void RunConnectionLifecycle(DbConnection conn)
   {
-    conn.SubscriptionBuilder()
+    _ = conn.SubscriptionBuilder()
       .OnApplied((ctx) =>
       {
+        _logger.LogInformation(string.Join("\n", _dumpOptions.Value.Subscriptions));
         _logger.LogInformation("Subscriptions applied, starting initial dump");
         Task.Run(async () =>
         {

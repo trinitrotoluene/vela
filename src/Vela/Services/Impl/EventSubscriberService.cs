@@ -1,10 +1,7 @@
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
-using System.Net.Sockets;
 using System.Reflection;
 using Convergence.Client;
-using Convergence.Client.Protocol;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SpacetimeDB;
@@ -24,7 +21,6 @@ public class EventSubscriberService : IEventSubscriber
   private readonly ILogger<EventGatewayService> _logger;
   private readonly IConvergeDbWriter _convergeWriter;
   private readonly IDescriptorDbWriter _descriptorWriter;
-  private readonly IHostApplicationLifetime _hostLifetime;
   private readonly List<object> _eventMappings;
   private readonly IOptions<BitcraftServiceOptions> _options;
   private readonly Dictionary<Type, Func<BitcraftEventBase, string, EntityMetadata?, Task>> _assertDispatchers;
@@ -52,14 +48,12 @@ public class EventSubscriberService : IEventSubscriber
     IMeterFactory metricsFactory,
     IMetricHelpers metricHelpers,
     IConvergeDbWriter convergeWriter,
-    IDescriptorDbWriter descriptorWriter,
-    IHostApplicationLifetime hostLifetime)
+    IDescriptorDbWriter descriptorWriter)
   {
     _logger = logger;
     _options = options;
     _convergeWriter = convergeWriter;
     _descriptorWriter = descriptorWriter;
-    _hostLifetime = hostLifetime;
 
     _eventMappings = LoadMappings();
     var metrics = metricsFactory.Create("Vela", null, [
@@ -562,27 +556,11 @@ public class EventSubscriberService : IEventSubscriber
     }
     catch (Exception ex)
     {
+      // Conversion/serialization (and other per-event) failures: log and skip the event.
+      // Steady-state ConvergeDB writes are now buffer-only here, so they no longer raise
+      // transport errors — those surface on the per-tick flush and are handled (with the
+      // host-shutdown-for-clean-restart logic) in ConvergeDbWriter.FlushPendingAsync.
       _logger.LogError(ex, "Error publishing event for {Type}", typeof(T).Name);
-      if (IsConvergeDbTransportFailure(ex))
-      {
-        _logger.LogError("ConvergeDB transport failure detected - shutting down host for clean restart");
-        _hostLifetime.StopApplication();
-      }
     }
-  }
-
-  // A ConvergeDB transport failure invalidates the source epoch - in-process recovery
-  // would leak stale entities. Signal the host to shut down so Docker restarts the
-  // container and re-runs the startup path (including the initial EpochAsync re-seed).
-  private static bool IsConvergeDbTransportFailure(Exception ex)
-  {
-    for (var e = ex; e is not null; e = e.InnerException)
-    {
-      if (e is ProtocolException or SocketException or IOException or ObjectDisposedException)
-        return true;
-      if (e.GetType().FullName?.StartsWith("Convergence.Client.", StringComparison.Ordinal) == true)
-        return true;
-    }
-    return false;
   }
 }

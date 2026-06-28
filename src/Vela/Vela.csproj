@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Exposes the internal IConvergenceWriteSink seam + test constructor on ConvergeDbWriter. -->
+    <InternalsVisibleTo Include="Vela.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

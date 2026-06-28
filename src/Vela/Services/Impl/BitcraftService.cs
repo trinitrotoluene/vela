@@ -22,21 +22,32 @@ public class BitcraftService : BackgroundService
   private readonly IOptions<BitcraftServiceOptions> _options;
   private readonly IDbConnectionAccessor _accessor;
   private readonly IMetricHelpers _metricHelpers;
+  private readonly IConvergeDbWriter _convergeWriter;
   private readonly AsyncRetryPolicy _retryPolicy;
   private readonly SemaphoreSlim _reconnectionLock;
   private Task? _connectionLoopTask;
   private CancellationTokenSource? _connLoopCts;
+
+  // Stagger the first reconnect attempt across instances. The decorrelated jitter in
+  // GetRetrySchedule only spaces out *failed* retries; when a fleet-wide disconnect is
+  // followed by the backend coming straight back, every instance's first attempt would
+  // otherwise succeed at once and rebuild its memory-heavy region snapshot in lockstep.
+  // Smaller than cold-start jitter since reconnects should recover faster; the
+  // per-container memory limit remains the real safety net.
+  private const int ReconnectJitterMaxMs = 15_000;
 
   public BitcraftService(
     ILogger<BitcraftService> logger,
     IOptions<BitcraftServiceOptions> options,
     IDbConnectionAccessor accessor,
     IMeterFactory metricsFactory,
-    IMetricHelpers metricHelpers
+    IMetricHelpers metricHelpers,
+    IConvergeDbWriter convergeWriter
   )
   {
     _logger = logger;
     _options = options;
+    _convergeWriter = convergeWriter;
     _retryPolicy = Policy.Handle<Exception>()
       .WaitAndRetryAsync(
         GetRetrySchedule(),
@@ -59,20 +70,31 @@ public class BitcraftService : BackgroundService
 
   private static IEnumerable<TimeSpan> GetRetrySchedule()
   {
-    // Start with exponential backoff with jitter for the first few retries
-    int maxRetries = 5;
+    // Decorrelated jitter (AWS-style): each delay is randomised within a window
+    // seeded off the previous one, so a fleet that all dropped at once (e.g. a
+    // Bitcraft backend blip) desynchronises instead of reconnecting — and
+    // rebuilding their memory-heavy region snapshots — in lockstep. The cap keeps
+    // a solo transient blip recovering quickly while still spreading the herd.
+    var baseDelay = TimeSpan.FromSeconds(1);
+    var cap = TimeSpan.FromSeconds(30);
+    var prev = baseDelay;
 
-    for (int i = 0; i < maxRetries; i++)
+    const int fastRetries = 6;
+    for (int i = 0; i < fastRetries; i++)
     {
-      var backoff = TimeSpan.FromSeconds(Math.Pow(2, i));
-      var jitter = TimeSpan.FromSeconds(Random.Shared.Next(0, 9));
-      yield return backoff + jitter;
+      // next ∈ [base, min(cap, prev * 3)]
+      var upperMs = Math.Min(cap.TotalMilliseconds, prev.TotalMilliseconds * 3);
+      var delayMs = baseDelay.TotalMilliseconds
+        + Random.Shared.NextDouble() * (upperMs - baseDelay.TotalMilliseconds);
+      prev = TimeSpan.FromMilliseconds(delayMs);
+      yield return prev;
     }
 
-    // Retry indefinitely every 30 minutes with jitter after exponential phase
+    // After the fast phase, retry indefinitely ~every 10 minutes with a wide
+    // (up to 2 min) spread so a long outage doesn't reconnect the fleet in unison.
     while (true)
     {
-      yield return TimeSpan.FromMinutes(10).Add(TimeSpan.FromSeconds(Random.Shared.Next(0, 30)));
+      yield return TimeSpan.FromMinutes(10).Add(TimeSpan.FromSeconds(Random.Shared.Next(0, 120)));
     }
   }
 
@@ -80,8 +102,12 @@ public class BitcraftService : BackgroundService
   {
     try
     {
-      // Initial jitter to avoid thundering herd if many instances start simultaneously
-      await Task.Delay(Random.Shared.Next(0, 10_000), cancellationToken);
+      // Initial jitter to avoid a thundering herd: gateways booting together would
+      // otherwise all build their (memory-heavy) initial region snapshot at once.
+      // Spread cold start over ~30s; the per-container memory limit is the real
+      // safety net — this just lowers peak snapshot concurrency. Tune if recovery
+      // feels too slow on a small fleet.
+      await Task.Delay(Random.Shared.Next(0, 30_000), cancellationToken);
 
       await ConnectWithRetryAsync(cancellationToken);
       await Task.Delay(Timeout.Infinite, cancellationToken);
@@ -112,6 +138,11 @@ public class BitcraftService : BackgroundService
       {
         var startMs = stopwatch.ElapsedMilliseconds;
         conn.FrameTick();
+        // Flush ConvergeDB writes buffered during this tick's FrameTick (steady-state writes are
+        // buffer-only). Kept inside the timed section so 60Hz pacing accounts for flush time. All
+        // gating (snapshot epoch, empty-tick skip) and transport-failure handling live in the
+        // writer; BitcraftService stays oblivious to ConvergeDB semantics.
+        await _convergeWriter.FlushPendingAsync(_connLoopCts.Token);
         var endMs = stopwatch.ElapsedMilliseconds;
         var elapsedMs = endMs - startMs;
 
@@ -205,7 +236,18 @@ public class BitcraftService : BackgroundService
         // so we need to schedule the reconnection ourselves.
         if (tcs.Task.IsCompleted)
         {
-          _ = Task.Run(() => ConnectWithRetryAsync(cancellationToken));
+          _ = Task.Run(async () =>
+          {
+            try
+            {
+              await Task.Delay(Random.Shared.Next(0, ReconnectJitterMaxMs), cancellationToken);
+              await ConnectWithRetryAsync(cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+              _logger.LogInformation("Reconnect cancelled during shutdown");
+            }
+          });
           return;
         }
 
