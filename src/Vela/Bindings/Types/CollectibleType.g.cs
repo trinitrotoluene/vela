@@ -33,5 +33,6 @@ namespace SpacetimeDB.Types
         Emote,
         HousingWalls,
         HousingFloor,
+        DeployableAppearanceOverride,
     }
 }

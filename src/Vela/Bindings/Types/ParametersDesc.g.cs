@@ -197,6 +197,10 @@ namespace SpacetimeDB.Types
         public uint EmpireMoveCapitalCurrencyCost;
         [DataMember(Name = "hexite_capsule_currency_cost")]
         public uint HexiteCapsuleCurrencyCost;
+        [DataMember(Name = "prospecting_herd_immunity_secs")]
+        public uint ProspectingHerdImmunitySecs;
+        [DataMember(Name = "rp_walk_speed")]
+        public float RpWalkSpeed;
 
         public ParametersDesc(
             int Version,
@@ -290,7 +294,9 @@ namespace SpacetimeDB.Types
             uint EmpireStartingCurrency,
             uint EmpireRenameCurrencyCost,
             uint EmpireMoveCapitalCurrencyCost,
-            uint HexiteCapsuleCurrencyCost
+            uint HexiteCapsuleCurrencyCost,
+            uint ProspectingHerdImmunitySecs,
+            float RpWalkSpeed
         )
         {
             this.Version = Version;
@@ -385,6 +391,8 @@ namespace SpacetimeDB.Types
             this.EmpireRenameCurrencyCost = EmpireRenameCurrencyCost;
             this.EmpireMoveCapitalCurrencyCost = EmpireMoveCapitalCurrencyCost;
             this.HexiteCapsuleCurrencyCost = HexiteCapsuleCurrencyCost;
+            this.ProspectingHerdImmunitySecs = ProspectingHerdImmunitySecs;
+            this.RpWalkSpeed = RpWalkSpeed;
         }
 
         public ParametersDesc()

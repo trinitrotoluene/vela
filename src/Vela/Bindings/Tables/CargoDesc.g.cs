@@ -62,6 +62,8 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<CargoDesc, string> Tag { get; }
         public global::SpacetimeDB.Col<CargoDesc, Rarity> Rarity { get; }
         public global::SpacetimeDB.Col<CargoDesc, bool> NotPickupable { get; }
+        public global::SpacetimeDB.Col<CargoDesc, bool> CannotStoreInBuildings { get; }
+        public global::SpacetimeDB.Col<CargoDesc, bool> CannotStoreInDeployables { get; }
 
         public CargoDescCols(string tableName)
         {
@@ -88,6 +90,8 @@ namespace SpacetimeDB.Types
             Tag = new global::SpacetimeDB.Col<CargoDesc, string>(tableName, "tag");
             Rarity = new global::SpacetimeDB.Col<CargoDesc, Rarity>(tableName, "rarity");
             NotPickupable = new global::SpacetimeDB.Col<CargoDesc, bool>(tableName, "not_pickupable");
+            CannotStoreInBuildings = new global::SpacetimeDB.Col<CargoDesc, bool>(tableName, "cannot_store_in_buildings");
+            CannotStoreInDeployables = new global::SpacetimeDB.Col<CargoDesc, bool>(tableName, "cannot_store_in_deployables");
         }
     }
 

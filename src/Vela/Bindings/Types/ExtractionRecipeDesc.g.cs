@@ -55,6 +55,10 @@ namespace SpacetimeDB.Types
         public int? EmpireRankRequirement;
         [DataMember(Name = "show_in_progression")]
         public bool ShowInProgression;
+        [DataMember(Name = "empire_permission_required")]
+        public EmpirePermission? EmpirePermissionRequired;
+        [DataMember(Name = "spawned_placeables")]
+        public System.Collections.Generic.List<ExtractionSpawnedPlaceable>? SpawnedPlaceables;
 
         public ExtractionRecipeDesc(
             int Id,
@@ -77,7 +81,9 @@ namespace SpacetimeDB.Types
             int ToolMeshIndex,
             int RecipePerformanceId,
             int? EmpireRankRequirement,
-            bool ShowInProgression
+            bool ShowInProgression,
+            EmpirePermission? EmpirePermissionRequired,
+            System.Collections.Generic.List<ExtractionSpawnedPlaceable>? SpawnedPlaceables
         )
         {
             this.Id = Id;
@@ -101,6 +107,8 @@ namespace SpacetimeDB.Types
             this.RecipePerformanceId = RecipePerformanceId;
             this.EmpireRankRequirement = EmpireRankRequirement;
             this.ShowInProgression = ShowInProgression;
+            this.EmpirePermissionRequired = EmpirePermissionRequired;
+            this.SpawnedPlaceables = SpawnedPlaceables;
         }
 
         public ExtractionRecipeDesc()

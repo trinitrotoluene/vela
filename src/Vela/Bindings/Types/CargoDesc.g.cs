@@ -59,6 +59,10 @@ namespace SpacetimeDB.Types
         public Rarity Rarity;
         [DataMember(Name = "not_pickupable")]
         public bool NotPickupable;
+        [DataMember(Name = "cannot_store_in_buildings")]
+        public bool CannotStoreInBuildings;
+        [DataMember(Name = "cannot_store_in_deployables")]
+        public bool CannotStoreInDeployables;
 
         public CargoDesc(
             int Id,
@@ -83,7 +87,9 @@ namespace SpacetimeDB.Types
             int Tier,
             string Tag,
             Rarity Rarity,
-            bool NotPickupable
+            bool NotPickupable,
+            bool CannotStoreInBuildings,
+            bool CannotStoreInDeployables
         )
         {
             this.Id = Id;
@@ -109,6 +115,8 @@ namespace SpacetimeDB.Types
             this.Tag = Tag;
             this.Rarity = Rarity;
             this.NotPickupable = NotPickupable;
+            this.CannotStoreInBuildings = CannotStoreInBuildings;
+            this.CannotStoreInDeployables = CannotStoreInDeployables;
         }
 
         public CargoDesc()

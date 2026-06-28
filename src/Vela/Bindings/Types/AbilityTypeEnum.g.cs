@@ -22,5 +22,6 @@ namespace SpacetimeDB.Types
         AddToToolbelt,
         DeployableToggle,
         Emote,
+        EquipPreset,
     }
 }

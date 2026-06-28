@@ -23,8 +23,8 @@ namespace SpacetimeDB.Types
         public float Duration;
         [DataMember(Name = "move_type")]
         public int MoveType;
-        [DataMember(Name = "running")]
-        public bool Running;
+        [DataMember(Name = "is_rp_walk")]
+        public bool IsRpWalk;
 
         public PlayerMoveRequest(
             ulong Timestamp,
@@ -32,7 +32,7 @@ namespace SpacetimeDB.Types
             OffsetCoordinatesFloat? Origin,
             float Duration,
             int MoveType,
-            bool Running
+            bool IsRpWalk
         )
         {
             this.Timestamp = Timestamp;
@@ -40,7 +40,7 @@ namespace SpacetimeDB.Types
             this.Origin = Origin;
             this.Duration = Duration;
             this.MoveType = MoveType;
-            this.Running = Running;
+            this.IsRpWalk = IsRpWalk;
         }
 
         public PlayerMoveRequest()

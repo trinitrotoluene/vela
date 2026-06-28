@@ -52,5 +52,7 @@ namespace SpacetimeDB.Types
         SpiderDungeonSmallSpider,
         SpiderDungeonSpiderNest,
         EnragedAlphaJakyl,
+        DeerSwift,
+        CrystalizedHexiteCrab,
     }
 }

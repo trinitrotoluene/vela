@@ -42,5 +42,7 @@ namespace SpacetimeDB.Types
         DestroyPillarShaping,
         AbilityCustom,
         Prospect,
+        PlacePlaceable,
+        InteractPlaceable,
     }
 }
