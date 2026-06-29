@@ -72,8 +72,8 @@ public class BitcraftService : BackgroundService
   {
     // Decorrelated jitter (AWS-style): each delay is randomised within a window
     // seeded off the previous one, so a fleet that all dropped at once (e.g. a
-    // Bitcraft backend blip) desynchronises instead of reconnecting — and
-    // rebuilding their memory-heavy region snapshots — in lockstep. The cap keeps
+    // Bitcraft backend blip) desynchronises instead of reconnecting - and
+    // rebuilding their memory-heavy region snapshots - in lockstep. The cap keeps
     // a solo transient blip recovering quickly while still spreading the herd.
     var baseDelay = TimeSpan.FromSeconds(1);
     var cap = TimeSpan.FromSeconds(30);
@@ -105,7 +105,7 @@ public class BitcraftService : BackgroundService
       // Initial jitter to avoid a thundering herd: gateways booting together would
       // otherwise all build their (memory-heavy) initial region snapshot at once.
       // Spread cold start over ~30s; the per-container memory limit is the real
-      // safety net — this just lowers peak snapshot concurrency. Tune if recovery
+      // safety net - this just lowers peak snapshot concurrency. Tune if recovery
       // feels too slow on a small fleet.
       await Task.Delay(Random.Shared.Next(0, 30_000), cancellationToken);
 
@@ -153,12 +153,21 @@ public class BitcraftService : BackgroundService
 
       _logger.LogInformation("Loop ended");
     }
-    catch (TaskCanceledException)
+    catch (OperationCanceledException)
     {
+      // Cancellation = the host is stopping (graceful shutdown, or a fatal restart triggered
+      // elsewhere). Catch the base type, not just TaskCanceledException: FlushPendingAsync surfaces
+      // cancellation as a bare OperationCanceledException (from SemaphoreSlim.WaitAsync), while
+      // Task.Delay throws the TaskCanceledException subtype - both are clean shutdown, not errors.
       _logger.LogInformation("Connection loop cancelled");
     }
     catch (Exception err)
     {
+      // Only SpacetimeDB-domain faults reach here. ConvergeDB failures are made fatal inside the
+      // writer (it restarts the process, then swallows), so they can no longer be misread here as a
+      // recoverable upstream blip - the bug that wedged the host. A genuine FrameTick fault drops the
+      // connection in the finally below; OnDisconnect then reconnects in-process. Recovery for the
+      // SpacetimeDB domain is reconnect, never a process restart.
       _logger.LogError(err, "Error occurred in connection loop");
     }
     finally

@@ -6,7 +6,7 @@ namespace Vela.Events
   public abstract record BitcraftEventBase(string Id)
   {
     // Set on every event before publish so ConvergeDB writes carry the module tag.
-    // Not mapped to Postgres — descriptor tables are global and shouldn't carry a module column,
+    // Not mapped to Postgres - descriptor tables are global and shouldn't carry a module column,
     // so on the Postgres path this assignment is a harmless no-op.
     [NotMapped]
     public string Module { get; set; } = null!;
@@ -31,9 +31,9 @@ namespace Vela.Events
         var hasConvergeDb = type.GetCustomAttribute<ConvergeDbAttribute>() != null;
 
         if (hasPostgres && hasConvergeDb)
-          violations.Add($"{type.Name} has both [Postgres] and [ConvergeDb] — pick one");
+          violations.Add($"{type.Name} has both [Postgres] and [ConvergeDb] - pick one");
         else if (!hasPostgres && !hasConvergeDb)
-          violations.Add($"{type.Name} has neither [Postgres] nor [ConvergeDb] — every entity must declare its storage");
+          violations.Add($"{type.Name} has neither [Postgres] nor [ConvergeDb] - every entity must declare its storage");
         else if (hasPostgres)
           postgres.Add(type);
         else

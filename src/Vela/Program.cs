@@ -100,6 +100,8 @@ builder.Services.AddSingleton<IDescriptorDbWriter, DescriptorDbWriter>();
 builder.Services.AddSingleton<IDbConnectionAccessor, DbConnectionAccessor>();
 builder.Services.AddSingleton<IEventSubscriber, EventSubscriberService>();
 builder.Services.AddSingleton<IMetricHelpers, MetricHelpers>();
+// The single "restart me" primitive. Singleton so its first-fatal-wins guard is process-wide.
+builder.Services.AddSingleton<IFatalRestart, FatalRestart>();
 
 builder.Services.AddHttpClient("Heartbeat", client =>
 {
@@ -114,9 +116,12 @@ builder.Services.AddOptions<BitcraftServiceOptions>()
 builder.Services.AddHostedService<BitcraftService>();
 builder.Services.AddHostedService<EventGatewayService>();
 
-// Any unhandled exception in a BackgroundService stops the host → non-zero exit →
-// Docker's restart policy re-runs the startup path (including the ConvergeDB
-// EpochAsync-wrapped populate that cleanly re-seeds state from scratch).
+// Restart model: deliberate restarts go through IFatalRestart - a ConvergeDB I/O failure or an
+// unrecoverable lifecycle error requests a graceful, NON-ZERO-exit shutdown so the orchestrator
+// restarts the container and the startup path re-seeds ConvergeDB from a clean epoch. (Recoverable
+// SpacetimeDB blips never restart; they reconnect in-process.) StopHost stays purely as a backstop:
+// if a BackgroundService ever throws something we did NOT route through IFatalRestart, stop the host
+// rather than limp on with a dead service.
 builder.Services.Configure<HostOptions>(o =>
     o.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.StopHost);
 

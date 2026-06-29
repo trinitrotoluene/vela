@@ -88,7 +88,7 @@ public class EventSubscriberService : IEventSubscriber
 
     if (missing.Count > 0)
       throw new InvalidOperationException(
-        "EventSubscriberService dispatcher coverage gap — every [ConvergeDb] type must be wired into all three dispatcher maps:\n  "
+        "EventSubscriberService dispatcher coverage gap - every [ConvergeDb] type must be wired into all three dispatcher maps:\n  "
         + string.Join("\n  ", missing));
   }
 
@@ -558,7 +558,7 @@ public class EventSubscriberService : IEventSubscriber
     {
       // Conversion/serialization (and other per-event) failures: log and skip the event.
       // Steady-state ConvergeDB writes are now buffer-only here, so they no longer raise
-      // transport errors — those surface on the per-tick flush and are handled (with the
+      // transport errors - those surface on the per-tick flush and are handled (with the
       // host-shutdown-for-clean-restart logic) in ConvergeDbWriter.FlushPendingAsync.
       _logger.LogError(ex, "Error publishing event for {Type}", typeof(T).Name);
     }

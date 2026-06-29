@@ -14,7 +14,7 @@ public class EventGatewayService : BackgroundService
   private readonly IConvergeDbWriter _convergeWriter;
   private readonly IOptions<BitcraftServiceOptions> _options;
   private readonly IHttpClientFactory _httpClientFactory;
-  private readonly IHostApplicationLifetime _hostLifetime;
+  private readonly IFatalRestart _fatalRestart;
 
   public EventGatewayService(
     ILogger<EventGatewayService> logger,
@@ -24,7 +24,7 @@ public class EventGatewayService : BackgroundService
     IOptions<BitcraftServiceOptions> options,
     IMetricHelpers metrics,
     IHttpClientFactory httpClientFactory,
-    IHostApplicationLifetime hostLifetime
+    IFatalRestart fatalRestart
   )
   {
     _logger = logger;
@@ -34,7 +34,7 @@ public class EventGatewayService : BackgroundService
     _options = options;
     _metrics = metrics;
     _httpClientFactory = httpClientFactory;
-    _hostLifetime = hostLifetime;
+    _fatalRestart = fatalRestart;
   }
 
   protected override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -69,8 +69,13 @@ public class EventGatewayService : BackgroundService
       }
       catch (Exception ex)
       {
-        _logger.LogError(ex, "Error in event gateway loop {message}", ex.Message);
-        throw;
+        // Unexpected lifecycle failure (subscription setup, subscriber wiring, etc.). Treat it as
+        // fatal and restart through the one restart primitive rather than re-throwing - this keeps the
+        // restart path and exit code consistent with ConvergeDB failures instead of depending on the
+        // host's unhandled-exception (StopHost) behaviour, whose exit code is harder to reason about.
+        _logger.LogError(ex, "Error in event gateway loop");
+        _fatalRestart.Trigger($"event gateway loop failed: {ex.Message}");
+        break;
       }
     }
   }
@@ -109,7 +114,7 @@ public class EventGatewayService : BackgroundService
           if (Interlocked.Decrement(ref remaining) == 0)
           {
             // OnApplied is a synchronous SDK callback on the FrameTick thread. Hand the async
-            // finalize work off to a Task so we don't block FrameTick — and so any awaitable
+            // finalize work off to a Task so we don't block FrameTick - and so any awaitable
             // exceptions surface cleanly.
             _ = Task.Run(() => FinalizeSnapshotAsync(conn, cancellationToken));
           }
@@ -118,7 +123,7 @@ public class EventGatewayService : BackgroundService
         {
           _logger.LogError(ex, "Error applying subscription batch {Index}/{Total}",
             batchIndex + 1, batches.Length);
-          // Drop the connection — process restart will abandon the open epoch on the server
+          // Drop the connection - process restart will abandon the open epoch on the server
           // and re-seed from a fresh epoch on next startup.
           conn.Disconnect();
         })
@@ -130,7 +135,7 @@ public class EventGatewayService : BackgroundService
   {
     try
     {
-      _logger.LogInformation("All subscription batches applied — finalizing streaming snapshot");
+      _logger.LogInformation("All subscription batches applied - finalizing streaming snapshot");
       await _subscriber.EndStreamingSnapshotAsync();
       await _convergeWriter.EndEpochAsync(cancellationToken);
       _logger.LogInformation("Epoch complete - ConvergeDB and PostgreSQL populated");
@@ -138,8 +143,11 @@ public class EventGatewayService : BackgroundService
     }
     catch (Exception ex)
     {
-      _logger.LogError(ex, "Fatal error finalizing snapshot epoch — shutting down host for clean restart");
-      _hostLifetime.StopApplication();
+      // Safety net: ConvergeDB I/O failures here already restart via the writer (EndEpochAsync). This
+      // catches anything else in the finalize path (e.g. the subscriber's snapshot teardown) and
+      // restarts through the same primitive so the snapshot can re-seed cleanly.
+      _logger.LogError(ex, "Fatal error finalizing snapshot epoch");
+      _fatalRestart.Trigger($"snapshot epoch finalize failed: {ex.Message}");
     }
   }
 

@@ -1,9 +1,6 @@
 using System.Collections.Concurrent;
-using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using Convergence.Client;
-using Convergence.Client.Protocol;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Vela.Contracts.Entities;
@@ -16,7 +13,7 @@ public class ConvergeDbWriter : IConvergeDbWriter
     private readonly ILogger<ConvergeDbWriter> _logger;
     private readonly IOptions<BitcraftServiceOptions> _bitcraftOptions;
     private readonly IOptions<ConvergeDbOptions> _options;
-    private readonly IHostApplicationLifetime _hostLifetime;
+    private readonly IFatalRestart _fatalRestart;
     private ConvergenceClient? _client;
     private readonly ConcurrentDictionary<Type, object> _kindHandles = new();
     private int _activeEpochs;
@@ -29,8 +26,8 @@ public class ConvergeDbWriter : IConvergeDbWriter
 
     // Set on every buffered steady-state write, cleared on flush, so idle ticks can skip
     // flushing entirely (ConvergenceClient.FlushAsync still awaits a TCP pipe flush even with an
-    // empty buffer). Effectively single-threaded — buffering happens inside conn.FrameTick() and
-    // the flush immediately after, both on the connection-loop thread — but accessed via
+    // empty buffer). Effectively single-threaded - buffering happens inside conn.FrameTick() and
+    // the flush immediately after, both on the connection-loop thread - but accessed via
     // Volatile/Interlocked so the test-and-clear is well defined regardless.
     private int _dirty;
 
@@ -38,13 +35,13 @@ public class ConvergeDbWriter : IConvergeDbWriter
         ILogger<ConvergeDbWriter> logger,
         IOptions<BitcraftServiceOptions> bitcraftOptions,
         IOptions<ConvergeDbOptions> options,
-        IHostApplicationLifetime hostLifetime
+        IFatalRestart fatalRestart
     )
     {
         _logger = logger;
         _bitcraftOptions = bitcraftOptions;
         _options = options;
-        _hostLifetime = hostLifetime;
+        _fatalRestart = fatalRestart;
     }
 
     // Test-only: inject a fake write sink instead of connecting to a real ConvergeDB server.
@@ -52,7 +49,7 @@ public class ConvergeDbWriter : IConvergeDbWriter
     // against the supplied sink.
     internal ConvergeDbWriter(
         ILogger<ConvergeDbWriter> logger,
-        IHostApplicationLifetime hostLifetime,
+        IFatalRestart fatalRestart,
         IConvergenceWriteSink sink
     )
     {
@@ -60,7 +57,7 @@ public class ConvergeDbWriter : IConvergeDbWriter
         // Option fields are only read by InitializeAsync, which tests skip.
         _bitcraftOptions = null!;
         _options = null!;
-        _hostLifetime = hostLifetime;
+        _fatalRestart = fatalRestart;
         _sink = sink;
     }
 
@@ -126,10 +123,10 @@ public class ConvergeDbWriter : IConvergeDbWriter
 
     // Buffer-only: the write is appended to the client's pending-op buffer and sent later by
     // FlushPendingAsync (once per connection-loop tick). Batching only changes how ops are framed
-    // on the wire, not their content/order/identity — arrival order is preserved end to end.
+    // on the wire, not their content/order/identity - arrival order is preserved end to end.
     //
     // NOTE (converged state only): ConvergeDB's server-side accumulator coalesces writes to the
-    // same entity within its ~20ms time-based window by last-writer-wins — field data, source bits
+    // same entity within its ~20ms time-based window by last-writer-wins - field data, source bits
     // AND metadata. So in the converged STATE view (subscriptions/point-queries), if the same
     // entity is asserted twice in one window with different metadata only the last op's metadata
     // survives. This is true with or without client-side batching (the window is time-based, not
@@ -151,12 +148,12 @@ public class ConvergeDbWriter : IConvergeDbWriter
     public async Task FlushPendingAsync(CancellationToken ct)
     {
         // Gate 1: while a snapshot epoch is open the streaming snapshot owns flushing of the
-        // shared client buffer; a per-tick steady-state flush must not fire. Read across threads —
+        // shared client buffer; a per-tick steady-state flush must not fire. Read across threads -
         // _activeEpochs is mutated on the lifecycle/finalize threads (Begin/EndEpochAsync).
         if (Volatile.Read(ref _activeEpochs) > 0)
             return;
 
-        // Gate 2: nothing buffered since the last flush — skip the idle tick entirely.
+        // Gate 2: nothing buffered since the last flush - skip the idle tick entirely.
         if (Interlocked.Exchange(ref _dirty, 0) == 0)
             return;
 
@@ -164,14 +161,9 @@ public class ConvergeDbWriter : IConvergeDbWriter
         {
             await _sink!.FlushAsync(ct);
         }
-        catch (Exception ex) when (IsConvergeDbTransportFailure(ex))
+        catch (Exception ex) when (!ct.IsCancellationRequested)
         {
-            // A transport failure invalidates the source epoch; in-process recovery would leak
-            // stale entities. Signal the host to shut down so Docker restarts the container and
-            // re-runs the startup path (fresh-epoch re-seed). Buffered-but-unsent ops are lost,
-            // which is fine — recovery re-seeds everything.
-            _logger.LogError(ex, "ConvergeDB transport failure during flush - shutting down host for clean restart");
-            _hostLifetime.StopApplication();
+            FatalConvergeDbFailure("flush", ex);
         }
     }
 
@@ -182,12 +174,22 @@ public class ConvergeDbWriter : IConvergeDbWriter
 
     public async Task BeginEpochAsync(CancellationToken ct = default)
     {
+        // Double-begin is a Vela logic error, not a ConvergeDB I/O failure - fail fast rather than
+        // restart, so the bug surfaces instead of hiding behind a container bounce.
         if (Interlocked.Increment(ref _activeEpochs) > 1)
         {
             Interlocked.Decrement(ref _activeEpochs);
             throw new InvalidOperationException("Cannot begin a ConvergeDB epoch while another is already open");
         }
-        await _sink!.EpochBeginAsync(ct);
+
+        try
+        {
+            await _sink!.EpochBeginAsync(ct);
+        }
+        catch (Exception ex) when (!ct.IsCancellationRequested)
+        {
+            FatalConvergeDbFailure("begin epoch", ex);
+        }
     }
 
     public async Task EndEpochAsync(CancellationToken ct = default)
@@ -196,10 +198,39 @@ public class ConvergeDbWriter : IConvergeDbWriter
         {
             await _sink!.EpochEndAsync(ct);
         }
+        catch (Exception ex) when (!ct.IsCancellationRequested)
+        {
+            FatalConvergeDbFailure("end epoch", ex);
+        }
         finally
         {
             Interlocked.Decrement(ref _activeEpochs);
         }
+    }
+
+    // Single, uniform reaction to a ConvergeDB I/O failure (begin/end epoch or flush): it is always
+    // fatal. ConvergeDB is the system of record; a dropped or absent connection means the current
+    // source epoch is compromised, and in-process recovery would leak stale entities. Hand off to
+    // IFatalRestart, which exits the process so the orchestrator restarts it and the startup path
+    // re-seeds from a clean epoch. Buffered-but-unsent ops are lost - fine, the re-seed restores
+    // everything.
+    //
+    // Callers swallow once this returns: the exception's only job was to surface a broken ConvergeDB,
+    // and that is now done. Every background loop unwinds on the cancellation the restart triggers,
+    // so re-throwing would only risk the failure being mistaken for a recoverable SpacetimeDB blip
+    // (the original hang).
+    //
+    // The catch filter is `when (!ct.IsCancellationRequested)` - NOT a type check. Rationale: the
+    // Convergence client signals a dropped connection as a bare InvalidOperationException("Not
+    // connected."), and a mid-request drop can even surface as an OperationCanceledException from the
+    // client's own internal token - so no exception type reliably means "transport failure". The one
+    // thing that reliably means "this is benign" is OUR token being cancelled: that is the host
+    // stopping (graceful shutdown or a restart already in flight), where we must let the exception
+    // propagate and unwind rather than escalate a clean stop into a failure exit.
+    private void FatalConvergeDbFailure(string operation, Exception ex)
+    {
+        _logger.LogError(ex, "ConvergeDB {Operation} failed", operation);
+        _fatalRestart.Trigger($"ConvergeDB {operation} failed: {ex.Message}");
     }
 
     public ConvergenceBatch Batch() => _client!.Batch();
@@ -217,25 +248,9 @@ public class ConvergeDbWriter : IConvergeDbWriter
         return sourceId;
     }
 
-    // A ConvergeDB transport failure invalidates the source epoch - in-process recovery would
-    // leak stale entities. Buffered writes never reach the wire (they only fill a List), so this
-    // can now only surface from FlushPendingAsync; the detection lives here, with the writer that
-    // owns ConvergeDB semantics, rather than in the event dispatch path.
-    private static bool IsConvergeDbTransportFailure(Exception ex)
-    {
-        for (var e = ex; e is not null; e = e.InnerException)
-        {
-            if (e is ProtocolException or SocketException or IOException or ObjectDisposedException)
-                return true;
-            if (e.GetType().FullName?.StartsWith("Convergence.Client.", StringComparison.Ordinal) == true)
-                return true;
-        }
-        return false;
-    }
-
     // Production write sink backed by the real ConvergenceClient. Assert/Retract are routed
     // through a single long-lived ConvergenceBatch: although ConvergenceBatch is documented as a
-    // scoped/await-using type, it holds no state of its own — it's a thin typed-encode shim over
+    // scoped/await-using type, it holds no state of its own - it's a thin typed-encode shim over
     // the client's shared pending-op buffer (its Assert/Retract buffer; FlushAsync drains and is
     // reusable). Holding one for the process lifetime avoids re-allocating it per write; it is
     // intentionally never disposed (disposal would merely flush).

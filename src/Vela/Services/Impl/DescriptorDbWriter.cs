@@ -69,8 +69,8 @@ public class DescriptorDbWriter : IDescriptorDbWriter
         await conn.OpenAsync(ct);
 
         // Session-level advisory lock: only one Vela instance populates a given descriptor
-        // type at a time. Postgres auto-releases the lock when the session ends — including
-        // on hard process death — so a crash here cannot leave the lock stuck.
+        // type at a time. Postgres auto-releases the lock when the session ends - including
+        // on hard process death - so a crash here cannot leave the lock stuck.
         bool acquired;
         await using (var cmd = new NpgsqlCommand("SELECT pg_try_advisory_lock(@key)", conn))
         {
@@ -81,7 +81,7 @@ public class DescriptorDbWriter : IDescriptorDbWriter
         if (!acquired)
         {
           _logger.LogInformation(
-            "Skipping {Type} populate — another instance holds the advisory lock",
+            "Skipping {Type} populate - another instance holds the advisory lock",
             entityType.Name);
           return;
         }
