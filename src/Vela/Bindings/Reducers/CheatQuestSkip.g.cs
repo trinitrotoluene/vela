@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatQuestSkip(ulong playerEntityId, int questDescId)
         {
-            conn.InternalCallReducer(new Reducer.CheatQuestSkip(playerEntityId, questDescId), this.SetCallReducerFlags.CheatQuestSkipFlags);
+            conn.InternalCallReducer(new Reducer.CheatQuestSkip(playerEntityId, questDescId));
         }
 
         public bool InvokeCheatQuestSkip(ReducerEventContext ctx, Reducer.CheatQuestSkip args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_quest_skip";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatQuestSkipFlags;
-        public void CheatQuestSkip(CallReducerFlags flags) => CheatQuestSkipFlags = flags;
     }
 }

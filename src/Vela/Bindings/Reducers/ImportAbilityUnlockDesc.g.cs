@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportAbilityUnlockDesc(System.Collections.Generic.List<SpacetimeDB.Types.AbilityUnlockDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportAbilityUnlockDesc(records), this.SetCallReducerFlags.ImportAbilityUnlockDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportAbilityUnlockDesc(records));
         }
 
         public bool InvokeImportAbilityUnlockDesc(ReducerEventContext ctx, Reducer.ImportAbilityUnlockDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_ability_unlock_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportAbilityUnlockDescFlags;
-        public void ImportAbilityUnlockDesc(CallReducerFlags flags) => ImportAbilityUnlockDescFlags = flags;
     }
 }

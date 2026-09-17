@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageQuestChainDesc(System.Collections.Generic.List<SpacetimeDB.Types.QuestChainDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageQuestChainDesc(records), this.SetCallReducerFlags.StageQuestChainDescFlags);
+            conn.InternalCallReducer(new Reducer.StageQuestChainDesc(records));
         }
 
         public bool InvokeStageQuestChainDesc(ReducerEventContext ctx, Reducer.StageQuestChainDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_quest_chain_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageQuestChainDescFlags;
-        public void StageQuestChainDesc(CallReducerFlags flags) => StageQuestChainDescFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ActivateBuildingBuff(ulong buildingEntityId)
         {
-            conn.InternalCallReducer(new Reducer.ActivateBuildingBuff(buildingEntityId), this.SetCallReducerFlags.ActivateBuildingBuffFlags);
+            conn.InternalCallReducer(new Reducer.ActivateBuildingBuff(buildingEntityId));
         }
 
         public bool InvokeActivateBuildingBuff(ReducerEventContext ctx, Reducer.ActivateBuildingBuff args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "activate_building_buff";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ActivateBuildingBuffFlags;
-        public void ActivateBuildingBuff(CallReducerFlags flags) => ActivateBuildingBuffFlags = flags;
     }
 }

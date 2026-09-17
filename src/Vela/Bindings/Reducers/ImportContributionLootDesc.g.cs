@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportContributionLootDesc(System.Collections.Generic.List<SpacetimeDB.Types.ContributionLootDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportContributionLootDesc(records), this.SetCallReducerFlags.ImportContributionLootDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportContributionLootDesc(records));
         }
 
         public bool InvokeImportContributionLootDesc(ReducerEventContext ctx, Reducer.ImportContributionLootDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_contribution_loot_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportContributionLootDescFlags;
-        public void ImportContributionLootDesc(CallReducerFlags flags) => ImportContributionLootDescFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ClaimRename(SpacetimeDB.Types.PlayerClaimRenameRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ClaimRename(request), this.SetCallReducerFlags.ClaimRenameFlags);
+            conn.InternalCallReducer(new Reducer.ClaimRename(request));
         }
 
         public bool InvokeClaimRename(ReducerEventContext ctx, Reducer.ClaimRename args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "claim_rename";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ClaimRenameFlags;
-        public void ClaimRename(CallReducerFlags flags) => ClaimRenameFlags = flags;
     }
 }

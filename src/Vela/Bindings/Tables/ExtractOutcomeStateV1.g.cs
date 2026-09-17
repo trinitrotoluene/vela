@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ExtractOutcomeStateV1Handle : RemoteTableHandle<EventContext, ExtractOutcomeState>
         {
-            protected override string RemoteTableName => "extract_outcome_state_v1";
+            public override string RemoteTableName => "extract_outcome_state_v1";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

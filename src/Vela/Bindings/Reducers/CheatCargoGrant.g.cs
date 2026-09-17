@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatCargoGrant(SpacetimeDB.Types.CheatCargoGrantRequest request)
         {
-            conn.InternalCallReducer(new Reducer.CheatCargoGrant(request), this.SetCallReducerFlags.CheatCargoGrantFlags);
+            conn.InternalCallReducer(new Reducer.CheatCargoGrant(request));
         }
 
         public bool InvokeCheatCargoGrant(ReducerEventContext ctx, Reducer.CheatCargoGrant args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_cargo_grant";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatCargoGrantFlags;
-        public void CheatCargoGrant(CallReducerFlags flags) => CheatCargoGrantFlags = flags;
     }
 }

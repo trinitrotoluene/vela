@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DeployableDismountServer(SpacetimeDB.Types.PlayerDeployableDismountRequest request)
         {
-            conn.InternalCallReducer(new Reducer.DeployableDismountServer(request), this.SetCallReducerFlags.DeployableDismountServerFlags);
+            conn.InternalCallReducer(new Reducer.DeployableDismountServer(request));
         }
 
         public bool InvokeDeployableDismountServer(ReducerEventContext ctx, Reducer.DeployableDismountServer args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "deployable_dismount_server";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DeployableDismountServerFlags;
-        public void DeployableDismountServer(CallReducerFlags flags) => DeployableDismountServerFlags = flags;
     }
 }

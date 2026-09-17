@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportExperienceState(System.Collections.Generic.List<SpacetimeDB.Types.ExperienceState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportExperienceState(records), this.SetCallReducerFlags.ImportExperienceStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportExperienceState(records));
         }
 
         public bool InvokeImportExperienceState(ReducerEventContext ctx, Reducer.ImportExperienceState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_experience_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportExperienceStateFlags;
-        public void ImportExperienceState(CallReducerFlags flags) => ImportExperienceStateFlags = flags;
     }
 }

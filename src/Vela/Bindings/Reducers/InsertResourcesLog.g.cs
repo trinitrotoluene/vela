@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void InsertResourcesLog(SpacetimeDB.Types.ResourcesLog resourcesLog)
         {
-            conn.InternalCallReducer(new Reducer.InsertResourcesLog(resourcesLog), this.SetCallReducerFlags.InsertResourcesLogFlags);
+            conn.InternalCallReducer(new Reducer.InsertResourcesLog(resourcesLog));
         }
 
         public bool InvokeInsertResourcesLog(ReducerEventContext ctx, Reducer.InsertResourcesLog args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "insert_resources_log";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags InsertResourcesLogFlags;
-        public void InsertResourcesLog(CallReducerFlags flags) => InsertResourcesLogFlags = flags;
     }
 }

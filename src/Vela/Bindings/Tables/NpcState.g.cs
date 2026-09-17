@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class NpcStateHandle : RemoteTableHandle<EventContext, NpcState>
         {
-            protected override string RemoteTableName => "npc_state";
+            public override string RemoteTableName => "npc_state";
 
             public sealed class BuildingEntityIdIndex : BTreeIndexBase<ulong>
             {

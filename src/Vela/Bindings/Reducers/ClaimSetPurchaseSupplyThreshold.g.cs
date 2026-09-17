@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ClaimSetPurchaseSupplyThreshold(SpacetimeDB.Types.ClaimSetPurchaseSupplyThresholdRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ClaimSetPurchaseSupplyThreshold(request), this.SetCallReducerFlags.ClaimSetPurchaseSupplyThresholdFlags);
+            conn.InternalCallReducer(new Reducer.ClaimSetPurchaseSupplyThreshold(request));
         }
 
         public bool InvokeClaimSetPurchaseSupplyThreshold(ReducerEventContext ctx, Reducer.ClaimSetPurchaseSupplyThreshold args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "claim_set_purchase_supply_threshold";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ClaimSetPurchaseSupplyThresholdFlags;
-        public void ClaimSetPurchaseSupplyThreshold(CallReducerFlags flags) => ClaimSetPurchaseSupplyThresholdFlags = flags;
     }
 }

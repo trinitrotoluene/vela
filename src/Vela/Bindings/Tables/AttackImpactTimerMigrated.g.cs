@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class AttackImpactTimerMigratedHandle : RemoteTableHandle<EventContext, AttackImpactTimerMigrated>
         {
-            protected override string RemoteTableName => "attack_impact_timer_migrated";
+            public override string RemoteTableName => "attack_impact_timer_migrated";
 
             public sealed class AttackerEntityIdIndex : BTreeIndexBase<ulong>
             {

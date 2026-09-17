@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminFindAllPlayersWithItem(int itemId, bool isCargo, ulong claimEntityId)
         {
-            conn.InternalCallReducer(new Reducer.AdminFindAllPlayersWithItem(itemId, isCargo, claimEntityId), this.SetCallReducerFlags.AdminFindAllPlayersWithItemFlags);
+            conn.InternalCallReducer(new Reducer.AdminFindAllPlayersWithItem(itemId, isCargo, claimEntityId));
         }
 
         public bool InvokeAdminFindAllPlayersWithItem(ReducerEventContext ctx, Reducer.AdminFindAllPlayersWithItem args)
@@ -74,11 +74,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_find_all_players_with_item";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminFindAllPlayersWithItemFlags;
-        public void AdminFindAllPlayersWithItem(CallReducerFlags flags) => AdminFindAllPlayersWithItemFlags = flags;
     }
 }

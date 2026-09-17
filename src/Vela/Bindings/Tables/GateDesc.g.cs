@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class GateDescHandle : RemoteTableHandle<EventContext, GateDesc>
         {
-            protected override string RemoteTableName => "gate_desc";
+            public override string RemoteTableName => "gate_desc";
 
             public sealed class BuildingIdUniqueIndex : UniqueIndexBase<int>
             {

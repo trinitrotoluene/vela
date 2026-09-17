@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminRestorePlayerState(string username, bool restorePosition, bool forceSignout, bool restoreAllDeployablesPositions, bool storeDeployables, bool clearCargo, bool clearItems, bool clearToolbelt)
         {
-            conn.InternalCallReducer(new Reducer.AdminRestorePlayerState(username, restorePosition, forceSignout, restoreAllDeployablesPositions, storeDeployables, clearCargo, clearItems, clearToolbelt), this.SetCallReducerFlags.AdminRestorePlayerStateFlags);
+            conn.InternalCallReducer(new Reducer.AdminRestorePlayerState(username, restorePosition, forceSignout, restoreAllDeployablesPositions, storeDeployables, clearCargo, clearItems, clearToolbelt));
         }
 
         public bool InvokeAdminRestorePlayerState(ReducerEventContext ctx, Reducer.AdminRestorePlayerState args)
@@ -100,11 +100,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_restore_player_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminRestorePlayerStateFlags;
-        public void AdminRestorePlayerState(CallReducerFlags flags) => AdminRestorePlayerStateFlags = flags;
     }
 }

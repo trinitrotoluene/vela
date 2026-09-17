@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatKill(ulong entityId)
         {
-            conn.InternalCallReducer(new Reducer.CheatKill(entityId), this.SetCallReducerFlags.CheatKillFlags);
+            conn.InternalCallReducer(new Reducer.CheatKill(entityId));
         }
 
         public bool InvokeCheatKill(ReducerEventContext ctx, Reducer.CheatKill args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_kill";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatKillFlags;
-        public void CheatKill(CallReducerFlags flags) => CheatKillFlags = flags;
     }
 }

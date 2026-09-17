@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminCollapseRuin(ulong ruinBuildingEntityId)
         {
-            conn.InternalCallReducer(new Reducer.AdminCollapseRuin(ruinBuildingEntityId), this.SetCallReducerFlags.AdminCollapseRuinFlags);
+            conn.InternalCallReducer(new Reducer.AdminCollapseRuin(ruinBuildingEntityId));
         }
 
         public bool InvokeAdminCollapseRuin(ReducerEventContext ctx, Reducer.AdminCollapseRuin args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_collapse_ruin";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminCollapseRuinFlags;
-        public void AdminCollapseRuin(CallReducerFlags flags) => AdminCollapseRuinFlags = flags;
     }
 }

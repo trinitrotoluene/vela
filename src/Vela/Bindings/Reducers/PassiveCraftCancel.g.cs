@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PassiveCraftCancel(ulong passiveCraftEntityId)
         {
-            conn.InternalCallReducer(new Reducer.PassiveCraftCancel(passiveCraftEntityId), this.SetCallReducerFlags.PassiveCraftCancelFlags);
+            conn.InternalCallReducer(new Reducer.PassiveCraftCancel(passiveCraftEntityId));
         }
 
         public bool InvokePassiveCraftCancel(ReducerEventContext ctx, Reducer.PassiveCraftCancel args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "passive_craft_cancel";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PassiveCraftCancelFlags;
-        public void PassiveCraftCancel(CallReducerFlags flags) => PassiveCraftCancelFlags = flags;
     }
 }

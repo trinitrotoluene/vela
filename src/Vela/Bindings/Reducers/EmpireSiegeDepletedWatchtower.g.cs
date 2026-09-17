@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EmpireSiegeDepletedWatchtower(SpacetimeDB.Types.EmpireStartSiegeRequest request)
         {
-            conn.InternalCallReducer(new Reducer.EmpireSiegeDepletedWatchtower(request), this.SetCallReducerFlags.EmpireSiegeDepletedWatchtowerFlags);
+            conn.InternalCallReducer(new Reducer.EmpireSiegeDepletedWatchtower(request));
         }
 
         public bool InvokeEmpireSiegeDepletedWatchtower(ReducerEventContext ctx, Reducer.EmpireSiegeDepletedWatchtower args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "empire_siege_depleted_watchtower";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EmpireSiegeDepletedWatchtowerFlags;
-        public void EmpireSiegeDepletedWatchtower(CallReducerFlags flags) => EmpireSiegeDepletedWatchtowerFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void TradeAddItem(SpacetimeDB.Types.PlayerTradeAddItemRequest request)
         {
-            conn.InternalCallReducer(new Reducer.TradeAddItem(request), this.SetCallReducerFlags.TradeAddItemFlags);
+            conn.InternalCallReducer(new Reducer.TradeAddItem(request));
         }
 
         public bool InvokeTradeAddItem(ReducerEventContext ctx, Reducer.TradeAddItem args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "trade_add_item";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags TradeAddItemFlags;
-        public void TradeAddItem(CallReducerFlags flags) => TradeAddItemFlags = flags;
     }
 }

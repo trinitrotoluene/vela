@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DeleteDeveloperIdentity(string identity)
         {
-            conn.InternalCallReducer(new Reducer.DeleteDeveloperIdentity(identity), this.SetCallReducerFlags.DeleteDeveloperIdentityFlags);
+            conn.InternalCallReducer(new Reducer.DeleteDeveloperIdentity(identity));
         }
 
         public bool InvokeDeleteDeveloperIdentity(ReducerEventContext ctx, Reducer.DeleteDeveloperIdentity args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "delete_developer_identity";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DeleteDeveloperIdentityFlags;
-        public void DeleteDeveloperIdentity(CallReducerFlags flags) => DeleteDeveloperIdentityFlags = flags;
     }
 }

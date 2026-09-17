@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatPavingAddTile(SpacetimeDB.Types.PlayerPavingPlaceTileRequest request)
         {
-            conn.InternalCallReducer(new Reducer.CheatPavingAddTile(request), this.SetCallReducerFlags.CheatPavingAddTileFlags);
+            conn.InternalCallReducer(new Reducer.CheatPavingAddTile(request));
         }
 
         public bool InvokeCheatPavingAddTile(ReducerEventContext ctx, Reducer.CheatPavingAddTile args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_paving_add_tile";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatPavingAddTileFlags;
-        public void CheatPavingAddTile(CallReducerFlags flags) => CheatPavingAddTileFlags = flags;
     }
 }

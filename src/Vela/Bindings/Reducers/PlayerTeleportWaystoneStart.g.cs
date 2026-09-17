@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerTeleportWaystoneStart(SpacetimeDB.Types.PlayerTeleportWaystoneRequest request)
         {
-            conn.InternalCallReducer(new Reducer.PlayerTeleportWaystoneStart(request), this.SetCallReducerFlags.PlayerTeleportWaystoneStartFlags);
+            conn.InternalCallReducer(new Reducer.PlayerTeleportWaystoneStart(request));
         }
 
         public bool InvokePlayerTeleportWaystoneStart(ReducerEventContext ctx, Reducer.PlayerTeleportWaystoneStart args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "player_teleport_waystone_start";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerTeleportWaystoneStartFlags;
-        public void PlayerTeleportWaystoneStart(CallReducerFlags flags) => PlayerTeleportWaystoneStartFlags = flags;
     }
 }

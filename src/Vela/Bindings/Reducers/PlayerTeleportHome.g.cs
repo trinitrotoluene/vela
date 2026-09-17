@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerTeleportHome(SpacetimeDB.Types.PlayerTeleportHomeRequest request)
         {
-            conn.InternalCallReducer(new Reducer.PlayerTeleportHome(request), this.SetCallReducerFlags.PlayerTeleportHomeFlags);
+            conn.InternalCallReducer(new Reducer.PlayerTeleportHome(request));
         }
 
         public bool InvokePlayerTeleportHome(ReducerEventContext ctx, Reducer.PlayerTeleportHome args)
@@ -48,7 +48,7 @@ namespace SpacetimeDB.Types
         [DataContract]
         public sealed partial class PlayerTeleportHome : Reducer, IReducerArgs
         {
-            [DataMember(Name = "_request")]
+            [DataMember(Name = "request")]
             public PlayerTeleportHomeRequest Request;
 
             public PlayerTeleportHome(PlayerTeleportHomeRequest Request)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "player_teleport_home";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerTeleportHomeFlags;
-        public void PlayerTeleportHome(CallReducerFlags flags) => PlayerTeleportHomeFlags = flags;
     }
 }

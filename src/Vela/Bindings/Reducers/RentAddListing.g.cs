@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void RentAddListing(SpacetimeDB.Types.RentAddListingRequest request)
         {
-            conn.InternalCallReducer(new Reducer.RentAddListing(request), this.SetCallReducerFlags.RentAddListingFlags);
+            conn.InternalCallReducer(new Reducer.RentAddListing(request));
         }
 
         public bool InvokeRentAddListing(ReducerEventContext ctx, Reducer.RentAddListing args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "rent_add_listing";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags RentAddListingFlags;
-        public void RentAddListing(CallReducerFlags flags) => RentAddListingFlags = flags;
     }
 }

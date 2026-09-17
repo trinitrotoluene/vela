@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ProjectSiteAddMaterials(SpacetimeDB.Types.PlayerProjectSiteAddMaterialsRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ProjectSiteAddMaterials(request), this.SetCallReducerFlags.ProjectSiteAddMaterialsFlags);
+            conn.InternalCallReducer(new Reducer.ProjectSiteAddMaterials(request));
         }
 
         public bool InvokeProjectSiteAddMaterials(ReducerEventContext ctx, Reducer.ProjectSiteAddMaterials args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "project_site_add_materials";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ProjectSiteAddMaterialsFlags;
-        public void ProjectSiteAddMaterials(CallReducerFlags flags) => ProjectSiteAddMaterialsFlags = flags;
     }
 }

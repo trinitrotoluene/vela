@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportEmpireColorsDesc(System.Collections.Generic.List<SpacetimeDB.Types.EmpireColorDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportEmpireColorsDesc(records), this.SetCallReducerFlags.ImportEmpireColorsDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportEmpireColorsDesc(records));
         }
 
         public bool InvokeImportEmpireColorsDesc(ReducerEventContext ctx, Reducer.ImportEmpireColorsDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_empire_colors_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportEmpireColorsDescFlags;
-        public void ImportEmpireColorsDesc(CallReducerFlags flags) => ImportEmpireColorsDescFlags = flags;
     }
 }

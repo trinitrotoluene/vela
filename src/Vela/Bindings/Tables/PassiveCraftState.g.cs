@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class PassiveCraftStateHandle : RemoteTableHandle<EventContext, PassiveCraftState>
         {
-            protected override string RemoteTableName => "passive_craft_state";
+            public override string RemoteTableName => "passive_craft_state";
 
             public sealed class BuildingEntityIdIndex : BTreeIndexBase<ulong>
             {
@@ -65,7 +65,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<PassiveCraftState, ulong> BuildingEntityId { get; }
         public global::SpacetimeDB.Col<PassiveCraftState, SpacetimeDB.Timestamp> Timestamp { get; }
         public global::SpacetimeDB.Col<PassiveCraftState, PassiveCraftStatus> Status { get; }
-        public global::SpacetimeDB.NullableCol<PassiveCraftState, uint> Slot { get; }
+        public global::SpacetimeDB.Col<PassiveCraftState, uint> Slot { get; }
 
         public PassiveCraftStateCols(string tableName)
         {
@@ -75,7 +75,7 @@ namespace SpacetimeDB.Types
             BuildingEntityId = new global::SpacetimeDB.Col<PassiveCraftState, ulong>(tableName, "building_entity_id");
             Timestamp = new global::SpacetimeDB.Col<PassiveCraftState, SpacetimeDB.Timestamp>(tableName, "timestamp");
             Status = new global::SpacetimeDB.Col<PassiveCraftState, PassiveCraftStatus>(tableName, "status");
-            Slot = new global::SpacetimeDB.NullableCol<PassiveCraftState, uint>(tableName, "slot");
+            Slot = new global::SpacetimeDB.Col<PassiveCraftState, uint>(tableName, "slot");
         }
     }
 

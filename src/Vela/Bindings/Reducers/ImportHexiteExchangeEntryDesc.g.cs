@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportHexiteExchangeEntryDesc(System.Collections.Generic.List<SpacetimeDB.Types.HexiteExchangeEntryDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportHexiteExchangeEntryDesc(records), this.SetCallReducerFlags.ImportHexiteExchangeEntryDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportHexiteExchangeEntryDesc(records));
         }
 
         public bool InvokeImportHexiteExchangeEntryDesc(ReducerEventContext ctx, Reducer.ImportHexiteExchangeEntryDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_hexite_exchange_entry_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportHexiteExchangeEntryDescFlags;
-        public void ImportHexiteExchangeEntryDesc(CallReducerFlags flags) => ImportHexiteExchangeEntryDescFlags = flags;
     }
 }

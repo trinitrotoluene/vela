@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void LoadConfig(System.Collections.Generic.List<string> environmentNames, System.Collections.Generic.List<string> contents)
         {
-            conn.InternalCallReducer(new Reducer.LoadConfig(environmentNames, contents), this.SetCallReducerFlags.LoadConfigFlags);
+            conn.InternalCallReducer(new Reducer.LoadConfig(environmentNames, contents));
         }
 
         public bool InvokeLoadConfig(ReducerEventContext ctx, Reducer.LoadConfig args)
@@ -71,11 +71,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "load_config";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags LoadConfigFlags;
-        public void LoadConfig(CallReducerFlags flags) => LoadConfigFlags = flags;
     }
 }

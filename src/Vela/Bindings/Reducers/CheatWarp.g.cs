@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatWarp(SpacetimeDB.Types.CheatWarpRequest request)
         {
-            conn.InternalCallReducer(new Reducer.CheatWarp(request), this.SetCallReducerFlags.CheatWarpFlags);
+            conn.InternalCallReducer(new Reducer.CheatWarp(request));
         }
 
         public bool InvokeCheatWarp(ReducerEventContext ctx, Reducer.CheatWarp args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_warp";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatWarpFlags;
-        public void CheatWarp(CallReducerFlags flags) => CheatWarpFlags = flags;
     }
 }

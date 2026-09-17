@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminCreateChatMessage(SpacetimeDB.Types.ChatChannel channelId, string username, int titleId, ulong targetId, string newMessageText)
         {
-            conn.InternalCallReducer(new Reducer.AdminCreateChatMessage(channelId, username, titleId, targetId, newMessageText), this.SetCallReducerFlags.AdminCreateChatMessageFlags);
+            conn.InternalCallReducer(new Reducer.AdminCreateChatMessage(channelId, username, titleId, targetId, newMessageText));
         }
 
         public bool InvokeAdminCreateChatMessage(ReducerEventContext ctx, Reducer.AdminCreateChatMessage args)
@@ -86,11 +86,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_create_chat_message";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminCreateChatMessageFlags;
-        public void AdminCreateChatMessage(CallReducerFlags flags) => AdminCreateChatMessageFlags = flags;
     }
 }

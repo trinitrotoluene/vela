@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StagePavingTileDesc(System.Collections.Generic.List<SpacetimeDB.Types.PavingTileDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StagePavingTileDesc(records), this.SetCallReducerFlags.StagePavingTileDescFlags);
+            conn.InternalCallReducer(new Reducer.StagePavingTileDesc(records));
         }
 
         public bool InvokeStagePavingTileDesc(ReducerEventContext ctx, Reducer.StagePavingTileDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_paving_tile_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StagePavingTileDescFlags;
-        public void StagePavingTileDesc(CallReducerFlags flags) => StagePavingTileDescFlags = flags;
     }
 }

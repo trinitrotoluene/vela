@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatGrantTeleportEnergy(ulong playerEntityId, float amount)
         {
-            conn.InternalCallReducer(new Reducer.CheatGrantTeleportEnergy(playerEntityId, amount), this.SetCallReducerFlags.CheatGrantTeleportEnergyFlags);
+            conn.InternalCallReducer(new Reducer.CheatGrantTeleportEnergy(playerEntityId, amount));
         }
 
         public bool InvokeCheatGrantTeleportEnergy(ReducerEventContext ctx, Reducer.CheatGrantTeleportEnergy args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_grant_teleport_energy";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatGrantTeleportEnergyFlags;
-        public void CheatGrantTeleportEnergy(CallReducerFlags flags) => CheatGrantTeleportEnergyFlags = flags;
     }
 }

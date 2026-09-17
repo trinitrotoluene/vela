@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageAchievementDesc(System.Collections.Generic.List<SpacetimeDB.Types.AchievementDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageAchievementDesc(records), this.SetCallReducerFlags.StageAchievementDescFlags);
+            conn.InternalCallReducer(new Reducer.StageAchievementDesc(records));
         }
 
         public bool InvokeStageAchievementDesc(ReducerEventContext ctx, Reducer.StageAchievementDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_achievement_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageAchievementDescFlags;
-        public void StageAchievementDesc(CallReducerFlags flags) => StageAchievementDescFlags = flags;
     }
 }

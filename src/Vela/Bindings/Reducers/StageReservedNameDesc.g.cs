@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageReservedNameDesc(System.Collections.Generic.List<SpacetimeDB.Types.ReservedNameDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageReservedNameDesc(records), this.SetCallReducerFlags.StageReservedNameDescFlags);
+            conn.InternalCallReducer(new Reducer.StageReservedNameDesc(records));
         }
 
         public bool InvokeStageReservedNameDesc(ReducerEventContext ctx, Reducer.StageReservedNameDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_reserved_name_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageReservedNameDescFlags;
-        public void StageReservedNameDesc(CallReducerFlags flags) => StageReservedNameDescFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageEquipmentDesc(System.Collections.Generic.List<SpacetimeDB.Types.EquipmentDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageEquipmentDesc(records), this.SetCallReducerFlags.StageEquipmentDescFlags);
+            conn.InternalCallReducer(new Reducer.StageEquipmentDesc(records));
         }
 
         public bool InvokeStageEquipmentDesc(ReducerEventContext ctx, Reducer.StageEquipmentDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_equipment_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageEquipmentDescFlags;
-        public void StageEquipmentDesc(CallReducerFlags flags) => StageEquipmentDescFlags = flags;
     }
 }

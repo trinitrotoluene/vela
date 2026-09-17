@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class CombatImmunityStateHandle : RemoteTableHandle<EventContext, CombatImmunityState>
         {
-            protected override string RemoteTableName => "combat_immunity_state";
+            public override string RemoteTableName => "combat_immunity_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {
@@ -41,13 +41,13 @@ namespace SpacetimeDB.Types
     {
         public global::SpacetimeDB.Col<CombatImmunityState, ulong> EntityId { get; }
         public global::SpacetimeDB.Col<CombatImmunityState, SpacetimeDB.Timestamp> ImmunityEndTimestamp { get; }
-        public global::SpacetimeDB.NullableCol<CombatImmunityState, ulong> CrumbTrailEntityId { get; }
+        public global::SpacetimeDB.Col<CombatImmunityState, ulong> CrumbTrailEntityId { get; }
 
         public CombatImmunityStateCols(string tableName)
         {
             EntityId = new global::SpacetimeDB.Col<CombatImmunityState, ulong>(tableName, "entity_id");
             ImmunityEndTimestamp = new global::SpacetimeDB.Col<CombatImmunityState, SpacetimeDB.Timestamp>(tableName, "immunity_end_timestamp");
-            CrumbTrailEntityId = new global::SpacetimeDB.NullableCol<CombatImmunityState, ulong>(tableName, "crumb_trail_entity_id");
+            CrumbTrailEntityId = new global::SpacetimeDB.Col<CombatImmunityState, ulong>(tableName, "crumb_trail_entity_id");
         }
     }
 

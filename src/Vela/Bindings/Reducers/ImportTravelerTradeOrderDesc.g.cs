@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportTravelerTradeOrderDesc(System.Collections.Generic.List<SpacetimeDB.Types.TravelerTradeOrderDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportTravelerTradeOrderDesc(records), this.SetCallReducerFlags.ImportTravelerTradeOrderDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportTravelerTradeOrderDesc(records));
         }
 
         public bool InvokeImportTravelerTradeOrderDesc(ReducerEventContext ctx, Reducer.ImportTravelerTradeOrderDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_traveler_trade_order_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportTravelerTradeOrderDescFlags;
-        public void ImportTravelerTradeOrderDesc(CallReducerFlags flags) => ImportTravelerTradeOrderDescFlags = flags;
     }
 }

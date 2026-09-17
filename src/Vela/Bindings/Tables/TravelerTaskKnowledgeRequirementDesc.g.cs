@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class TravelerTaskKnowledgeRequirementDescHandle : RemoteTableHandle<EventContext, TravelerTaskKnowledgeRequirementDesc>
         {
-            protected override string RemoteTableName => "traveler_task_knowledge_requirement_desc";
+            public override string RemoteTableName => "traveler_task_knowledge_requirement_desc";
 
             public sealed class TravelerTaskIdUniqueIndex : UniqueIndexBase<int>
             {

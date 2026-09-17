@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportRentState(System.Collections.Generic.List<SpacetimeDB.Types.RentState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportRentState(records), this.SetCallReducerFlags.ImportRentStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportRentState(records));
         }
 
         public bool InvokeImportRentState(ReducerEventContext ctx, Reducer.ImportRentState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_rent_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportRentStateFlags;
-        public void ImportRentState(CallReducerFlags flags) => ImportRentStateFlags = flags;
     }
 }

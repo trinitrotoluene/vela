@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class EmpireNodeSiegeStateHandle : RemoteTableHandle<EventContext, EmpireNodeSiegeState>
         {
-            protected override string RemoteTableName => "empire_node_siege_state";
+            public override string RemoteTableName => "empire_node_siege_state";
 
             public sealed class ActiveIndex : BTreeIndexBase<bool>
             {
@@ -74,7 +74,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<EmpireNodeSiegeState, ulong> EmpireEntityId { get; }
         public global::SpacetimeDB.Col<EmpireNodeSiegeState, int> Energy { get; }
         public global::SpacetimeDB.Col<EmpireNodeSiegeState, bool> Active { get; }
-        public global::SpacetimeDB.NullableCol<EmpireNodeSiegeState, SpacetimeDB.Timestamp> StartTimestamp { get; }
+        public global::SpacetimeDB.Col<EmpireNodeSiegeState, SpacetimeDB.Timestamp> StartTimestamp { get; }
 
         public EmpireNodeSiegeStateCols(string tableName)
         {
@@ -83,7 +83,7 @@ namespace SpacetimeDB.Types
             EmpireEntityId = new global::SpacetimeDB.Col<EmpireNodeSiegeState, ulong>(tableName, "empire_entity_id");
             Energy = new global::SpacetimeDB.Col<EmpireNodeSiegeState, int>(tableName, "energy");
             Active = new global::SpacetimeDB.Col<EmpireNodeSiegeState, bool>(tableName, "active");
-            StartTimestamp = new global::SpacetimeDB.NullableCol<EmpireNodeSiegeState, SpacetimeDB.Timestamp>(tableName, "start_timestamp");
+            StartTimestamp = new global::SpacetimeDB.Col<EmpireNodeSiegeState, SpacetimeDB.Timestamp>(tableName, "start_timestamp");
         }
     }
 

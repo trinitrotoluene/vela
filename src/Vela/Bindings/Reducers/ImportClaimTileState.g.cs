@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportClaimTileState(System.Collections.Generic.List<SpacetimeDB.Types.ClaimTileState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportClaimTileState(records), this.SetCallReducerFlags.ImportClaimTileStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportClaimTileState(records));
         }
 
         public bool InvokeImportClaimTileState(ReducerEventContext ctx, Reducer.ImportClaimTileState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_claim_tile_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportClaimTileStateFlags;
-        public void ImportClaimTileState(CallReducerFlags flags) => ImportClaimTileStateFlags = flags;
     }
 }

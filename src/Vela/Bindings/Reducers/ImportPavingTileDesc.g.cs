@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportPavingTileDesc(System.Collections.Generic.List<SpacetimeDB.Types.PavingTileDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportPavingTileDesc(records), this.SetCallReducerFlags.ImportPavingTileDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportPavingTileDesc(records));
         }
 
         public bool InvokeImportPavingTileDesc(ReducerEventContext ctx, Reducer.ImportPavingTileDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_paving_tile_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportPavingTileDescFlags;
-        public void ImportPavingTileDesc(CallReducerFlags flags) => ImportPavingTileDescFlags = flags;
     }
 }

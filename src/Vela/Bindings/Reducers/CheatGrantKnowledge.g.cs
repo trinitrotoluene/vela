@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatGrantKnowledge(SpacetimeDB.Types.CheatGrantKnowledgeRequest request)
         {
-            conn.InternalCallReducer(new Reducer.CheatGrantKnowledge(request), this.SetCallReducerFlags.CheatGrantKnowledgeFlags);
+            conn.InternalCallReducer(new Reducer.CheatGrantKnowledge(request));
         }
 
         public bool InvokeCheatGrantKnowledge(ReducerEventContext ctx, Reducer.CheatGrantKnowledge args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_grant_knowledge";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatGrantKnowledgeFlags;
-        public void CheatGrantKnowledge(CallReducerFlags flags) => CheatGrantKnowledgeFlags = flags;
     }
 }

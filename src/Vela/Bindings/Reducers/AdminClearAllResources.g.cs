@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminClearAllResources()
         {
-            conn.InternalCallReducer(new Reducer.AdminClearAllResources(), this.SetCallReducerFlags.AdminClearAllResourcesFlags);
+            conn.InternalCallReducer(new Reducer.AdminClearAllResources());
         }
 
         public bool InvokeAdminClearAllResources(ReducerEventContext ctx, Reducer.AdminClearAllResources args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "admin_clear_all_resources";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminClearAllResourcesFlags;
-        public void AdminClearAllResources(CallReducerFlags flags) => AdminClearAllResourcesFlags = flags;
     }
 }

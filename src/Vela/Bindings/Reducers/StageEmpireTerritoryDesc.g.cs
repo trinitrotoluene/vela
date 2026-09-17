@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageEmpireTerritoryDesc(System.Collections.Generic.List<SpacetimeDB.Types.EmpireTerritoryDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageEmpireTerritoryDesc(records), this.SetCallReducerFlags.StageEmpireTerritoryDescFlags);
+            conn.InternalCallReducer(new Reducer.StageEmpireTerritoryDesc(records));
         }
 
         public bool InvokeStageEmpireTerritoryDesc(ReducerEventContext ctx, Reducer.StageEmpireTerritoryDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_empire_territory_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageEmpireTerritoryDescFlags;
-        public void StageEmpireTerritoryDesc(CallReducerFlags flags) => StageEmpireTerritoryDescFlags = flags;
     }
 }

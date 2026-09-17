@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ForceStartAgents()
         {
-            conn.InternalCallReducer(new Reducer.ForceStartAgents(), this.SetCallReducerFlags.ForceStartAgentsFlags);
+            conn.InternalCallReducer(new Reducer.ForceStartAgents());
         }
 
         public bool InvokeForceStartAgents(ReducerEventContext ctx, Reducer.ForceStartAgents args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "force_start_agents";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ForceStartAgentsFlags;
-        public void ForceStartAgents(CallReducerFlags flags) => ForceStartAgentsFlags = flags;
     }
 }

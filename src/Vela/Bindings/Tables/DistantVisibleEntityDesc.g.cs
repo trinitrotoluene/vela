@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class DistantVisibleEntityDescHandle : RemoteTableHandle<EventContext, DistantVisibleEntityDesc>
         {
-            protected override string RemoteTableName => "distant_visible_entity_desc";
+            public override string RemoteTableName => "distant_visible_entity_desc";
 
             public sealed class DescriptionIdIndex : BTreeIndexBase<int>
             {

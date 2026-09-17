@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CompleteOnboardingState(ushort id)
         {
-            conn.InternalCallReducer(new Reducer.CompleteOnboardingState(id), this.SetCallReducerFlags.CompleteOnboardingStateFlags);
+            conn.InternalCallReducer(new Reducer.CompleteOnboardingState(id));
         }
 
         public bool InvokeCompleteOnboardingState(ReducerEventContext ctx, Reducer.CompleteOnboardingState args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "complete_onboarding_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CompleteOnboardingStateFlags;
-        public void CompleteOnboardingState(CallReducerFlags flags) => CompleteOnboardingStateFlags = flags;
     }
 }

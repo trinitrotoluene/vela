@@ -12,12 +12,12 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void ProcessInterModuleMessageHandler(ReducerEventContext ctx, byte sender, SpacetimeDB.Types.InterModuleMessageV4 message);
+        public delegate void ProcessInterModuleMessageHandler(ReducerEventContext ctx, byte sender, SpacetimeDB.Types.InterModuleMessageV5 message);
         public event ProcessInterModuleMessageHandler? OnProcessInterModuleMessage;
 
-        public void ProcessInterModuleMessage(byte sender, SpacetimeDB.Types.InterModuleMessageV4 message)
+        public void ProcessInterModuleMessage(byte sender, SpacetimeDB.Types.InterModuleMessageV5 message)
         {
-            conn.InternalCallReducer(new Reducer.ProcessInterModuleMessage(sender, message), this.SetCallReducerFlags.ProcessInterModuleMessageFlags);
+            conn.InternalCallReducer(new Reducer.ProcessInterModuleMessage(sender, message));
         }
 
         public bool InvokeProcessInterModuleMessage(ReducerEventContext ctx, Reducer.ProcessInterModuleMessage args)
@@ -52,11 +52,11 @@ namespace SpacetimeDB.Types
             [DataMember(Name = "sender")]
             public byte Sender;
             [DataMember(Name = "message")]
-            public InterModuleMessageV4 Message;
+            public InterModuleMessageV5 Message;
 
             public ProcessInterModuleMessage(
                 byte Sender,
-                InterModuleMessageV4 Message
+                InterModuleMessageV5 Message
             )
             {
                 this.Sender = Sender;
@@ -70,11 +70,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "process_inter_module_message";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ProcessInterModuleMessageFlags;
-        public void ProcessInterModuleMessage(CallReducerFlags flags) => ProcessInterModuleMessageFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void TradeInitiateSession(SpacetimeDB.Types.PlayerTradeInitiateSessionRequest request)
         {
-            conn.InternalCallReducer(new Reducer.TradeInitiateSession(request), this.SetCallReducerFlags.TradeInitiateSessionFlags);
+            conn.InternalCallReducer(new Reducer.TradeInitiateSession(request));
         }
 
         public bool InvokeTradeInitiateSession(ReducerEventContext ctx, Reducer.TradeInitiateSession args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "trade_initiate_session";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags TradeInitiateSessionFlags;
-        public void TradeInitiateSession(CallReducerFlags flags) => TradeInitiateSessionFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void BlueprintPlace(SpacetimeDB.Types.OffsetCoordinatesSmallMessage center, string blueprintJson, string settingsJson, int rotation, short elevationOffset)
         {
-            conn.InternalCallReducer(new Reducer.BlueprintPlace(center, blueprintJson, settingsJson, rotation, elevationOffset), this.SetCallReducerFlags.BlueprintPlaceFlags);
+            conn.InternalCallReducer(new Reducer.BlueprintPlace(center, blueprintJson, settingsJson, rotation, elevationOffset));
         }
 
         public bool InvokeBlueprintPlace(ReducerEventContext ctx, Reducer.BlueprintPlace args)
@@ -87,11 +87,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "blueprint_place";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags BlueprintPlaceFlags;
-        public void BlueprintPlace(CallReducerFlags flags) => BlueprintPlaceFlags = flags;
     }
 }

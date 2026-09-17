@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminResetOnboardingCompletely(ulong entityId)
         {
-            conn.InternalCallReducer(new Reducer.AdminResetOnboardingCompletely(entityId), this.SetCallReducerFlags.AdminResetOnboardingCompletelyFlags);
+            conn.InternalCallReducer(new Reducer.AdminResetOnboardingCompletely(entityId));
         }
 
         public bool InvokeAdminResetOnboardingCompletely(ReducerEventContext ctx, Reducer.AdminResetOnboardingCompletely args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_reset_onboarding_completely";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminResetOnboardingCompletelyFlags;
-        public void AdminResetOnboardingCompletely(CallReducerFlags flags) => AdminResetOnboardingCompletelyFlags = flags;
     }
 }

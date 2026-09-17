@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminSignOutAllRegion()
         {
-            conn.InternalCallReducer(new Reducer.AdminSignOutAllRegion(), this.SetCallReducerFlags.AdminSignOutAllRegionFlags);
+            conn.InternalCallReducer(new Reducer.AdminSignOutAllRegion());
         }
 
         public bool InvokeAdminSignOutAllRegion(ReducerEventContext ctx, Reducer.AdminSignOutAllRegion args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "admin_sign_out_all_region";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminSignOutAllRegionFlags;
-        public void AdminSignOutAllRegion(CallReducerFlags flags) => AdminSignOutAllRegionFlags = flags;
     }
 }

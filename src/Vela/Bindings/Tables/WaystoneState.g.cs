@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class WaystoneStateHandle : RemoteTableHandle<EventContext, WaystoneState>
         {
-            protected override string RemoteTableName => "waystone_state";
+            public override string RemoteTableName => "waystone_state";
 
             public sealed class BuildingEntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

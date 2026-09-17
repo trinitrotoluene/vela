@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatCompendiumPlaceEnemy(SpacetimeDB.Types.CheatCompendiumEnemyPlaceRequest request)
         {
-            conn.InternalCallReducer(new Reducer.CheatCompendiumPlaceEnemy(request), this.SetCallReducerFlags.CheatCompendiumPlaceEnemyFlags);
+            conn.InternalCallReducer(new Reducer.CheatCompendiumPlaceEnemy(request));
         }
 
         public bool InvokeCheatCompendiumPlaceEnemy(ReducerEventContext ctx, Reducer.CheatCompendiumPlaceEnemy args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_compendium_place_enemy";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatCompendiumPlaceEnemyFlags;
-        public void CheatCompendiumPlaceEnemy(CallReducerFlags flags) => CheatCompendiumPlaceEnemyFlags = flags;
     }
 }

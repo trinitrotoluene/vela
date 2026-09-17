@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerRegionCrossover()
         {
-            conn.InternalCallReducer(new Reducer.PlayerRegionCrossover(), this.SetCallReducerFlags.PlayerRegionCrossoverFlags);
+            conn.InternalCallReducer(new Reducer.PlayerRegionCrossover());
         }
 
         public bool InvokePlayerRegionCrossover(ReducerEventContext ctx, Reducer.PlayerRegionCrossover args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "player_region_crossover";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerRegionCrossoverFlags;
-        public void PlayerRegionCrossover(CallReducerFlags flags) => PlayerRegionCrossoverFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void InsertTerrainChunk(SpacetimeDB.Types.TerrainChunkState terrainChunk, System.Collections.Generic.List<SpacetimeDB.Types.WorldGenGeneratedBuilding> buildings, System.Collections.Generic.List<SpacetimeDB.Types.WorldGenGeneratedResourceDeposit> resources)
         {
-            conn.InternalCallReducer(new Reducer.InsertTerrainChunk(terrainChunk, buildings, resources), this.SetCallReducerFlags.InsertTerrainChunkFlags);
+            conn.InternalCallReducer(new Reducer.InsertTerrainChunk(terrainChunk, buildings, resources));
         }
 
         public bool InvokeInsertTerrainChunk(ReducerEventContext ctx, Reducer.InsertTerrainChunk args)
@@ -77,11 +77,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "insert_terrain_chunk";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags InsertTerrainChunkFlags;
-        public void InsertTerrainChunk(CallReducerFlags flags) => InsertTerrainChunkFlags = flags;
     }
 }

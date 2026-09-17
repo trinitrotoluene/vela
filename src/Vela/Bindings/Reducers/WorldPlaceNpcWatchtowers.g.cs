@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void WorldPlaceNpcWatchtowers(System.Collections.Generic.List<SpacetimeDB.Types.OffsetCoordinatesSmallMessage> watchtowerPositions, System.Collections.Generic.List<System.Collections.Generic.List<ulong>> watchtowerChunkIndexes, int energy, int upkeep, int buildingDescId, System.Collections.Generic.List<int> biomes, bool dryRun, bool logResults, bool clearAndLevelGround, bool ignoreBiomes, bool ignoreClaims, bool ignoreDimensionRules)
         {
-            conn.InternalCallReducer(new Reducer.WorldPlaceNpcWatchtowers(watchtowerPositions, watchtowerChunkIndexes, energy, upkeep, buildingDescId, biomes, dryRun, logResults, clearAndLevelGround, ignoreBiomes, ignoreClaims, ignoreDimensionRules), this.SetCallReducerFlags.WorldPlaceNpcWatchtowersFlags);
+            conn.InternalCallReducer(new Reducer.WorldPlaceNpcWatchtowers(watchtowerPositions, watchtowerChunkIndexes, energy, upkeep, buildingDescId, biomes, dryRun, logResults, clearAndLevelGround, ignoreBiomes, ignoreClaims, ignoreDimensionRules));
         }
 
         public bool InvokeWorldPlaceNpcWatchtowers(ReducerEventContext ctx, Reducer.WorldPlaceNpcWatchtowers args)
@@ -122,11 +122,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "world_place_npc_watchtowers";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags WorldPlaceNpcWatchtowersFlags;
-        public void WorldPlaceNpcWatchtowers(CallReducerFlags flags) => WorldPlaceNpcWatchtowersFlags = flags;
     }
 }

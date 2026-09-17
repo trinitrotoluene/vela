@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class CombatStateHandle : RemoteTableHandle<EventContext, CombatState>
         {
-            protected override string RemoteTableName => "combat_state";
+            public override string RemoteTableName => "combat_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {
@@ -42,14 +42,14 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<CombatState, ulong> EntityId { get; }
         public global::SpacetimeDB.Col<CombatState, ulong> LastAttackedTimestamp { get; }
         public global::SpacetimeDB.Col<CombatState, ulong> LastPerformedActionEntityId { get; }
-        public global::SpacetimeDB.NullableCol<CombatState, ActionCooldown> GlobalCooldown { get; }
+        public global::SpacetimeDB.Col<CombatState, ActionCooldown> GlobalCooldown { get; }
 
         public CombatStateCols(string tableName)
         {
             EntityId = new global::SpacetimeDB.Col<CombatState, ulong>(tableName, "entity_id");
             LastAttackedTimestamp = new global::SpacetimeDB.Col<CombatState, ulong>(tableName, "last_attacked_timestamp");
             LastPerformedActionEntityId = new global::SpacetimeDB.Col<CombatState, ulong>(tableName, "last_performed_action_entity_id");
-            GlobalCooldown = new global::SpacetimeDB.NullableCol<CombatState, ActionCooldown>(tableName, "global_cooldown");
+            GlobalCooldown = new global::SpacetimeDB.Col<CombatState, ActionCooldown>(tableName, "global_cooldown");
         }
     }
 

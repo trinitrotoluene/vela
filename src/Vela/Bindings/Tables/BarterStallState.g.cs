@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class BarterStallStateHandle : RemoteTableHandle<EventContext, BarterStallState>
         {
-            protected override string RemoteTableName => "barter_stall_state";
+            public override string RemoteTableName => "barter_stall_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

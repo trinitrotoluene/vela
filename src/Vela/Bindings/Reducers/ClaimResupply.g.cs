@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ClaimResupply(SpacetimeDB.Types.ClaimResupplyRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ClaimResupply(request), this.SetCallReducerFlags.ClaimResupplyFlags);
+            conn.InternalCallReducer(new Reducer.ClaimResupply(request));
         }
 
         public bool InvokeClaimResupply(ReducerEventContext ctx, Reducer.ClaimResupply args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "claim_resupply";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ClaimResupplyFlags;
-        public void ClaimResupply(CallReducerFlags flags) => ClaimResupplyFlags = flags;
     }
 }

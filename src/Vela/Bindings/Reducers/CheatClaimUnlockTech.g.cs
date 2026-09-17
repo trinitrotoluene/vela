@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatClaimUnlockTech(ulong claimEntityId, int techId)
         {
-            conn.InternalCallReducer(new Reducer.CheatClaimUnlockTech(claimEntityId, techId), this.SetCallReducerFlags.CheatClaimUnlockTechFlags);
+            conn.InternalCallReducer(new Reducer.CheatClaimUnlockTech(claimEntityId, techId));
         }
 
         public bool InvokeCheatClaimUnlockTech(ReducerEventContext ctx, Reducer.CheatClaimUnlockTech args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_claim_unlock_tech";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatClaimUnlockTechFlags;
-        public void CheatClaimUnlockTech(CallReducerFlags flags) => CheatClaimUnlockTechFlags = flags;
     }
 }

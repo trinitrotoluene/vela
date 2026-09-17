@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatClearBuffsAndDebuffs(ulong playerEntityId)
         {
-            conn.InternalCallReducer(new Reducer.CheatClearBuffsAndDebuffs(playerEntityId), this.SetCallReducerFlags.CheatClearBuffsAndDebuffsFlags);
+            conn.InternalCallReducer(new Reducer.CheatClearBuffsAndDebuffs(playerEntityId));
         }
 
         public bool InvokeCheatClearBuffsAndDebuffs(ReducerEventContext ctx, Reducer.CheatClearBuffsAndDebuffs args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_clear_buffs_and_debuffs";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatClearBuffsAndDebuffsFlags;
-        public void CheatClearBuffsAndDebuffs(CallReducerFlags flags) => CheatClearBuffsAndDebuffsFlags = flags;
     }
 }

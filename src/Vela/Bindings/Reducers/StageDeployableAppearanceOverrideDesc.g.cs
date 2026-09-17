@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageDeployableAppearanceOverrideDesc(System.Collections.Generic.List<SpacetimeDB.Types.DeployableAppearanceOverrideDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageDeployableAppearanceOverrideDesc(records), this.SetCallReducerFlags.StageDeployableAppearanceOverrideDescFlags);
+            conn.InternalCallReducer(new Reducer.StageDeployableAppearanceOverrideDesc(records));
         }
 
         public bool InvokeStageDeployableAppearanceOverrideDesc(ReducerEventContext ctx, Reducer.StageDeployableAppearanceOverrideDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_deployable_appearance_override_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageDeployableAppearanceOverrideDescFlags;
-        public void StageDeployableAppearanceOverrideDesc(CallReducerFlags flags) => StageDeployableAppearanceOverrideDescFlags = flags;
     }
 }

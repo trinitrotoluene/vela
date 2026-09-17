@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EmpireCreate(SpacetimeDB.Types.EmpireCreateRequest request)
         {
-            conn.InternalCallReducer(new Reducer.EmpireCreate(request), this.SetCallReducerFlags.EmpireCreateFlags);
+            conn.InternalCallReducer(new Reducer.EmpireCreate(request));
         }
 
         public bool InvokeEmpireCreate(ReducerEventContext ctx, Reducer.EmpireCreate args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "empire_create";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EmpireCreateFlags;
-        public void EmpireCreate(CallReducerFlags flags) => EmpireCreateFlags = flags;
     }
 }

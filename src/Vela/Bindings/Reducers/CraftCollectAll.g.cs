@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CraftCollectAll(SpacetimeDB.Types.PlayerCraftCollectAllRequest request)
         {
-            conn.InternalCallReducer(new Reducer.CraftCollectAll(request), this.SetCallReducerFlags.CraftCollectAllFlags);
+            conn.InternalCallReducer(new Reducer.CraftCollectAll(request));
         }
 
         public bool InvokeCraftCollectAll(ReducerEventContext ctx, Reducer.CraftCollectAll args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "craft_collect_all";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CraftCollectAllFlags;
-        public void CraftCollectAll(CallReducerFlags flags) => CraftCollectAllFlags = flags;
     }
 }

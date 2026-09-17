@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class WindParamsDescHandle : RemoteTableHandle<EventContext, WindParamsDesc>
         {
-            protected override string RemoteTableName => "wind_params_desc";
+            public override string RemoteTableName => "wind_params_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {

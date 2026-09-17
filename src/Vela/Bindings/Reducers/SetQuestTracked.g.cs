@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void SetQuestTracked(int id, bool tracked)
         {
-            conn.InternalCallReducer(new Reducer.SetQuestTracked(id, tracked), this.SetCallReducerFlags.SetQuestTrackedFlags);
+            conn.InternalCallReducer(new Reducer.SetQuestTracked(id, tracked));
         }
 
         public bool InvokeSetQuestTracked(ReducerEventContext ctx, Reducer.SetQuestTracked args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "set_quest_tracked";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags SetQuestTrackedFlags;
-        public void SetQuestTracked(CallReducerFlags flags) => SetQuestTrackedFlags = flags;
     }
 }

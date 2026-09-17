@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ClearStagedStaticData()
         {
-            conn.InternalCallReducer(new Reducer.ClearStagedStaticData(), this.SetCallReducerFlags.ClearStagedStaticDataFlags);
+            conn.InternalCallReducer(new Reducer.ClearStagedStaticData());
         }
 
         public bool InvokeClearStagedStaticData(ReducerEventContext ctx, Reducer.ClearStagedStaticData args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "clear_staged_static_data";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ClearStagedStaticDataFlags;
-        public void ClearStagedStaticData(CallReducerFlags flags) => ClearStagedStaticDataFlags = flags;
     }
 }

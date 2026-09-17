@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportExtractionRecipeDesc(System.Collections.Generic.List<SpacetimeDB.Types.ExtractionRecipeDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportExtractionRecipeDesc(records), this.SetCallReducerFlags.ImportExtractionRecipeDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportExtractionRecipeDesc(records));
         }
 
         public bool InvokeImportExtractionRecipeDesc(ReducerEventContext ctx, Reducer.ImportExtractionRecipeDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_extraction_recipe_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportExtractionRecipeDescFlags;
-        public void ImportExtractionRecipeDesc(CallReducerFlags flags) => ImportExtractionRecipeDescFlags = flags;
     }
 }

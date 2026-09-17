@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatClaimsCompleteAllCurrentResearch()
         {
-            conn.InternalCallReducer(new Reducer.CheatClaimsCompleteAllCurrentResearch(), this.SetCallReducerFlags.CheatClaimsCompleteAllCurrentResearchFlags);
+            conn.InternalCallReducer(new Reducer.CheatClaimsCompleteAllCurrentResearch());
         }
 
         public bool InvokeCheatClaimsCompleteAllCurrentResearch(ReducerEventContext ctx, Reducer.CheatClaimsCompleteAllCurrentResearch args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "cheat_claims_complete_all_current_research";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatClaimsCompleteAllCurrentResearchFlags;
-        public void CheatClaimsCompleteAllCurrentResearch(CallReducerFlags flags) => CheatClaimsCompleteAllCurrentResearchFlags = flags;
     }
 }

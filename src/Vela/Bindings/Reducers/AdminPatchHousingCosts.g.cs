@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminPatchHousingCosts()
         {
-            conn.InternalCallReducer(new Reducer.AdminPatchHousingCosts(), this.SetCallReducerFlags.AdminPatchHousingCostsFlags);
+            conn.InternalCallReducer(new Reducer.AdminPatchHousingCosts());
         }
 
         public bool InvokeAdminPatchHousingCosts(ReducerEventContext ctx, Reducer.AdminPatchHousingCosts args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "admin_patch_housing_costs";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminPatchHousingCostsFlags;
-        public void AdminPatchHousingCosts(CallReducerFlags flags) => AdminPatchHousingCostsFlags = flags;
     }
 }

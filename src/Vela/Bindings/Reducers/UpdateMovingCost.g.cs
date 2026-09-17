@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void UpdateMovingCost(ulong playerHousingEntityId, int movingCost)
         {
-            conn.InternalCallReducer(new Reducer.UpdateMovingCost(playerHousingEntityId, movingCost), this.SetCallReducerFlags.UpdateMovingCostFlags);
+            conn.InternalCallReducer(new Reducer.UpdateMovingCost(playerHousingEntityId, movingCost));
         }
 
         public bool InvokeUpdateMovingCost(ReducerEventContext ctx, Reducer.UpdateMovingCost args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "update_moving_cost";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags UpdateMovingCostFlags;
-        public void UpdateMovingCost(CallReducerFlags flags) => UpdateMovingCostFlags = flags;
     }
 }

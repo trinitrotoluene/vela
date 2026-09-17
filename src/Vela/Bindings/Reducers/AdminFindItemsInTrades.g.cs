@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminFindItemsInTrades(int itemId, bool isCargo, ulong minThreshold)
         {
-            conn.InternalCallReducer(new Reducer.AdminFindItemsInTrades(itemId, isCargo, minThreshold), this.SetCallReducerFlags.AdminFindItemsInTradesFlags);
+            conn.InternalCallReducer(new Reducer.AdminFindItemsInTrades(itemId, isCargo, minThreshold));
         }
 
         public bool InvokeAdminFindItemsInTrades(ReducerEventContext ctx, Reducer.AdminFindItemsInTrades args)
@@ -74,11 +74,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_find_items_in_trades";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminFindItemsInTradesFlags;
-        public void AdminFindItemsInTrades(CallReducerFlags flags) => AdminFindItemsInTradesFlags = flags;
     }
 }

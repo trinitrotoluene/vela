@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DiscoverEnemy(int enemyId)
         {
-            conn.InternalCallReducer(new Reducer.DiscoverEnemy(enemyId), this.SetCallReducerFlags.DiscoverEnemyFlags);
+            conn.InternalCallReducer(new Reducer.DiscoverEnemy(enemyId));
         }
 
         public bool InvokeDiscoverEnemy(ReducerEventContext ctx, Reducer.DiscoverEnemy args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "discover_enemy";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DiscoverEnemyFlags;
-        public void DiscoverEnemy(CallReducerFlags flags) => DiscoverEnemyFlags = flags;
     }
 }

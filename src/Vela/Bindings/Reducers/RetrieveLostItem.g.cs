@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void RetrieveLostItem(SpacetimeDB.Types.PlayerRetrieveLostItemRequest request)
         {
-            conn.InternalCallReducer(new Reducer.RetrieveLostItem(request), this.SetCallReducerFlags.RetrieveLostItemFlags);
+            conn.InternalCallReducer(new Reducer.RetrieveLostItem(request));
         }
 
         public bool InvokeRetrieveLostItem(ReducerEventContext ctx, Reducer.RetrieveLostItem args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "retrieve_lost_item";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags RetrieveLostItemFlags;
-        public void RetrieveLostItem(CallReducerFlags flags) => RetrieveLostItemFlags = flags;
     }
 }

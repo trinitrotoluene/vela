@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void OrderPostBuyOrder(SpacetimeDB.Types.PlayerPostOrderRequest request)
         {
-            conn.InternalCallReducer(new Reducer.OrderPostBuyOrder(request), this.SetCallReducerFlags.OrderPostBuyOrderFlags);
+            conn.InternalCallReducer(new Reducer.OrderPostBuyOrder(request));
         }
 
         public bool InvokeOrderPostBuyOrder(ReducerEventContext ctx, Reducer.OrderPostBuyOrder args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "order_post_buy_order";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags OrderPostBuyOrderFlags;
-        public void OrderPostBuyOrder(CallReducerFlags flags) => OrderPostBuyOrderFlags = flags;
     }
 }

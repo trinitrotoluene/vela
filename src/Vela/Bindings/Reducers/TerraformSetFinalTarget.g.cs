@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void TerraformSetFinalTarget(SpacetimeDB.Types.PlayerTerraformSetFinalTargetRequest request)
         {
-            conn.InternalCallReducer(new Reducer.TerraformSetFinalTarget(request), this.SetCallReducerFlags.TerraformSetFinalTargetFlags);
+            conn.InternalCallReducer(new Reducer.TerraformSetFinalTarget(request));
         }
 
         public bool InvokeTerraformSetFinalTarget(ReducerEventContext ctx, Reducer.TerraformSetFinalTarget args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "terraform_set_final_target";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags TerraformSetFinalTargetFlags;
-        public void TerraformSetFinalTarget(CallReducerFlags flags) => TerraformSetFinalTargetFlags = flags;
     }
 }

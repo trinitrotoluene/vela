@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerMove(SpacetimeDB.Types.PlayerMoveRequest request)
         {
-            conn.InternalCallReducer(new Reducer.PlayerMove(request), this.SetCallReducerFlags.PlayerMoveFlags);
+            conn.InternalCallReducer(new Reducer.PlayerMove(request));
         }
 
         public bool InvokePlayerMove(ReducerEventContext ctx, Reducer.PlayerMove args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "player_move";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerMoveFlags;
-        public void PlayerMove(CallReducerFlags flags) => PlayerMoveFlags = flags;
     }
 }

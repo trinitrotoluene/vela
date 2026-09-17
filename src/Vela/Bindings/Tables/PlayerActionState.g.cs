@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class PlayerActionStateHandle : RemoteTableHandle<EventContext, PlayerActionState>
         {
-            protected override string RemoteTableName => "player_action_state";
+            public override string RemoteTableName => "player_action_state";
 
             public sealed class AutoIdUniqueIndex : UniqueIndexBase<ulong>
             {
@@ -64,8 +64,8 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<PlayerActionState, ulong> EntityId { get; }
         public global::SpacetimeDB.Col<PlayerActionState, ulong> StartTime { get; }
         public global::SpacetimeDB.Col<PlayerActionState, ulong> Duration { get; }
-        public global::SpacetimeDB.NullableCol<PlayerActionState, ulong> Target { get; }
-        public global::SpacetimeDB.NullableCol<PlayerActionState, int> RecipeId { get; }
+        public global::SpacetimeDB.Col<PlayerActionState, ulong> Target { get; }
+        public global::SpacetimeDB.Col<PlayerActionState, int> RecipeId { get; }
         public global::SpacetimeDB.Col<PlayerActionState, PlayerActionType> ActionType { get; }
         public global::SpacetimeDB.Col<PlayerActionState, PlayerActionLayer> Layer { get; }
         public global::SpacetimeDB.Col<PlayerActionState, PlayerActionResult> LastActionResult { get; }
@@ -82,8 +82,8 @@ namespace SpacetimeDB.Types
             EntityId = new global::SpacetimeDB.Col<PlayerActionState, ulong>(tableName, "entity_id");
             StartTime = new global::SpacetimeDB.Col<PlayerActionState, ulong>(tableName, "start_time");
             Duration = new global::SpacetimeDB.Col<PlayerActionState, ulong>(tableName, "duration");
-            Target = new global::SpacetimeDB.NullableCol<PlayerActionState, ulong>(tableName, "target");
-            RecipeId = new global::SpacetimeDB.NullableCol<PlayerActionState, int>(tableName, "recipe_id");
+            Target = new global::SpacetimeDB.Col<PlayerActionState, ulong>(tableName, "target");
+            RecipeId = new global::SpacetimeDB.Col<PlayerActionState, int>(tableName, "recipe_id");
             ActionType = new global::SpacetimeDB.Col<PlayerActionState, PlayerActionType>(tableName, "action_type");
             Layer = new global::SpacetimeDB.Col<PlayerActionState, PlayerActionLayer>(tableName, "layer");
             LastActionResult = new global::SpacetimeDB.Col<PlayerActionState, PlayerActionResult>(tableName, "last_action_result");

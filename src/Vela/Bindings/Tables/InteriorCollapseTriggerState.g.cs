@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class InteriorCollapseTriggerStateHandle : RemoteTableHandle<EventContext, InteriorCollapseTriggerState>
         {
-            protected override string RemoteTableName => "interior_collapse_trigger_state";
+            public override string RemoteTableName => "interior_collapse_trigger_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

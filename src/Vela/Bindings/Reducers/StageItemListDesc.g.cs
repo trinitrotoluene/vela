@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageItemListDesc(System.Collections.Generic.List<SpacetimeDB.Types.ItemListDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageItemListDesc(records), this.SetCallReducerFlags.StageItemListDescFlags);
+            conn.InternalCallReducer(new Reducer.StageItemListDesc(records));
         }
 
         public bool InvokeStageItemListDesc(ReducerEventContext ctx, Reducer.StageItemListDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_item_list_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageItemListDescFlags;
-        public void StageItemListDesc(CallReducerFlags flags) => StageItemListDescFlags = flags;
     }
 }

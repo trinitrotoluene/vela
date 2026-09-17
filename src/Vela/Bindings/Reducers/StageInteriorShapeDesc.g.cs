@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageInteriorShapeDesc(System.Collections.Generic.List<SpacetimeDB.Types.InteriorShapeDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageInteriorShapeDesc(records), this.SetCallReducerFlags.StageInteriorShapeDescFlags);
+            conn.InternalCallReducer(new Reducer.StageInteriorShapeDesc(records));
         }
 
         public bool InvokeStageInteriorShapeDesc(ReducerEventContext ctx, Reducer.StageInteriorShapeDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_interior_shape_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageInteriorShapeDescFlags;
-        public void StageInteriorShapeDesc(CallReducerFlags flags) => StageInteriorShapeDescFlags = flags;
     }
 }

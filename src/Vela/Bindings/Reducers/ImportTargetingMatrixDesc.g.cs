@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportTargetingMatrixDesc(System.Collections.Generic.List<SpacetimeDB.Types.TargetingMatrixDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportTargetingMatrixDesc(records), this.SetCallReducerFlags.ImportTargetingMatrixDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportTargetingMatrixDesc(records));
         }
 
         public bool InvokeImportTargetingMatrixDesc(ReducerEventContext ctx, Reducer.ImportTargetingMatrixDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_targeting_matrix_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportTargetingMatrixDescFlags;
-        public void ImportTargetingMatrixDesc(CallReducerFlags flags) => ImportTargetingMatrixDescFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PausePlayTimer(SpacetimeDB.Types.PlayerPausePlayTimerRequest request)
         {
-            conn.InternalCallReducer(new Reducer.PausePlayTimer(request), this.SetCallReducerFlags.PausePlayTimerFlags);
+            conn.InternalCallReducer(new Reducer.PausePlayTimer(request));
         }
 
         public bool InvokePausePlayTimer(ReducerEventContext ctx, Reducer.PausePlayTimer args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "pause_play_timer";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PausePlayTimerFlags;
-        public void PausePlayTimer(CallReducerFlags flags) => PausePlayTimerFlags = flags;
     }
 }

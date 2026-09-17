@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class CrumbTrailExposedStateHandle : RemoteTableHandle<EventContext, CrumbTrailExposedState>
         {
-            protected override string RemoteTableName => "crumb_trail_exposed_state";
+            public override string RemoteTableName => "crumb_trail_exposed_state";
 
             public sealed class CrumbTrailEntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

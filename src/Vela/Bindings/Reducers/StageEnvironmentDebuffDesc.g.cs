@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageEnvironmentDebuffDesc(System.Collections.Generic.List<SpacetimeDB.Types.EnvironmentDebuffDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageEnvironmentDebuffDesc(records), this.SetCallReducerFlags.StageEnvironmentDebuffDescFlags);
+            conn.InternalCallReducer(new Reducer.StageEnvironmentDebuffDesc(records));
         }
 
         public bool InvokeStageEnvironmentDebuffDesc(ReducerEventContext ctx, Reducer.StageEnvironmentDebuffDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_environment_debuff_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageEnvironmentDebuffDescFlags;
-        public void StageEnvironmentDebuffDesc(CallReducerFlags flags) => StageEnvironmentDebuffDescFlags = flags;
     }
 }

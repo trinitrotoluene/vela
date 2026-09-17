@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class CrumbTrailContributionLockStateHandle : RemoteTableHandle<EventContext, CrumbTrailContributionLockState>
         {
-            protected override string RemoteTableName => "crumb_trail_contribution_lock_state";
+            public override string RemoteTableName => "crumb_trail_contribution_lock_state";
 
             public sealed class CrumbTrailEntityIdIndex : BTreeIndexBase<ulong>
             {

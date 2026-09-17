@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportProspectingDesc(System.Collections.Generic.List<SpacetimeDB.Types.ProspectingDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportProspectingDesc(records), this.SetCallReducerFlags.ImportProspectingDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportProspectingDesc(records));
         }
 
         public bool InvokeImportProspectingDesc(ReducerEventContext ctx, Reducer.ImportProspectingDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_prospecting_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportProspectingDescFlags;
-        public void ImportProspectingDesc(CallReducerFlags flags) => ImportProspectingDescFlags = flags;
     }
 }

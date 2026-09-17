@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminCountInventoryItems(int itemId, uint limit)
         {
-            conn.InternalCallReducer(new Reducer.AdminCountInventoryItems(itemId, limit), this.SetCallReducerFlags.AdminCountInventoryItemsFlags);
+            conn.InternalCallReducer(new Reducer.AdminCountInventoryItems(itemId, limit));
         }
 
         public bool InvokeAdminCountInventoryItems(ReducerEventContext ctx, Reducer.AdminCountInventoryItems args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_count_inventory_items";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminCountInventoryItemsFlags;
-        public void AdminCountInventoryItems(CallReducerFlags flags) => AdminCountInventoryItemsFlags = flags;
     }
 }

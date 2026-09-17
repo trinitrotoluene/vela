@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ProspectingStateHandle : RemoteTableHandle<EventContext, ProspectingState>
         {
-            protected override string RemoteTableName => "prospecting_state";
+            public override string RemoteTableName => "prospecting_state";
 
             public sealed class CrumbTrailEntityIdIndex : BTreeIndexBase<ulong>
             {

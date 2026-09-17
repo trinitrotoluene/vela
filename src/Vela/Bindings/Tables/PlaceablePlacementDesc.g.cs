@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class PlaceablePlacementDescHandle : RemoteTableHandle<EventContext, PlaceablePlacementDesc>
         {
-            protected override string RemoteTableName => "placeable_placement_desc";
+            public override string RemoteTableName => "placeable_placement_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {
@@ -64,6 +64,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<PlaceablePlacementDesc, int> MaxDistanceToBuildings { get; }
         public global::SpacetimeDB.Col<PlaceablePlacementDesc, System.Collections.Generic.List<int>> Buildings { get; }
         public global::SpacetimeDB.Col<PlaceablePlacementDesc, int> RecipePerformanceId { get; }
+        public global::SpacetimeDB.Col<PlaceablePlacementDesc, System.Collections.Generic.List<PlaceableSelfBuffChance>> SelfBuffs { get; }
 
         public PlaceablePlacementDescCols(string tableName)
         {
@@ -92,6 +93,7 @@ namespace SpacetimeDB.Types
             MaxDistanceToBuildings = new global::SpacetimeDB.Col<PlaceablePlacementDesc, int>(tableName, "max_distance_to_buildings");
             Buildings = new global::SpacetimeDB.Col<PlaceablePlacementDesc, System.Collections.Generic.List<int>>(tableName, "buildings");
             RecipePerformanceId = new global::SpacetimeDB.Col<PlaceablePlacementDesc, int>(tableName, "recipe_performance_id");
+            SelfBuffs = new global::SpacetimeDB.Col<PlaceablePlacementDesc, System.Collections.Generic.List<PlaceableSelfBuffChance>>(tableName, "self_buffs");
         }
     }
 

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void UpdateScheduledTimersFromStaticData()
         {
-            conn.InternalCallReducer(new Reducer.UpdateScheduledTimersFromStaticData(), this.SetCallReducerFlags.UpdateScheduledTimersFromStaticDataFlags);
+            conn.InternalCallReducer(new Reducer.UpdateScheduledTimersFromStaticData());
         }
 
         public bool InvokeUpdateScheduledTimersFromStaticData(ReducerEventContext ctx, Reducer.UpdateScheduledTimersFromStaticData args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "update_scheduled_timers_from_static_data";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags UpdateScheduledTimersFromStaticDataFlags;
-        public void UpdateScheduledTimersFromStaticData(CallReducerFlags flags) => UpdateScheduledTimersFromStaticDataFlags = flags;
     }
 }

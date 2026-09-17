@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class TerraformProgressStateHandle : RemoteTableHandle<EventContext, TerraformProgressState>
         {
-            protected override string RemoteTableName => "terraform_progress_state";
+            public override string RemoteTableName => "terraform_progress_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

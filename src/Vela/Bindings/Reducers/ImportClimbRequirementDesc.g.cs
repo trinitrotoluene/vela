@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportClimbRequirementDesc(System.Collections.Generic.List<SpacetimeDB.Types.ClimbRequirementDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportClimbRequirementDesc(records), this.SetCallReducerFlags.ImportClimbRequirementDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportClimbRequirementDesc(records));
         }
 
         public bool InvokeImportClimbRequirementDesc(ReducerEventContext ctx, Reducer.ImportClimbRequirementDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_climb_requirement_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportClimbRequirementDescFlags;
-        public void ImportClimbRequirementDesc(CallReducerFlags flags) => ImportClimbRequirementDescFlags = flags;
     }
 }

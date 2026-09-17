@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportIdentityRole(System.Collections.Generic.List<SpacetimeDB.Types.IdentityRole> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportIdentityRole(records), this.SetCallReducerFlags.ImportIdentityRoleFlags);
+            conn.InternalCallReducer(new Reducer.ImportIdentityRole(records));
         }
 
         public bool InvokeImportIdentityRole(ReducerEventContext ctx, Reducer.ImportIdentityRole args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_identity_role";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportIdentityRoleFlags;
-        public void ImportIdentityRole(CallReducerFlags flags) => ImportIdentityRoleFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void InventoryCreatePersonal(ulong buildingEntityId)
         {
-            conn.InternalCallReducer(new Reducer.InventoryCreatePersonal(buildingEntityId), this.SetCallReducerFlags.InventoryCreatePersonalFlags);
+            conn.InternalCallReducer(new Reducer.InventoryCreatePersonal(buildingEntityId));
         }
 
         public bool InvokeInventoryCreatePersonal(ReducerEventContext ctx, Reducer.InventoryCreatePersonal args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "inventory_create_personal";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags InventoryCreatePersonalFlags;
-        public void InventoryCreatePersonal(CallReducerFlags flags) => InventoryCreatePersonalFlags = flags;
     }
 }

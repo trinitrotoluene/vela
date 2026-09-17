@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminFailQuest(int questDescId)
         {
-            conn.InternalCallReducer(new Reducer.AdminFailQuest(questDescId), this.SetCallReducerFlags.AdminFailQuestFlags);
+            conn.InternalCallReducer(new Reducer.AdminFailQuest(questDescId));
         }
 
         public bool InvokeAdminFailQuest(ReducerEventContext ctx, Reducer.AdminFailQuest args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_fail_quest";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminFailQuestFlags;
-        public void AdminFailQuest(CallReducerFlags flags) => AdminFailQuestFlags = flags;
     }
 }

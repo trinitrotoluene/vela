@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageItemConversionRecipeDesc(System.Collections.Generic.List<SpacetimeDB.Types.ItemConversionRecipeDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageItemConversionRecipeDesc(records), this.SetCallReducerFlags.StageItemConversionRecipeDescFlags);
+            conn.InternalCallReducer(new Reducer.StageItemConversionRecipeDesc(records));
         }
 
         public bool InvokeStageItemConversionRecipeDesc(ReducerEventContext ctx, Reducer.StageItemConversionRecipeDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_item_conversion_recipe_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageItemConversionRecipeDescFlags;
-        public void StageItemConversionRecipeDesc(CallReducerFlags flags) => StageItemConversionRecipeDescFlags = flags;
     }
 }

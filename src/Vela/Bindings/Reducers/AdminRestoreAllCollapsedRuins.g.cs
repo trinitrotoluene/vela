@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminRestoreAllCollapsedRuins()
         {
-            conn.InternalCallReducer(new Reducer.AdminRestoreAllCollapsedRuins(), this.SetCallReducerFlags.AdminRestoreAllCollapsedRuinsFlags);
+            conn.InternalCallReducer(new Reducer.AdminRestoreAllCollapsedRuins());
         }
 
         public bool InvokeAdminRestoreAllCollapsedRuins(ReducerEventContext ctx, Reducer.AdminRestoreAllCollapsedRuins args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "admin_restore_all_collapsed_ruins";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminRestoreAllCollapsedRuinsFlags;
-        public void AdminRestoreAllCollapsedRuins(CallReducerFlags flags) => AdminRestoreAllCollapsedRuinsFlags = flags;
     }
 }

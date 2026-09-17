@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportAttackOutcomeState(System.Collections.Generic.List<SpacetimeDB.Types.AttackOutcomeState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportAttackOutcomeState(records), this.SetCallReducerFlags.ImportAttackOutcomeStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportAttackOutcomeState(records));
         }
 
         public bool InvokeImportAttackOutcomeState(ReducerEventContext ctx, Reducer.ImportAttackOutcomeState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_attack_outcome_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportAttackOutcomeStateFlags;
-        public void ImportAttackOutcomeState(CallReducerFlags flags) => ImportAttackOutcomeStateFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DeployableMount(SpacetimeDB.Types.PlayerDeployableMountRequest request)
         {
-            conn.InternalCallReducer(new Reducer.DeployableMount(request), this.SetCallReducerFlags.DeployableMountFlags);
+            conn.InternalCallReducer(new Reducer.DeployableMount(request));
         }
 
         public bool InvokeDeployableMount(ReducerEventContext ctx, Reducer.DeployableMount args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "deployable_mount";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DeployableMountFlags;
-        public void DeployableMount(CallReducerFlags flags) => DeployableMountFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EnemyMove(SpacetimeDB.Types.EnemyMoveRequest request)
         {
-            conn.InternalCallReducer(new Reducer.EnemyMove(request), this.SetCallReducerFlags.EnemyMoveFlags);
+            conn.InternalCallReducer(new Reducer.EnemyMove(request));
         }
 
         public bool InvokeEnemyMove(ReducerEventContext ctx, Reducer.EnemyMove args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "enemy_move";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EnemyMoveFlags;
-        public void EnemyMove(CallReducerFlags flags) => EnemyMoveFlags = flags;
     }
 }

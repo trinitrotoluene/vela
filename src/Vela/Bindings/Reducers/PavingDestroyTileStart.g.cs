@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PavingDestroyTileStart(SpacetimeDB.Types.PlayerPavingDestroyTileRequest request)
         {
-            conn.InternalCallReducer(new Reducer.PavingDestroyTileStart(request), this.SetCallReducerFlags.PavingDestroyTileStartFlags);
+            conn.InternalCallReducer(new Reducer.PavingDestroyTileStart(request));
         }
 
         public bool InvokePavingDestroyTileStart(ReducerEventContext ctx, Reducer.PavingDestroyTileStart args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "paving_destroy_tile_start";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PavingDestroyTileStartFlags;
-        public void PavingDestroyTileStart(CallReducerFlags flags) => PavingDestroyTileStartFlags = flags;
     }
 }

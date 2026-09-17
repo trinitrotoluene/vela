@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminFindAllPlayersWithItemAboveQuantity(int itemId, bool isCargo, ulong claimEntityId, ulong minQuantity)
         {
-            conn.InternalCallReducer(new Reducer.AdminFindAllPlayersWithItemAboveQuantity(itemId, isCargo, claimEntityId, minQuantity), this.SetCallReducerFlags.AdminFindAllPlayersWithItemAboveQuantityFlags);
+            conn.InternalCallReducer(new Reducer.AdminFindAllPlayersWithItemAboveQuantity(itemId, isCargo, claimEntityId, minQuantity));
         }
 
         public bool InvokeAdminFindAllPlayersWithItemAboveQuantity(ReducerEventContext ctx, Reducer.AdminFindAllPlayersWithItemAboveQuantity args)
@@ -79,11 +79,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_find_all_players_with_item_above_quantity";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminFindAllPlayersWithItemAboveQuantityFlags;
-        public void AdminFindAllPlayersWithItemAboveQuantity(CallReducerFlags flags) => AdminFindAllPlayersWithItemAboveQuantityFlags = flags;
     }
 }

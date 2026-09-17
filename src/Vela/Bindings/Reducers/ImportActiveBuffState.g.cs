@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportActiveBuffState(System.Collections.Generic.List<SpacetimeDB.Types.ActiveBuffState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportActiveBuffState(records), this.SetCallReducerFlags.ImportActiveBuffStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportActiveBuffState(records));
         }
 
         public bool InvokeImportActiveBuffState(ReducerEventContext ctx, Reducer.ImportActiveBuffState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_active_buff_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportActiveBuffStateFlags;
-        public void ImportActiveBuffState(CallReducerFlags flags) => ImportActiveBuffStateFlags = flags;
     }
 }

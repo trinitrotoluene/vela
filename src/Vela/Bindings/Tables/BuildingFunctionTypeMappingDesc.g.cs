@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class BuildingFunctionTypeMappingDescHandle : RemoteTableHandle<EventContext, BuildingFunctionTypeMappingDesc>
         {
-            protected override string RemoteTableName => "building_function_type_mapping_desc";
+            public override string RemoteTableName => "building_function_type_mapping_desc";
 
             public sealed class TypeIdUniqueIndex : UniqueIndexBase<int>
             {

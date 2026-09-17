@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class KnowledgeStatModifierDescHandle : RemoteTableHandle<EventContext, KnowledgeStatModifierDesc>
         {
-            protected override string RemoteTableName => "knowledge_stat_modifier_desc";
+            public override string RemoteTableName => "knowledge_stat_modifier_desc";
 
             public sealed class SecondaryKnowledgeIdUniqueIndex : UniqueIndexBase<int>
             {

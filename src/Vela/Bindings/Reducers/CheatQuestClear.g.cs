@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatQuestClear(ulong playerEntityId, int questDescId)
         {
-            conn.InternalCallReducer(new Reducer.CheatQuestClear(playerEntityId, questDescId), this.SetCallReducerFlags.CheatQuestClearFlags);
+            conn.InternalCallReducer(new Reducer.CheatQuestClear(playerEntityId, questDescId));
         }
 
         public bool InvokeCheatQuestClear(ReducerEventContext ctx, Reducer.CheatQuestClear args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_quest_clear";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatQuestClearFlags;
-        public void CheatQuestClear(CallReducerFlags flags) => CheatQuestClearFlags = flags;
     }
 }

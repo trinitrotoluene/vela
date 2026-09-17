@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void InventorySort(ulong targetEntityId)
         {
-            conn.InternalCallReducer(new Reducer.InventorySort(targetEntityId), this.SetCallReducerFlags.InventorySortFlags);
+            conn.InternalCallReducer(new Reducer.InventorySort(targetEntityId));
         }
 
         public bool InvokeInventorySort(ReducerEventContext ctx, Reducer.InventorySort args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "inventory_sort";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags InventorySortFlags;
-        public void InventorySort(CallReducerFlags flags) => InventorySortFlags = flags;
     }
 }

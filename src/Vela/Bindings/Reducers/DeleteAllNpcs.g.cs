@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DeleteAllNpcs()
         {
-            conn.InternalCallReducer(new Reducer.DeleteAllNpcs(), this.SetCallReducerFlags.DeleteAllNpcsFlags);
+            conn.InternalCallReducer(new Reducer.DeleteAllNpcs());
         }
 
         public bool InvokeDeleteAllNpcs(ReducerEventContext ctx, Reducer.DeleteAllNpcs args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "delete_all_npcs";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DeleteAllNpcsFlags;
-        public void DeleteAllNpcs(CallReducerFlags flags) => DeleteAllNpcsFlags = flags;
     }
 }

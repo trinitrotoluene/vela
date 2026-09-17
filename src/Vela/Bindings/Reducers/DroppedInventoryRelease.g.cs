@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DroppedInventoryRelease(ulong droppedInventoryEntityId)
         {
-            conn.InternalCallReducer(new Reducer.DroppedInventoryRelease(droppedInventoryEntityId), this.SetCallReducerFlags.DroppedInventoryReleaseFlags);
+            conn.InternalCallReducer(new Reducer.DroppedInventoryRelease(droppedInventoryEntityId));
         }
 
         public bool InvokeDroppedInventoryRelease(ReducerEventContext ctx, Reducer.DroppedInventoryRelease args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "dropped_inventory_release";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DroppedInventoryReleaseFlags;
-        public void DroppedInventoryRelease(CallReducerFlags flags) => DroppedInventoryReleaseFlags = flags;
     }
 }

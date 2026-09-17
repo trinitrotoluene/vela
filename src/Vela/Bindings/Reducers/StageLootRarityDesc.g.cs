@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageLootRarityDesc(System.Collections.Generic.List<SpacetimeDB.Types.LootRarityDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageLootRarityDesc(records), this.SetCallReducerFlags.StageLootRarityDescFlags);
+            conn.InternalCallReducer(new Reducer.StageLootRarityDesc(records));
         }
 
         public bool InvokeStageLootRarityDesc(ReducerEventContext ctx, Reducer.StageLootRarityDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_loot_rarity_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageLootRarityDescFlags;
-        public void StageLootRarityDesc(CallReducerFlags flags) => StageLootRarityDescFlags = flags;
     }
 }

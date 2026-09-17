@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class QuestStageDescHandle : RemoteTableHandle<EventContext, QuestStageDesc>
         {
-            protected override string RemoteTableName => "quest_stage_desc";
+            public override string RemoteTableName => "quest_stage_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {

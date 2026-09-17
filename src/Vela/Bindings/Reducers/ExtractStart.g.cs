@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ExtractStart(SpacetimeDB.Types.PlayerExtractRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ExtractStart(request), this.SetCallReducerFlags.ExtractStartFlags);
+            conn.InternalCallReducer(new Reducer.ExtractStart(request));
         }
 
         public bool InvokeExtractStart(ReducerEventContext ctx, Reducer.ExtractStart args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "extract_start";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ExtractStartFlags;
-        public void ExtractStart(CallReducerFlags flags) => ExtractStartFlags = flags;
     }
 }

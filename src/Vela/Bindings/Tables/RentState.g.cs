@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class RentStateHandle : RemoteTableHandle<EventContext, RentState>
         {
-            protected override string RemoteTableName => "rent_state";
+            public override string RemoteTableName => "rent_state";
 
             public sealed class ClaimEntityIdIndex : BTreeIndexBase<ulong>
             {
@@ -67,7 +67,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<RentState, uint> PaidRent { get; }
         public global::SpacetimeDB.Col<RentState, bool> Active { get; }
         public global::SpacetimeDB.Col<RentState, bool> Defaulted { get; }
-        public global::SpacetimeDB.NullableCol<RentState, SpacetimeDB.Timestamp> EvictionTimestamp { get; }
+        public global::SpacetimeDB.Col<RentState, SpacetimeDB.Timestamp> EvictionTimestamp { get; }
 
         public RentStateCols(string tableName)
         {
@@ -79,7 +79,7 @@ namespace SpacetimeDB.Types
             PaidRent = new global::SpacetimeDB.Col<RentState, uint>(tableName, "paid_rent");
             Active = new global::SpacetimeDB.Col<RentState, bool>(tableName, "active");
             Defaulted = new global::SpacetimeDB.Col<RentState, bool>(tableName, "defaulted");
-            EvictionTimestamp = new global::SpacetimeDB.NullableCol<RentState, SpacetimeDB.Timestamp>(tableName, "eviction_timestamp");
+            EvictionTimestamp = new global::SpacetimeDB.Col<RentState, SpacetimeDB.Timestamp>(tableName, "eviction_timestamp");
         }
     }
 

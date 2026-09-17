@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class DeployableCollectibleStateHandle : RemoteTableHandle<EventContext, DeployableCollectibleState>
         {
-            protected override string RemoteTableName => "deployable_collectible_state";
+            public override string RemoteTableName => "deployable_collectible_state";
 
             public sealed class DeployableEntityIdUniqueIndex : UniqueIndexBase<ulong>
             {
@@ -53,7 +53,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<DeployableCollectibleState, ulong> OwnerEntityId { get; }
         public global::SpacetimeDB.Col<DeployableCollectibleState, int> CollectibleId { get; }
         public global::SpacetimeDB.Col<DeployableCollectibleState, int> DeployableDescId { get; }
-        public global::SpacetimeDB.NullableCol<DeployableCollectibleState, OffsetCoordinatesSmallMessage> Location { get; }
+        public global::SpacetimeDB.Col<DeployableCollectibleState, OffsetCoordinatesSmallMessage> Location { get; }
         public global::SpacetimeDB.Col<DeployableCollectibleState, bool> AutoFollow { get; }
 
         public DeployableCollectibleStateCols(string tableName)
@@ -62,7 +62,7 @@ namespace SpacetimeDB.Types
             OwnerEntityId = new global::SpacetimeDB.Col<DeployableCollectibleState, ulong>(tableName, "owner_entity_id");
             CollectibleId = new global::SpacetimeDB.Col<DeployableCollectibleState, int>(tableName, "collectible_id");
             DeployableDescId = new global::SpacetimeDB.Col<DeployableCollectibleState, int>(tableName, "deployable_desc_id");
-            Location = new global::SpacetimeDB.NullableCol<DeployableCollectibleState, OffsetCoordinatesSmallMessage>(tableName, "location");
+            Location = new global::SpacetimeDB.Col<DeployableCollectibleState, OffsetCoordinatesSmallMessage>(tableName, "location");
             AutoFollow = new global::SpacetimeDB.Col<DeployableCollectibleState, bool>(tableName, "auto_follow");
         }
     }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminUpdateHousingPortals()
         {
-            conn.InternalCallReducer(new Reducer.AdminUpdateHousingPortals(), this.SetCallReducerFlags.AdminUpdateHousingPortalsFlags);
+            conn.InternalCallReducer(new Reducer.AdminUpdateHousingPortals());
         }
 
         public bool InvokeAdminUpdateHousingPortals(ReducerEventContext ctx, Reducer.AdminUpdateHousingPortals args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "admin_update_housing_portals";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminUpdateHousingPortalsFlags;
-        public void AdminUpdateHousingPortals(CallReducerFlags flags) => AdminUpdateHousingPortalsFlags = flags;
     }
 }

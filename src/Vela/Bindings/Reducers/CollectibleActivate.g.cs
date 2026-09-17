@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CollectibleActivate(SpacetimeDB.Types.PlayerCollectibleActivateRequest request)
         {
-            conn.InternalCallReducer(new Reducer.CollectibleActivate(request), this.SetCallReducerFlags.CollectibleActivateFlags);
+            conn.InternalCallReducer(new Reducer.CollectibleActivate(request));
         }
 
         public bool InvokeCollectibleActivate(ReducerEventContext ctx, Reducer.CollectibleActivate args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "collectible_activate";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CollectibleActivateFlags;
-        public void CollectibleActivate(CallReducerFlags flags) => CollectibleActivateFlags = flags;
     }
 }

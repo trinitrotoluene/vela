@@ -31,6 +31,10 @@ namespace SpacetimeDB.Types
         public bool ConsumableWhileInCombat;
         [DataMember(Name = "buffs")]
         public System.Collections.Generic.List<BuffEffect> Buffs;
+        [DataMember(Name = "auto_consume")]
+        public bool AutoConsume;
+        [DataMember(Name = "output_item_stacks")]
+        public System.Collections.Generic.List<ItemStack>? OutputItemStacks;
 
         public FoodDesc(
             int ItemId,
@@ -41,7 +45,9 @@ namespace SpacetimeDB.Types
             float Hunger,
             float TeleportationEnergy,
             bool ConsumableWhileInCombat,
-            System.Collections.Generic.List<BuffEffect> Buffs
+            System.Collections.Generic.List<BuffEffect> Buffs,
+            bool AutoConsume,
+            System.Collections.Generic.List<ItemStack>? OutputItemStacks
         )
         {
             this.ItemId = ItemId;
@@ -53,6 +59,8 @@ namespace SpacetimeDB.Types
             this.TeleportationEnergy = TeleportationEnergy;
             this.ConsumableWhileInCombat = ConsumableWhileInCombat;
             this.Buffs = Buffs;
+            this.AutoConsume = AutoConsume;
+            this.OutputItemStacks = OutputItemStacks;
         }
 
         public FoodDesc()

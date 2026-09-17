@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void MigrateOnboarding()
         {
-            conn.InternalCallReducer(new Reducer.MigrateOnboarding(), this.SetCallReducerFlags.MigrateOnboardingFlags);
+            conn.InternalCallReducer(new Reducer.MigrateOnboarding());
         }
 
         public bool InvokeMigrateOnboarding(ReducerEventContext ctx, Reducer.MigrateOnboarding args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "migrate_onboarding";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags MigrateOnboardingFlags;
-        public void MigrateOnboarding(CallReducerFlags flags) => MigrateOnboardingFlags = flags;
     }
 }

@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ClaimLocalStateHandle : RemoteTableHandle<EventContext, ClaimLocalState>
         {
-            protected override string RemoteTableName => "claim_local_state";
+            public override string RemoteTableName => "claim_local_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {
@@ -44,7 +44,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<ClaimLocalState, float> BuildingMaintenance { get; }
         public global::SpacetimeDB.Col<ClaimLocalState, int> NumTiles { get; }
         public global::SpacetimeDB.Col<ClaimLocalState, uint> NumTileNeighbors { get; }
-        public global::SpacetimeDB.NullableCol<ClaimLocalState, OffsetCoordinatesSmallMessage> Location { get; }
+        public global::SpacetimeDB.Col<ClaimLocalState, OffsetCoordinatesSmallMessage> Location { get; }
         public global::SpacetimeDB.Col<ClaimLocalState, uint> Treasury { get; }
         public global::SpacetimeDB.Col<ClaimLocalState, uint> XpGainedSinceLastCoinMinting { get; }
         public global::SpacetimeDB.Col<ClaimLocalState, uint> SuppliesPurchaseThreshold { get; }
@@ -58,7 +58,7 @@ namespace SpacetimeDB.Types
             BuildingMaintenance = new global::SpacetimeDB.Col<ClaimLocalState, float>(tableName, "building_maintenance");
             NumTiles = new global::SpacetimeDB.Col<ClaimLocalState, int>(tableName, "num_tiles");
             NumTileNeighbors = new global::SpacetimeDB.Col<ClaimLocalState, uint>(tableName, "num_tile_neighbors");
-            Location = new global::SpacetimeDB.NullableCol<ClaimLocalState, OffsetCoordinatesSmallMessage>(tableName, "location");
+            Location = new global::SpacetimeDB.Col<ClaimLocalState, OffsetCoordinatesSmallMessage>(tableName, "location");
             Treasury = new global::SpacetimeDB.Col<ClaimLocalState, uint>(tableName, "treasury");
             XpGainedSinceLastCoinMinting = new global::SpacetimeDB.Col<ClaimLocalState, uint>(tableName, "xp_gained_since_last_coin_minting");
             SuppliesPurchaseThreshold = new global::SpacetimeDB.Col<ClaimLocalState, uint>(tableName, "supplies_purchase_threshold");

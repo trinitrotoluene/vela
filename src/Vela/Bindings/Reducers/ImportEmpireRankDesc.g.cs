@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportEmpireRankDesc(System.Collections.Generic.List<SpacetimeDB.Types.EmpireRankDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportEmpireRankDesc(records), this.SetCallReducerFlags.ImportEmpireRankDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportEmpireRankDesc(records));
         }
 
         public bool InvokeImportEmpireRankDesc(ReducerEventContext ctx, Reducer.ImportEmpireRankDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_empire_rank_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportEmpireRankDescFlags;
-        public void ImportEmpireRankDesc(CallReducerFlags flags) => ImportEmpireRankDescFlags = flags;
     }
 }

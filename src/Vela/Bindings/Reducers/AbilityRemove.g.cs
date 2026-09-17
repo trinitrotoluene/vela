@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AbilityRemove(byte actionBarIndex, byte localAbilityIndex)
         {
-            conn.InternalCallReducer(new Reducer.AbilityRemove(actionBarIndex, localAbilityIndex), this.SetCallReducerFlags.AbilityRemoveFlags);
+            conn.InternalCallReducer(new Reducer.AbilityRemove(actionBarIndex, localAbilityIndex));
         }
 
         public bool InvokeAbilityRemove(ReducerEventContext ctx, Reducer.AbilityRemove args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "ability_remove";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AbilityRemoveFlags;
-        public void AbilityRemove(CallReducerFlags flags) => AbilityRemoveFlags = flags;
     }
 }

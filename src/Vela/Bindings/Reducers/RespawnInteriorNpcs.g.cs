@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void RespawnInteriorNpcs()
         {
-            conn.InternalCallReducer(new Reducer.RespawnInteriorNpcs(), this.SetCallReducerFlags.RespawnInteriorNpcsFlags);
+            conn.InternalCallReducer(new Reducer.RespawnInteriorNpcs());
         }
 
         public bool InvokeRespawnInteriorNpcs(ReducerEventContext ctx, Reducer.RespawnInteriorNpcs args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "respawn_interior_npcs";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags RespawnInteriorNpcsFlags;
-        public void RespawnInteriorNpcs(CallReducerFlags flags) => RespawnInteriorNpcsFlags = flags;
     }
 }

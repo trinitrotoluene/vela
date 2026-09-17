@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminAddSpecificBuildingTypeStates()
         {
-            conn.InternalCallReducer(new Reducer.AdminAddSpecificBuildingTypeStates(), this.SetCallReducerFlags.AdminAddSpecificBuildingTypeStatesFlags);
+            conn.InternalCallReducer(new Reducer.AdminAddSpecificBuildingTypeStates());
         }
 
         public bool InvokeAdminAddSpecificBuildingTypeStates(ReducerEventContext ctx, Reducer.AdminAddSpecificBuildingTypeStates args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "admin_add_specific_building_type_states";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminAddSpecificBuildingTypeStatesFlags;
-        public void AdminAddSpecificBuildingTypeStates(CallReducerFlags flags) => AdminAddSpecificBuildingTypeStatesFlags = flags;
     }
 }

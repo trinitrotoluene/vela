@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerUseElevator(ulong platformEntityId)
         {
-            conn.InternalCallReducer(new Reducer.PlayerUseElevator(platformEntityId), this.SetCallReducerFlags.PlayerUseElevatorFlags);
+            conn.InternalCallReducer(new Reducer.PlayerUseElevator(platformEntityId));
         }
 
         public bool InvokePlayerUseElevator(ReducerEventContext ctx, Reducer.PlayerUseElevator args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "player_use_elevator";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerUseElevatorFlags;
-        public void PlayerUseElevator(CallReducerFlags flags) => PlayerUseElevatorFlags = flags;
     }
 }

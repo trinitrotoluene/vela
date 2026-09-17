@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerHousingEvictPlayer(SpacetimeDB.Types.PlayerHousingEvictPlayerRequest request)
         {
-            conn.InternalCallReducer(new Reducer.PlayerHousingEvictPlayer(request), this.SetCallReducerFlags.PlayerHousingEvictPlayerFlags);
+            conn.InternalCallReducer(new Reducer.PlayerHousingEvictPlayer(request));
         }
 
         public bool InvokePlayerHousingEvictPlayer(ReducerEventContext ctx, Reducer.PlayerHousingEvictPlayer args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "player_housing_evict_player";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerHousingEvictPlayerFlags;
-        public void PlayerHousingEvictPlayer(CallReducerFlags flags) => PlayerHousingEvictPlayerFlags = flags;
     }
 }

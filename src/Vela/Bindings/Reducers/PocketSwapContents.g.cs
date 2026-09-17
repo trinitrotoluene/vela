@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PocketSwapContents(SpacetimeDB.Types.PlayerPocketSwapContentsRequest request)
         {
-            conn.InternalCallReducer(new Reducer.PocketSwapContents(request), this.SetCallReducerFlags.PocketSwapContentsFlags);
+            conn.InternalCallReducer(new Reducer.PocketSwapContents(request));
         }
 
         public bool InvokePocketSwapContents(ReducerEventContext ctx, Reducer.PocketSwapContents args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "pocket_swap_contents";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PocketSwapContentsFlags;
-        public void PocketSwapContents(CallReducerFlags flags) => PocketSwapContentsFlags = flags;
     }
 }

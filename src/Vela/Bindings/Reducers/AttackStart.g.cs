@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AttackStart(SpacetimeDB.Types.EntityAttackRequest request)
         {
-            conn.InternalCallReducer(new Reducer.AttackStart(request), this.SetCallReducerFlags.AttackStartFlags);
+            conn.InternalCallReducer(new Reducer.AttackStart(request));
         }
 
         public bool InvokeAttackStart(ReducerEventContext ctx, Reducer.AttackStart args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "attack_start";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AttackStartFlags;
-        public void AttackStart(CallReducerFlags flags) => AttackStartFlags = flags;
     }
 }

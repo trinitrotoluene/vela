@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageKnowledgeScrollTypeDesc(System.Collections.Generic.List<SpacetimeDB.Types.KnowledgeScrollTypeDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageKnowledgeScrollTypeDesc(records), this.SetCallReducerFlags.StageKnowledgeScrollTypeDescFlags);
+            conn.InternalCallReducer(new Reducer.StageKnowledgeScrollTypeDesc(records));
         }
 
         public bool InvokeStageKnowledgeScrollTypeDesc(ReducerEventContext ctx, Reducer.StageKnowledgeScrollTypeDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_knowledge_scroll_type_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageKnowledgeScrollTypeDescFlags;
-        public void StageKnowledgeScrollTypeDesc(CallReducerFlags flags) => StageKnowledgeScrollTypeDescFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ItemStackMove(SpacetimeDB.Types.PlayerItemStackMoveRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ItemStackMove(request), this.SetCallReducerFlags.ItemStackMoveFlags);
+            conn.InternalCallReducer(new Reducer.ItemStackMove(request));
         }
 
         public bool InvokeItemStackMove(ReducerEventContext ctx, Reducer.ItemStackMove args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "item_stack_move";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ItemStackMoveFlags;
-        public void ItemStackMove(CallReducerFlags flags) => ItemStackMoveFlags = flags;
     }
 }

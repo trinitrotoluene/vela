@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportClaimLocalState(System.Collections.Generic.List<SpacetimeDB.Types.ClaimLocalState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportClaimLocalState(records), this.SetCallReducerFlags.ImportClaimLocalStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportClaimLocalState(records));
         }
 
         public bool InvokeImportClaimLocalState(ReducerEventContext ctx, Reducer.ImportClaimLocalState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_claim_local_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportClaimLocalStateFlags;
-        public void ImportClaimLocalState(CallReducerFlags flags) => ImportClaimLocalStateFlags = flags;
     }
 }

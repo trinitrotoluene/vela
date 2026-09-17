@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ClaimTransferOwnership(SpacetimeDB.Types.PlayerClaimTransferOwnershipRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ClaimTransferOwnership(request), this.SetCallReducerFlags.ClaimTransferOwnershipFlags);
+            conn.InternalCallReducer(new Reducer.ClaimTransferOwnership(request));
         }
 
         public bool InvokeClaimTransferOwnership(ReducerEventContext ctx, Reducer.ClaimTransferOwnership args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "claim_transfer_ownership";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ClaimTransferOwnershipFlags;
-        public void ClaimTransferOwnership(CallReducerFlags flags) => ClaimTransferOwnershipFlags = flags;
     }
 }

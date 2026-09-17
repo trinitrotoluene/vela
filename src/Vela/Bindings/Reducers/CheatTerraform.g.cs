@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatTerraform(int x, int z, uint dimension, int delta)
         {
-            conn.InternalCallReducer(new Reducer.CheatTerraform(x, z, dimension, delta), this.SetCallReducerFlags.CheatTerraformFlags);
+            conn.InternalCallReducer(new Reducer.CheatTerraform(x, z, dimension, delta));
         }
 
         public bool InvokeCheatTerraform(ReducerEventContext ctx, Reducer.CheatTerraform args)
@@ -79,11 +79,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_terraform";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatTerraformFlags;
-        public void CheatTerraform(CallReducerFlags flags) => CheatTerraformFlags = flags;
     }
 }

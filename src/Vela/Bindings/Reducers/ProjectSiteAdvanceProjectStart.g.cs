@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ProjectSiteAdvanceProjectStart(SpacetimeDB.Types.PlayerProjectSiteAdvanceProjectRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ProjectSiteAdvanceProjectStart(request), this.SetCallReducerFlags.ProjectSiteAdvanceProjectStartFlags);
+            conn.InternalCallReducer(new Reducer.ProjectSiteAdvanceProjectStart(request));
         }
 
         public bool InvokeProjectSiteAdvanceProjectStart(ReducerEventContext ctx, Reducer.ProjectSiteAdvanceProjectStart args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "project_site_advance_project_start";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ProjectSiteAdvanceProjectStartFlags;
-        public void ProjectSiteAdvanceProjectStart(CallReducerFlags flags) => ProjectSiteAdvanceProjectStartFlags = flags;
     }
 }

@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class EmpireIconDescHandle : RemoteTableHandle<EventContext, EmpireIconDesc>
         {
-            protected override string RemoteTableName => "empire_icon_desc";
+            public override string RemoteTableName => "empire_icon_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {

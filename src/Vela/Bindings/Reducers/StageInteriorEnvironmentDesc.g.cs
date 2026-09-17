@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageInteriorEnvironmentDesc(System.Collections.Generic.List<SpacetimeDB.Types.InteriorEnvironmentDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageInteriorEnvironmentDesc(records), this.SetCallReducerFlags.StageInteriorEnvironmentDescFlags);
+            conn.InternalCallReducer(new Reducer.StageInteriorEnvironmentDesc(records));
         }
 
         public bool InvokeStageInteriorEnvironmentDesc(ReducerEventContext ctx, Reducer.StageInteriorEnvironmentDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_interior_environment_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageInteriorEnvironmentDescFlags;
-        public void StageInteriorEnvironmentDesc(CallReducerFlags flags) => StageInteriorEnvironmentDescFlags = flags;
     }
 }

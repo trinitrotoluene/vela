@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerCompleteTask(SpacetimeDB.Types.PlayerCompleteTaskRequest request)
         {
-            conn.InternalCallReducer(new Reducer.PlayerCompleteTask(request), this.SetCallReducerFlags.PlayerCompleteTaskFlags);
+            conn.InternalCallReducer(new Reducer.PlayerCompleteTask(request));
         }
 
         public bool InvokePlayerCompleteTask(ReducerEventContext ctx, Reducer.PlayerCompleteTask args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "player_complete_task";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerCompleteTaskFlags;
-        public void PlayerCompleteTask(CallReducerFlags flags) => PlayerCompleteTaskFlags = flags;
     }
 }

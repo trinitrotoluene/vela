@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportEmpireTerritoryDesc(System.Collections.Generic.List<SpacetimeDB.Types.EmpireTerritoryDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportEmpireTerritoryDesc(records), this.SetCallReducerFlags.ImportEmpireTerritoryDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportEmpireTerritoryDesc(records));
         }
 
         public bool InvokeImportEmpireTerritoryDesc(ReducerEventContext ctx, Reducer.ImportEmpireTerritoryDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_empire_territory_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportEmpireTerritoryDescFlags;
-        public void ImportEmpireTerritoryDesc(CallReducerFlags flags) => ImportEmpireTerritoryDescFlags = flags;
     }
 }

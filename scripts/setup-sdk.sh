@@ -4,7 +4,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SDK_DIR="$REPO_ROOT/src/SpacetimeDB.ClientSDK"
 PATCH_FILE="$REPO_ROOT/patches/spacetimedb-cacheless.patch"
-SDK_VERSION="v1.12.0"
+SDK_VERSION="v2.10.0"
 
 echo "Initializing SpacetimeDB.ClientSDK submodule..."
 cd "$REPO_ROOT"

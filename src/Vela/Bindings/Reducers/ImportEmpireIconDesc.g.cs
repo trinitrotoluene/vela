@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportEmpireIconDesc(System.Collections.Generic.List<SpacetimeDB.Types.EmpireIconDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportEmpireIconDesc(records), this.SetCallReducerFlags.ImportEmpireIconDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportEmpireIconDesc(records));
         }
 
         public bool InvokeImportEmpireIconDesc(ReducerEventContext ctx, Reducer.ImportEmpireIconDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_empire_icon_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportEmpireIconDescFlags;
-        public void ImportEmpireIconDesc(CallReducerFlags flags) => ImportEmpireIconDescFlags = flags;
     }
 }

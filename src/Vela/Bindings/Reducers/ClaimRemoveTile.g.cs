@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ClaimRemoveTile(SpacetimeDB.Types.PlayerClaimRemoveTileRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ClaimRemoveTile(request), this.SetCallReducerFlags.ClaimRemoveTileFlags);
+            conn.InternalCallReducer(new Reducer.ClaimRemoveTile(request));
         }
 
         public bool InvokeClaimRemoveTile(ReducerEventContext ctx, Reducer.ClaimRemoveTile args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "claim_remove_tile";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ClaimRemoveTileFlags;
-        public void ClaimRemoveTile(CallReducerFlags flags) => ClaimRemoveTileFlags = flags;
     }
 }

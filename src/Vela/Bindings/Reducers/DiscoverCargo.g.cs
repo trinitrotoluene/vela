@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DiscoverCargo(int cargoId)
         {
-            conn.InternalCallReducer(new Reducer.DiscoverCargo(cargoId), this.SetCallReducerFlags.DiscoverCargoFlags);
+            conn.InternalCallReducer(new Reducer.DiscoverCargo(cargoId));
         }
 
         public bool InvokeDiscoverCargo(ReducerEventContext ctx, Reducer.DiscoverCargo args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "discover_cargo";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DiscoverCargoFlags;
-        public void DiscoverCargo(CallReducerFlags flags) => DiscoverCargoFlags = flags;
     }
 }

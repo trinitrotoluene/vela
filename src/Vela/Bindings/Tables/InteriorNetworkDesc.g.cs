@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class InteriorNetworkDescHandle : RemoteTableHandle<EventContext, InteriorNetworkDesc>
         {
-            protected override string RemoteTableName => "interior_network_desc";
+            public override string RemoteTableName => "interior_network_desc";
 
             public sealed class BuildingIdUniqueIndex : UniqueIndexBase<int>
             {
@@ -44,6 +44,8 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<InteriorNetworkDesc, uint> TriggerCollapseTime { get; }
         public global::SpacetimeDB.Col<InteriorNetworkDesc, uint> RespawnTime { get; }
         public global::SpacetimeDB.Col<InteriorNetworkDesc, System.Collections.Generic.List<int>> ChildInteriorInstances { get; }
+        public global::SpacetimeDB.Col<InteriorNetworkDesc, bool> StartCollapsing { get; }
+        public global::SpacetimeDB.Col<InteriorNetworkDesc, bool> DestroyBuildingOnCollapse { get; }
 
         public InteriorNetworkDescCols(string tableName)
         {
@@ -52,6 +54,8 @@ namespace SpacetimeDB.Types
             TriggerCollapseTime = new global::SpacetimeDB.Col<InteriorNetworkDesc, uint>(tableName, "trigger_collapse_time");
             RespawnTime = new global::SpacetimeDB.Col<InteriorNetworkDesc, uint>(tableName, "respawn_time");
             ChildInteriorInstances = new global::SpacetimeDB.Col<InteriorNetworkDesc, System.Collections.Generic.List<int>>(tableName, "child_interior_instances");
+            StartCollapsing = new global::SpacetimeDB.Col<InteriorNetworkDesc, bool>(tableName, "start_collapsing");
+            DestroyBuildingOnCollapse = new global::SpacetimeDB.Col<InteriorNetworkDesc, bool>(tableName, "destroy_building_on_collapse");
         }
     }
 

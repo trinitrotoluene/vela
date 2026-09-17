@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageTravelerTradeOrderDesc(System.Collections.Generic.List<SpacetimeDB.Types.TravelerTradeOrderDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageTravelerTradeOrderDesc(records), this.SetCallReducerFlags.StageTravelerTradeOrderDescFlags);
+            conn.InternalCallReducer(new Reducer.StageTravelerTradeOrderDesc(records));
         }
 
         public bool InvokeStageTravelerTradeOrderDesc(ReducerEventContext ctx, Reducer.StageTravelerTradeOrderDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_traveler_trade_order_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageTravelerTradeOrderDescFlags;
-        public void StageTravelerTradeOrderDesc(CallReducerFlags flags) => StageTravelerTradeOrderDescFlags = flags;
     }
 }

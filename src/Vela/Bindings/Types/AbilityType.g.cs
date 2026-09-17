@@ -9,7 +9,7 @@ namespace SpacetimeDB.Types
 {
     [SpacetimeDB.Type]
     public partial record AbilityType : SpacetimeDB.TaggedEnum<(
-        U128 _Unsupported,
+        U128 Unsupported,
         int Eat,
         int CombatAction,
         SpacetimeDB.Unit AutoAttack,

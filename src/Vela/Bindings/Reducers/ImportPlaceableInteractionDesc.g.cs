@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportPlaceableInteractionDesc(System.Collections.Generic.List<SpacetimeDB.Types.PlaceableInteractionDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportPlaceableInteractionDesc(records), this.SetCallReducerFlags.ImportPlaceableInteractionDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportPlaceableInteractionDesc(records));
         }
 
         public bool InvokeImportPlaceableInteractionDesc(ReducerEventContext ctx, Reducer.ImportPlaceableInteractionDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_placeable_interaction_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportPlaceableInteractionDescFlags;
-        public void ImportPlaceableInteractionDesc(CallReducerFlags flags) => ImportPlaceableInteractionDescFlags = flags;
     }
 }

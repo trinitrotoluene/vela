@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportInteriorSpawnDesc(System.Collections.Generic.List<SpacetimeDB.Types.InteriorSpawnDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportInteriorSpawnDesc(records), this.SetCallReducerFlags.ImportInteriorSpawnDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportInteriorSpawnDesc(records));
         }
 
         public bool InvokeImportInteriorSpawnDesc(ReducerEventContext ctx, Reducer.ImportInteriorSpawnDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_interior_spawn_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportInteriorSpawnDescFlags;
-        public void ImportInteriorSpawnDesc(CallReducerFlags flags) => ImportInteriorSpawnDescFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportGlobals(System.Collections.Generic.List<SpacetimeDB.Types.Globals> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportGlobals(records), this.SetCallReducerFlags.ImportGlobalsFlags);
+            conn.InternalCallReducer(new Reducer.ImportGlobals(records));
         }
 
         public bool InvokeImportGlobals(ReducerEventContext ctx, Reducer.ImportGlobals args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_globals";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportGlobalsFlags;
-        public void ImportGlobals(CallReducerFlags flags) => ImportGlobalsFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StagePathfindingDesc(System.Collections.Generic.List<SpacetimeDB.Types.PathfindingDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StagePathfindingDesc(records), this.SetCallReducerFlags.StagePathfindingDescFlags);
+            conn.InternalCallReducer(new Reducer.StagePathfindingDesc(records));
         }
 
         public bool InvokeStagePathfindingDesc(ReducerEventContext ctx, Reducer.StagePathfindingDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_pathfinding_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StagePathfindingDescFlags;
-        public void StagePathfindingDesc(CallReducerFlags flags) => StagePathfindingDescFlags = flags;
     }
 }

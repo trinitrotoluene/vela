@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatDiscoverMap(SpacetimeDB.Types.CheatDiscoverMapRequest request)
         {
-            conn.InternalCallReducer(new Reducer.CheatDiscoverMap(request), this.SetCallReducerFlags.CheatDiscoverMapFlags);
+            conn.InternalCallReducer(new Reducer.CheatDiscoverMap(request));
         }
 
         public bool InvokeCheatDiscoverMap(ReducerEventContext ctx, Reducer.CheatDiscoverMap args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_discover_map";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatDiscoverMapFlags;
-        public void CheatDiscoverMap(CallReducerFlags flags) => CheatDiscoverMapFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminCompleteAllPassiveCrafts()
         {
-            conn.InternalCallReducer(new Reducer.AdminCompleteAllPassiveCrafts(), this.SetCallReducerFlags.AdminCompleteAllPassiveCraftsFlags);
+            conn.InternalCallReducer(new Reducer.AdminCompleteAllPassiveCrafts());
         }
 
         public bool InvokeAdminCompleteAllPassiveCrafts(ReducerEventContext ctx, Reducer.AdminCompleteAllPassiveCrafts args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "admin_complete_all_passive_crafts";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminCompleteAllPassiveCraftsFlags;
-        public void AdminCompleteAllPassiveCrafts(CallReducerFlags flags) => AdminCompleteAllPassiveCraftsFlags = flags;
     }
 }

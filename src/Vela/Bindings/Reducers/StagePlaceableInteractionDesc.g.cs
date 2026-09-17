@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StagePlaceableInteractionDesc(System.Collections.Generic.List<SpacetimeDB.Types.PlaceableInteractionDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StagePlaceableInteractionDesc(records), this.SetCallReducerFlags.StagePlaceableInteractionDescFlags);
+            conn.InternalCallReducer(new Reducer.StagePlaceableInteractionDesc(records));
         }
 
         public bool InvokeStagePlaceableInteractionDesc(ReducerEventContext ctx, Reducer.StagePlaceableInteractionDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_placeable_interaction_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StagePlaceableInteractionDescFlags;
-        public void StagePlaceableInteractionDesc(CallReducerFlags flags) => StagePlaceableInteractionDescFlags = flags;
     }
 }

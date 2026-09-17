@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DiscoverSecondaryKnowledge(int secondaryId)
         {
-            conn.InternalCallReducer(new Reducer.DiscoverSecondaryKnowledge(secondaryId), this.SetCallReducerFlags.DiscoverSecondaryKnowledgeFlags);
+            conn.InternalCallReducer(new Reducer.DiscoverSecondaryKnowledge(secondaryId));
         }
 
         public bool InvokeDiscoverSecondaryKnowledge(ReducerEventContext ctx, Reducer.DiscoverSecondaryKnowledge args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "discover_secondary_knowledge";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DiscoverSecondaryKnowledgeFlags;
-        public void DiscoverSecondaryKnowledge(CallReducerFlags flags) => DiscoverSecondaryKnowledgeFlags = flags;
     }
 }

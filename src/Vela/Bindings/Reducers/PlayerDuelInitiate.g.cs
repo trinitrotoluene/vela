@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerDuelInitiate(ulong targetPlayerEntityId)
         {
-            conn.InternalCallReducer(new Reducer.PlayerDuelInitiate(targetPlayerEntityId), this.SetCallReducerFlags.PlayerDuelInitiateFlags);
+            conn.InternalCallReducer(new Reducer.PlayerDuelInitiate(targetPlayerEntityId));
         }
 
         public bool InvokePlayerDuelInitiate(ReducerEventContext ctx, Reducer.PlayerDuelInitiate args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "player_duel_initiate";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerDuelInitiateFlags;
-        public void PlayerDuelInitiate(CallReducerFlags flags) => PlayerDuelInitiateFlags = flags;
     }
 }

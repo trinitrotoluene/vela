@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DiscoverExtractionRecipe(int extractId)
         {
-            conn.InternalCallReducer(new Reducer.DiscoverExtractionRecipe(extractId), this.SetCallReducerFlags.DiscoverExtractionRecipeFlags);
+            conn.InternalCallReducer(new Reducer.DiscoverExtractionRecipe(extractId));
         }
 
         public bool InvokeDiscoverExtractionRecipe(ReducerEventContext ctx, Reducer.DiscoverExtractionRecipe args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "discover_extraction_recipe";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DiscoverExtractionRecipeFlags;
-        public void DiscoverExtractionRecipe(CallReducerFlags flags) => DiscoverExtractionRecipeFlags = flags;
     }
 }

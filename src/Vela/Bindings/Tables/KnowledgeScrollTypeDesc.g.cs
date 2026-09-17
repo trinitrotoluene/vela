@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class KnowledgeScrollTypeDescHandle : RemoteTableHandle<EventContext, KnowledgeScrollTypeDesc>
         {
-            protected override string RemoteTableName => "knowledge_scroll_type_desc";
+            public override string RemoteTableName => "knowledge_scroll_type_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {

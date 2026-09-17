@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatDeleteItem(ulong inventoryEntityId, int pocketIndex)
         {
-            conn.InternalCallReducer(new Reducer.CheatDeleteItem(inventoryEntityId, pocketIndex), this.SetCallReducerFlags.CheatDeleteItemFlags);
+            conn.InternalCallReducer(new Reducer.CheatDeleteItem(inventoryEntityId, pocketIndex));
         }
 
         public bool InvokeCheatDeleteItem(ReducerEventContext ctx, Reducer.CheatDeleteItem args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_delete_item";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatDeleteItemFlags;
-        public void CheatDeleteItem(CallReducerFlags flags) => CheatDeleteItemFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminMigrateTradeOrders()
         {
-            conn.InternalCallReducer(new Reducer.AdminMigrateTradeOrders(), this.SetCallReducerFlags.AdminMigrateTradeOrdersFlags);
+            conn.InternalCallReducer(new Reducer.AdminMigrateTradeOrders());
         }
 
         public bool InvokeAdminMigrateTradeOrders(ReducerEventContext ctx, Reducer.AdminMigrateTradeOrders args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "admin_migrate_trade_orders";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminMigrateTradeOrdersFlags;
-        public void AdminMigrateTradeOrders(CallReducerFlags flags) => AdminMigrateTradeOrdersFlags = flags;
     }
 }

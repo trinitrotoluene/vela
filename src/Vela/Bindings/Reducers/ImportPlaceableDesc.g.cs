@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportPlaceableDesc(System.Collections.Generic.List<SpacetimeDB.Types.PlaceableDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportPlaceableDesc(records), this.SetCallReducerFlags.ImportPlaceableDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportPlaceableDesc(records));
         }
 
         public bool InvokeImportPlaceableDesc(ReducerEventContext ctx, Reducer.ImportPlaceableDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_placeable_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportPlaceableDescFlags;
-        public void ImportPlaceableDesc(CallReducerFlags flags) => ImportPlaceableDescFlags = flags;
     }
 }

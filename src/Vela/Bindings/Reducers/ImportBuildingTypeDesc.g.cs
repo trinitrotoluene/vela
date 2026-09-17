@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportBuildingTypeDesc(System.Collections.Generic.List<SpacetimeDB.Types.BuildingTypeDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportBuildingTypeDesc(records), this.SetCallReducerFlags.ImportBuildingTypeDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportBuildingTypeDesc(records));
         }
 
         public bool InvokeImportBuildingTypeDesc(ReducerEventContext ctx, Reducer.ImportBuildingTypeDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_building_type_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportBuildingTypeDescFlags;
-        public void ImportBuildingTypeDesc(CallReducerFlags flags) => ImportBuildingTypeDescFlags = flags;
     }
 }

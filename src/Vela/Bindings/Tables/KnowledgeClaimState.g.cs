@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class KnowledgeClaimStateHandle : RemoteTableHandle<EventContext, KnowledgeClaimState>
         {
-            protected override string RemoteTableName => "knowledge_claim_state";
+            public override string RemoteTableName => "knowledge_claim_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

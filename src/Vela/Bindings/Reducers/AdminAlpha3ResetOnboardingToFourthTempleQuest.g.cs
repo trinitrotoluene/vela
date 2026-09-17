@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminAlpha3ResetOnboardingToFourthTempleQuest(ulong entityId)
         {
-            conn.InternalCallReducer(new Reducer.AdminAlpha3ResetOnboardingToFourthTempleQuest(entityId), this.SetCallReducerFlags.AdminAlpha3ResetOnboardingToFourthTempleQuestFlags);
+            conn.InternalCallReducer(new Reducer.AdminAlpha3ResetOnboardingToFourthTempleQuest(entityId));
         }
 
         public bool InvokeAdminAlpha3ResetOnboardingToFourthTempleQuest(ReducerEventContext ctx, Reducer.AdminAlpha3ResetOnboardingToFourthTempleQuest args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_alpha3_reset_onboarding_to_fourth_temple_quest";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminAlpha3ResetOnboardingToFourthTempleQuestFlags;
-        public void AdminAlpha3ResetOnboardingToFourthTempleQuest(CallReducerFlags flags) => AdminAlpha3ResetOnboardingToFourthTempleQuestFlags = flags;
     }
 }

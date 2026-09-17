@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminClearUnattachedHerds()
         {
-            conn.InternalCallReducer(new Reducer.AdminClearUnattachedHerds(), this.SetCallReducerFlags.AdminClearUnattachedHerdsFlags);
+            conn.InternalCallReducer(new Reducer.AdminClearUnattachedHerds());
         }
 
         public bool InvokeAdminClearUnattachedHerds(ReducerEventContext ctx, Reducer.AdminClearUnattachedHerds args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "admin_clear_unattached_herds";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminClearUnattachedHerdsFlags;
-        public void AdminClearUnattachedHerds(CallReducerFlags flags) => AdminClearUnattachedHerdsFlags = flags;
     }
 }

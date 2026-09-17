@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class DroppedInventoryOwnershipTimerHandle : RemoteTableHandle<EventContext, DroppedInventoryOwnershipTimer>
         {
-            protected override string RemoteTableName => "dropped_inventory_ownership_timer";
+            public override string RemoteTableName => "dropped_inventory_ownership_timer";
 
             public sealed class EntityIdIndex : BTreeIndexBase<ulong>
             {

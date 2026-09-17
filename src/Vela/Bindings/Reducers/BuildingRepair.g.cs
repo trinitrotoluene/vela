@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void BuildingRepair(SpacetimeDB.Types.PlayerBuildingRepairRequest request)
         {
-            conn.InternalCallReducer(new Reducer.BuildingRepair(request), this.SetCallReducerFlags.BuildingRepairFlags);
+            conn.InternalCallReducer(new Reducer.BuildingRepair(request));
         }
 
         public bool InvokeBuildingRepair(ReducerEventContext ctx, Reducer.BuildingRepair args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "building_repair";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags BuildingRepairFlags;
-        public void BuildingRepair(CallReducerFlags flags) => BuildingRepairFlags = flags;
     }
 }

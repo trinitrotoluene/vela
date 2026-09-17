@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ResourceClumpDescHandle : RemoteTableHandle<EventContext, ResourceClumpDesc>
         {
-            protected override string RemoteTableName => "resource_clump_desc";
+            public override string RemoteTableName => "resource_clump_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {

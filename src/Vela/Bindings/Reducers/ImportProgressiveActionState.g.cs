@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportProgressiveActionState(System.Collections.Generic.List<SpacetimeDB.Types.ProgressiveActionState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportProgressiveActionState(records), this.SetCallReducerFlags.ImportProgressiveActionStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportProgressiveActionState(records));
         }
 
         public bool InvokeImportProgressiveActionState(ReducerEventContext ctx, Reducer.ImportProgressiveActionState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_progressive_action_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportProgressiveActionStateFlags;
-        public void ImportProgressiveActionState(CallReducerFlags flags) => ImportProgressiveActionStateFlags = flags;
     }
 }

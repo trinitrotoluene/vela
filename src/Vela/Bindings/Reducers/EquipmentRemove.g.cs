@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EquipmentRemove(SpacetimeDB.Types.PlayerEquipmentRemoveRequest request)
         {
-            conn.InternalCallReducer(new Reducer.EquipmentRemove(request), this.SetCallReducerFlags.EquipmentRemoveFlags);
+            conn.InternalCallReducer(new Reducer.EquipmentRemove(request));
         }
 
         public bool InvokeEquipmentRemove(ReducerEventContext ctx, Reducer.EquipmentRemove args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "equipment_remove";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EquipmentRemoveFlags;
-        public void EquipmentRemove(CallReducerFlags flags) => EquipmentRemoveFlags = flags;
     }
 }

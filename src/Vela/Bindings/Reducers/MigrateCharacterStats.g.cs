@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void MigrateCharacterStats()
         {
-            conn.InternalCallReducer(new Reducer.MigrateCharacterStats(), this.SetCallReducerFlags.MigrateCharacterStatsFlags);
+            conn.InternalCallReducer(new Reducer.MigrateCharacterStats());
         }
 
         public bool InvokeMigrateCharacterStats(ReducerEventContext ctx, Reducer.MigrateCharacterStats args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "migrate_character_stats";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags MigrateCharacterStatsFlags;
-        public void MigrateCharacterStats(CallReducerFlags flags) => MigrateCharacterStatsFlags = flags;
     }
 }

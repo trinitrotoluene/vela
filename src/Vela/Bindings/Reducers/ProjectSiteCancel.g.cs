@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ProjectSiteCancel(SpacetimeDB.Types.PlayerProjectSiteCancelRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ProjectSiteCancel(request), this.SetCallReducerFlags.ProjectSiteCancelFlags);
+            conn.InternalCallReducer(new Reducer.ProjectSiteCancel(request));
         }
 
         public bool InvokeProjectSiteCancel(ReducerEventContext ctx, Reducer.ProjectSiteCancel args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "project_site_cancel";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ProjectSiteCancelFlags;
-        public void ProjectSiteCancel(CallReducerFlags flags) => ProjectSiteCancelFlags = flags;
     }
 }

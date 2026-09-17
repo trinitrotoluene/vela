@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EquipmentPresetActivate(int index)
         {
-            conn.InternalCallReducer(new Reducer.EquipmentPresetActivate(index), this.SetCallReducerFlags.EquipmentPresetActivateFlags);
+            conn.InternalCallReducer(new Reducer.EquipmentPresetActivate(index));
         }
 
         public bool InvokeEquipmentPresetActivate(ReducerEventContext ctx, Reducer.EquipmentPresetActivate args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "equipment_preset_activate";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EquipmentPresetActivateFlags;
-        public void EquipmentPresetActivate(CallReducerFlags flags) => EquipmentPresetActivateFlags = flags;
     }
 }

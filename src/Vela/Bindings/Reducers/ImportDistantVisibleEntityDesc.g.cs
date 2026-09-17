@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportDistantVisibleEntityDesc(System.Collections.Generic.List<SpacetimeDB.Types.DistantVisibleEntityDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportDistantVisibleEntityDesc(records), this.SetCallReducerFlags.ImportDistantVisibleEntityDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportDistantVisibleEntityDesc(records));
         }
 
         public bool InvokeImportDistantVisibleEntityDesc(ReducerEventContext ctx, Reducer.ImportDistantVisibleEntityDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_distant_visible_entity_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportDistantVisibleEntityDescFlags;
-        public void ImportDistantVisibleEntityDesc(CallReducerFlags flags) => ImportDistantVisibleEntityDescFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void SynchronizeTime(double clientTime)
         {
-            conn.InternalCallReducer(new Reducer.SynchronizeTime(clientTime), this.SetCallReducerFlags.SynchronizeTimeFlags);
+            conn.InternalCallReducer(new Reducer.SynchronizeTime(clientTime));
         }
 
         public bool InvokeSynchronizeTime(ReducerEventContext ctx, Reducer.SynchronizeTime args)
@@ -48,7 +48,7 @@ namespace SpacetimeDB.Types
         [DataContract]
         public sealed partial class SynchronizeTime : Reducer, IReducerArgs
         {
-            [DataMember(Name = "_client_time")]
+            [DataMember(Name = "client_time")]
             public double ClientTime;
 
             public SynchronizeTime(double ClientTime)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "synchronize_time";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags SynchronizeTimeFlags;
-        public void SynchronizeTime(CallReducerFlags flags) => SynchronizeTimeFlags = flags;
     }
 }

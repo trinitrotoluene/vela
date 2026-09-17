@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PillarShapingDestroy(SpacetimeDB.Types.PlayerPillarShapingDestroyRequest request)
         {
-            conn.InternalCallReducer(new Reducer.PillarShapingDestroy(request), this.SetCallReducerFlags.PillarShapingDestroyFlags);
+            conn.InternalCallReducer(new Reducer.PillarShapingDestroy(request));
         }
 
         public bool InvokePillarShapingDestroy(ReducerEventContext ctx, Reducer.PillarShapingDestroy args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "pillar_shaping_destroy";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PillarShapingDestroyFlags;
-        public void PillarShapingDestroy(CallReducerFlags flags) => PillarShapingDestroyFlags = flags;
     }
 }

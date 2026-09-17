@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminBroadcastMsgRegion(string title, string message)
         {
-            conn.InternalCallReducer(new Reducer.AdminBroadcastMsgRegion(title, message), this.SetCallReducerFlags.AdminBroadcastMsgRegionFlags);
+            conn.InternalCallReducer(new Reducer.AdminBroadcastMsgRegion(title, message));
         }
 
         public bool InvokeAdminBroadcastMsgRegion(ReducerEventContext ctx, Reducer.AdminBroadcastMsgRegion args)
@@ -71,11 +71,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_broadcast_msg_region";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminBroadcastMsgRegionFlags;
-        public void AdminBroadcastMsgRegion(CallReducerFlags flags) => AdminBroadcastMsgRegionFlags = flags;
     }
 }

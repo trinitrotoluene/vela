@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void RentTerminate(SpacetimeDB.Types.RentTerminateRequest request)
         {
-            conn.InternalCallReducer(new Reducer.RentTerminate(request), this.SetCallReducerFlags.RentTerminateFlags);
+            conn.InternalCallReducer(new Reducer.RentTerminate(request));
         }
 
         public bool InvokeRentTerminate(ReducerEventContext ctx, Reducer.RentTerminate args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "rent_terminate";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags RentTerminateFlags;
-        public void RentTerminate(CallReducerFlags flags) => RentTerminateFlags = flags;
     }
 }

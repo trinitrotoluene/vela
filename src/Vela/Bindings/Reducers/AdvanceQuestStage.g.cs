@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdvanceQuestStage(int chainId)
         {
-            conn.InternalCallReducer(new Reducer.AdvanceQuestStage(chainId), this.SetCallReducerFlags.AdvanceQuestStageFlags);
+            conn.InternalCallReducer(new Reducer.AdvanceQuestStage(chainId));
         }
 
         public bool InvokeAdvanceQuestStage(ReducerEventContext ctx, Reducer.AdvanceQuestStage args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "advance_quest_stage";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdvanceQuestStageFlags;
-        public void AdvanceQuestStage(CallReducerFlags flags) => AdvanceQuestStageFlags = flags;
     }
 }

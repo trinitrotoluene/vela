@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportTradeSessionState(System.Collections.Generic.List<SpacetimeDB.Types.TradeSessionState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportTradeSessionState(records), this.SetCallReducerFlags.ImportTradeSessionStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportTradeSessionState(records));
         }
 
         public bool InvokeImportTradeSessionState(ReducerEventContext ctx, Reducer.ImportTradeSessionState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_trade_session_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportTradeSessionStateFlags;
-        public void ImportTradeSessionState(CallReducerFlags flags) => ImportTradeSessionStateFlags = flags;
     }
 }

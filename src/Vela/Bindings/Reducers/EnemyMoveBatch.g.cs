@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EnemyMoveBatch(System.Collections.Generic.List<SpacetimeDB.Types.EnemyMoveRequest> requests)
         {
-            conn.InternalCallReducer(new Reducer.EnemyMoveBatch(requests), this.SetCallReducerFlags.EnemyMoveBatchFlags);
+            conn.InternalCallReducer(new Reducer.EnemyMoveBatch(requests));
         }
 
         public bool InvokeEnemyMoveBatch(ReducerEventContext ctx, Reducer.EnemyMoveBatch args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "enemy_move_batch";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EnemyMoveBatchFlags;
-        public void EnemyMoveBatch(CallReducerFlags flags) => EnemyMoveBatchFlags = flags;
     }
 }

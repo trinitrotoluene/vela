@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DiscoverConstructionRecipe(int constructionId)
         {
-            conn.InternalCallReducer(new Reducer.DiscoverConstructionRecipe(constructionId), this.SetCallReducerFlags.DiscoverConstructionRecipeFlags);
+            conn.InternalCallReducer(new Reducer.DiscoverConstructionRecipe(constructionId));
         }
 
         public bool InvokeDiscoverConstructionRecipe(ReducerEventContext ctx, Reducer.DiscoverConstructionRecipe args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "discover_construction_recipe";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DiscoverConstructionRecipeFlags;
-        public void DiscoverConstructionRecipe(CallReducerFlags flags) => DiscoverConstructionRecipeFlags = flags;
     }
 }

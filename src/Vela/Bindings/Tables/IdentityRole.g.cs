@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class IdentityRoleHandle : RemoteTableHandle<EventContext, IdentityRole>
         {
-            protected override string RemoteTableName => "identity_role";
+            public override string RemoteTableName => "identity_role";
 
             public sealed class IdentityUniqueIndex : UniqueIndexBase<SpacetimeDB.Identity>
             {

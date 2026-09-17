@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void RentDepositCoins(SpacetimeDB.Types.RentDepositCoinsRequest request)
         {
-            conn.InternalCallReducer(new Reducer.RentDepositCoins(request), this.SetCallReducerFlags.RentDepositCoinsFlags);
+            conn.InternalCallReducer(new Reducer.RentDepositCoins(request));
         }
 
         public bool InvokeRentDepositCoins(ReducerEventContext ctx, Reducer.RentDepositCoins args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "rent_deposit_coins";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags RentDepositCoinsFlags;
-        public void RentDepositCoins(CallReducerFlags flags) => RentDepositCoinsFlags = flags;
     }
 }

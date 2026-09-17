@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EnemySpawnLoot(SpacetimeDB.Types.EnemySpawnLootRequest request)
         {
-            conn.InternalCallReducer(new Reducer.EnemySpawnLoot(request), this.SetCallReducerFlags.EnemySpawnLootFlags);
+            conn.InternalCallReducer(new Reducer.EnemySpawnLoot(request));
         }
 
         public bool InvokeEnemySpawnLoot(ReducerEventContext ctx, Reducer.EnemySpawnLoot args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "enemy_spawn_loot";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EnemySpawnLootFlags;
-        public void EnemySpawnLoot(CallReducerFlags flags) => EnemySpawnLootFlags = flags;
     }
 }

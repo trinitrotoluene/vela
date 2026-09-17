@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class EquipmentPresetStateHandle : RemoteTableHandle<EventContext, EquipmentPresetState>
         {
-            protected override string RemoteTableName => "equipment_preset_state";
+            public override string RemoteTableName => "equipment_preset_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

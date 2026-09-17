@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportQuestStageDesc(System.Collections.Generic.List<SpacetimeDB.Types.QuestStageDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportQuestStageDesc(records), this.SetCallReducerFlags.ImportQuestStageDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportQuestStageDesc(records));
         }
 
         public bool InvokeImportQuestStageDesc(ReducerEventContext ctx, Reducer.ImportQuestStageDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_quest_stage_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportQuestStageDescFlags;
-        public void ImportQuestStageDesc(CallReducerFlags flags) => ImportQuestStageDescFlags = flags;
     }
 }

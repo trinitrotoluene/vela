@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void Terraform(SpacetimeDB.Types.PlayerTerraformRequest request)
         {
-            conn.InternalCallReducer(new Reducer.Terraform(request), this.SetCallReducerFlags.TerraformFlags);
+            conn.InternalCallReducer(new Reducer.Terraform(request));
         }
 
         public bool InvokeTerraform(ReducerEventContext ctx, Reducer.Terraform args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "terraform";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags TerraformFlags;
-        public void Terraform(CallReducerFlags flags) => TerraformFlags = flags;
     }
 }

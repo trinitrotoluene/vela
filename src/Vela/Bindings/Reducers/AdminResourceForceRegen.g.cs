@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminResourceForceRegen(int resourceId, int iterations, bool ignoreTargetCount)
         {
-            conn.InternalCallReducer(new Reducer.AdminResourceForceRegen(resourceId, iterations, ignoreTargetCount), this.SetCallReducerFlags.AdminResourceForceRegenFlags);
+            conn.InternalCallReducer(new Reducer.AdminResourceForceRegen(resourceId, iterations, ignoreTargetCount));
         }
 
         public bool InvokeAdminResourceForceRegen(ReducerEventContext ctx, Reducer.AdminResourceForceRegen args)
@@ -74,11 +74,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_resource_force_regen";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminResourceForceRegenFlags;
-        public void AdminResourceForceRegen(CallReducerFlags flags) => AdminResourceForceRegenFlags = flags;
     }
 }

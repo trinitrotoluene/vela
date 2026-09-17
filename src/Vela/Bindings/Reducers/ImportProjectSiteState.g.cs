@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportProjectSiteState(System.Collections.Generic.List<SpacetimeDB.Types.ProjectSiteState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportProjectSiteState(records), this.SetCallReducerFlags.ImportProjectSiteStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportProjectSiteState(records));
         }
 
         public bool InvokeImportProjectSiteState(ReducerEventContext ctx, Reducer.ImportProjectSiteState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_project_site_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportProjectSiteStateFlags;
-        public void ImportProjectSiteState(CallReducerFlags flags) => ImportProjectSiteStateFlags = flags;
     }
 }

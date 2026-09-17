@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class MobileEntityStateHandle : RemoteTableHandle<EventContext, MobileEntityState>
         {
-            protected override string RemoteTableName => "mobile_entity_state";
+            public override string RemoteTableName => "mobile_entity_state";
 
             public sealed class ChunkIndexIndex : BTreeIndexBase<ulong>
             {

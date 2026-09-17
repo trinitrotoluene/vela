@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class DuelStateHandle : RemoteTableHandle<EventContext, DuelState>
         {
-            protected override string RemoteTableName => "duel_state";
+            public override string RemoteTableName => "duel_state";
 
             public sealed class AcceptorEntityIdUniqueIndex : UniqueIndexBase<ulong>
             {
@@ -62,7 +62,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<DuelState, ulong> EntityId { get; }
         public global::SpacetimeDB.Col<DuelState, ulong> InitiatorEntityId { get; }
         public global::SpacetimeDB.Col<DuelState, ulong> AcceptorEntityId { get; }
-        public global::SpacetimeDB.NullableCol<DuelState, ulong> Victor { get; }
+        public global::SpacetimeDB.Col<DuelState, ulong> Victor { get; }
         public global::SpacetimeDB.Col<DuelState, System.Collections.Generic.List<ulong>> PlayerEntityIds { get; }
         public global::SpacetimeDB.Col<DuelState, System.Collections.Generic.List<SpacetimeDB.Timestamp?>> OutOfRangeTimestamps { get; }
 
@@ -71,7 +71,7 @@ namespace SpacetimeDB.Types
             EntityId = new global::SpacetimeDB.Col<DuelState, ulong>(tableName, "entity_id");
             InitiatorEntityId = new global::SpacetimeDB.Col<DuelState, ulong>(tableName, "initiator_entity_id");
             AcceptorEntityId = new global::SpacetimeDB.Col<DuelState, ulong>(tableName, "acceptor_entity_id");
-            Victor = new global::SpacetimeDB.NullableCol<DuelState, ulong>(tableName, "victor");
+            Victor = new global::SpacetimeDB.Col<DuelState, ulong>(tableName, "victor");
             PlayerEntityIds = new global::SpacetimeDB.Col<DuelState, System.Collections.Generic.List<ulong>>(tableName, "player_entity_ids");
             OutOfRangeTimestamps = new global::SpacetimeDB.Col<DuelState, System.Collections.Generic.List<SpacetimeDB.Timestamp?>>(tableName, "out_of_range_timestamps");
         }

@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ContributionLootDescHandle : RemoteTableHandle<EventContext, ContributionLootDesc>
         {
-            protected override string RemoteTableName => "contribution_loot_desc";
+            public override string RemoteTableName => "contribution_loot_desc";
 
             public sealed class EnemyTypeIdIndex : BTreeIndexBase<int>
             {

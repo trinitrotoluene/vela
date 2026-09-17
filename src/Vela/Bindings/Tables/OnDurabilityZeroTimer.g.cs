@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class OnDurabilityZeroTimerHandle : RemoteTableHandle<EventContext, OnDurabilityZeroTimer>
         {
-            protected override string RemoteTableName => "on_durability_zero_timer";
+            public override string RemoteTableName => "on_durability_zero_timer";
 
             public sealed class PlayerEntityIdIndex : BTreeIndexBase<ulong>
             {

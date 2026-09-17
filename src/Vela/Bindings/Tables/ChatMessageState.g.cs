@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ChatMessageStateHandle : RemoteTableHandle<EventContext, ChatMessageState>
         {
-            protected override string RemoteTableName => "chat_message_state";
+            public override string RemoteTableName => "chat_message_state";
 
             public sealed class ChannelAndTargetIdIndex : BTreeIndexBase<(int ChannelId, ulong TargetId, int Timestamp)>
             {

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatQuestRestart(ulong playerEntityId, int questDescId)
         {
-            conn.InternalCallReducer(new Reducer.CheatQuestRestart(playerEntityId, questDescId), this.SetCallReducerFlags.CheatQuestRestartFlags);
+            conn.InternalCallReducer(new Reducer.CheatQuestRestart(playerEntityId, questDescId));
         }
 
         public bool InvokeCheatQuestRestart(ReducerEventContext ctx, Reducer.CheatQuestRestart args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_quest_restart";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatQuestRestartFlags;
-        public void CheatQuestRestart(CallReducerFlags flags) => CheatQuestRestartFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminCreatePlayerReport(SpacetimeDB.Types.CreatePlayerReportRequest request)
         {
-            conn.InternalCallReducer(new Reducer.AdminCreatePlayerReport(request), this.SetCallReducerFlags.AdminCreatePlayerReportFlags);
+            conn.InternalCallReducer(new Reducer.AdminCreatePlayerReport(request));
         }
 
         public bool InvokeAdminCreatePlayerReport(ReducerEventContext ctx, Reducer.AdminCreatePlayerReport args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_create_player_report";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminCreatePlayerReportFlags;
-        public void AdminCreatePlayerReport(CallReducerFlags flags) => AdminCreatePlayerReportFlags = flags;
     }
 }

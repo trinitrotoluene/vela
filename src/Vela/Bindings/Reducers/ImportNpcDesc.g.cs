@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportNpcDesc(System.Collections.Generic.List<SpacetimeDB.Types.NpcDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportNpcDesc(records), this.SetCallReducerFlags.ImportNpcDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportNpcDesc(records));
         }
 
         public bool InvokeImportNpcDesc(ReducerEventContext ctx, Reducer.ImportNpcDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_npc_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportNpcDescFlags;
-        public void ImportNpcDesc(CallReducerFlags flags) => ImportNpcDescFlags = flags;
     }
 }

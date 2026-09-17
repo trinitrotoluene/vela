@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerActionCancel(bool clientCancel)
         {
-            conn.InternalCallReducer(new Reducer.PlayerActionCancel(clientCancel), this.SetCallReducerFlags.PlayerActionCancelFlags);
+            conn.InternalCallReducer(new Reducer.PlayerActionCancel(clientCancel));
         }
 
         public bool InvokePlayerActionCancel(ReducerEventContext ctx, Reducer.PlayerActionCancel args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "player_action_cancel";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerActionCancelFlags;
-        public void PlayerActionCancel(CallReducerFlags flags) => PlayerActionCancelFlags = flags;
     }
 }

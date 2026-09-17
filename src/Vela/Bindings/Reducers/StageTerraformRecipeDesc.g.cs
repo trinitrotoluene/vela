@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageTerraformRecipeDesc(System.Collections.Generic.List<SpacetimeDB.Types.TerraformRecipeDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageTerraformRecipeDesc(records), this.SetCallReducerFlags.StageTerraformRecipeDescFlags);
+            conn.InternalCallReducer(new Reducer.StageTerraformRecipeDesc(records));
         }
 
         public bool InvokeStageTerraformRecipeDesc(ReducerEventContext ctx, Reducer.StageTerraformRecipeDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_terraform_recipe_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageTerraformRecipeDescFlags;
-        public void StageTerraformRecipeDesc(CallReducerFlags flags) => StageTerraformRecipeDescFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageAbilityUnlockDesc(System.Collections.Generic.List<SpacetimeDB.Types.AbilityUnlockDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageAbilityUnlockDesc(records), this.SetCallReducerFlags.StageAbilityUnlockDescFlags);
+            conn.InternalCallReducer(new Reducer.StageAbilityUnlockDesc(records));
         }
 
         public bool InvokeStageAbilityUnlockDesc(ReducerEventContext ctx, Reducer.StageAbilityUnlockDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_ability_unlock_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageAbilityUnlockDescFlags;
-        public void StageAbilityUnlockDesc(CallReducerFlags flags) => StageAbilityUnlockDescFlags = flags;
     }
 }

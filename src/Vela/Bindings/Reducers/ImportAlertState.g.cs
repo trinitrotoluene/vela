@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportAlertState(System.Collections.Generic.List<SpacetimeDB.Types.AlertState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportAlertState(records), this.SetCallReducerFlags.ImportAlertStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportAlertState(records));
         }
 
         public bool InvokeImportAlertState(ReducerEventContext ctx, Reducer.ImportAlertState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_alert_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportAlertStateFlags;
-        public void ImportAlertState(CallReducerFlags flags) => ImportAlertStateFlags = flags;
     }
 }

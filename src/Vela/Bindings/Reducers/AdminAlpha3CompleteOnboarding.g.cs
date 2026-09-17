@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminAlpha3CompleteOnboarding(ulong entityId)
         {
-            conn.InternalCallReducer(new Reducer.AdminAlpha3CompleteOnboarding(entityId), this.SetCallReducerFlags.AdminAlpha3CompleteOnboardingFlags);
+            conn.InternalCallReducer(new Reducer.AdminAlpha3CompleteOnboarding(entityId));
         }
 
         public bool InvokeAdminAlpha3CompleteOnboarding(ReducerEventContext ctx, Reducer.AdminAlpha3CompleteOnboarding args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_alpha3_complete_onboarding";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminAlpha3CompleteOnboardingFlags;
-        public void AdminAlpha3CompleteOnboarding(CallReducerFlags flags) => AdminAlpha3CompleteOnboardingFlags = flags;
     }
 }

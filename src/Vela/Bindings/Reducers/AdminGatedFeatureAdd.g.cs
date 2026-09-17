@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminGatedFeatureAdd(string feature)
         {
-            conn.InternalCallReducer(new Reducer.AdminGatedFeatureAdd(feature), this.SetCallReducerFlags.AdminGatedFeatureAddFlags);
+            conn.InternalCallReducer(new Reducer.AdminGatedFeatureAdd(feature));
         }
 
         public bool InvokeAdminGatedFeatureAdd(ReducerEventContext ctx, Reducer.AdminGatedFeatureAdd args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_gated_feature_add";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminGatedFeatureAddFlags;
-        public void AdminGatedFeatureAdd(CallReducerFlags flags) => AdminGatedFeatureAddFlags = flags;
     }
 }

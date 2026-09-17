@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void RentUnlist(SpacetimeDB.Types.RentUnlistRequest request)
         {
-            conn.InternalCallReducer(new Reducer.RentUnlist(request), this.SetCallReducerFlags.RentUnlistFlags);
+            conn.InternalCallReducer(new Reducer.RentUnlist(request));
         }
 
         public bool InvokeRentUnlist(ReducerEventContext ctx, Reducer.RentUnlist args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "rent_unlist";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags RentUnlistFlags;
-        public void RentUnlist(CallReducerFlags flags) => RentUnlistFlags = flags;
     }
 }

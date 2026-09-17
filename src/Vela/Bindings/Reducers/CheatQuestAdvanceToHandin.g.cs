@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatQuestAdvanceToHandin(ulong playerEntityId, int questDescId)
         {
-            conn.InternalCallReducer(new Reducer.CheatQuestAdvanceToHandin(playerEntityId, questDescId), this.SetCallReducerFlags.CheatQuestAdvanceToHandinFlags);
+            conn.InternalCallReducer(new Reducer.CheatQuestAdvanceToHandin(playerEntityId, questDescId));
         }
 
         public bool InvokeCheatQuestAdvanceToHandin(ReducerEventContext ctx, Reducer.CheatQuestAdvanceToHandin args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_quest_advance_to_handin";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatQuestAdvanceToHandinFlags;
-        public void CheatQuestAdvanceToHandin(CallReducerFlags flags) => CheatQuestAdvanceToHandinFlags = flags;
     }
 }

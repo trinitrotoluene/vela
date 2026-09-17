@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void MigrateAutoAttacks()
         {
-            conn.InternalCallReducer(new Reducer.MigrateAutoAttacks(), this.SetCallReducerFlags.MigrateAutoAttacksFlags);
+            conn.InternalCallReducer(new Reducer.MigrateAutoAttacks());
         }
 
         public bool InvokeMigrateAutoAttacks(ReducerEventContext ctx, Reducer.MigrateAutoAttacks args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "migrate_auto_attacks";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags MigrateAutoAttacksFlags;
-        public void MigrateAutoAttacks(CallReducerFlags flags) => MigrateAutoAttacksFlags = flags;
     }
 }

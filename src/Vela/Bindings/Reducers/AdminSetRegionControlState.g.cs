@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminSetRegionControlState(bool allowPlayers, bool allowPlayerSpawn)
         {
-            conn.InternalCallReducer(new Reducer.AdminSetRegionControlState(allowPlayers, allowPlayerSpawn), this.SetCallReducerFlags.AdminSetRegionControlStateFlags);
+            conn.InternalCallReducer(new Reducer.AdminSetRegionControlState(allowPlayers, allowPlayerSpawn));
         }
 
         public bool InvokeAdminSetRegionControlState(ReducerEventContext ctx, Reducer.AdminSetRegionControlState args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_set_region_control_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminSetRegionControlStateFlags;
-        public void AdminSetRegionControlState(CallReducerFlags flags) => AdminSetRegionControlStateFlags = flags;
     }
 }

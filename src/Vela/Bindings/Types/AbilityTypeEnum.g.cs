@@ -10,7 +10,7 @@ namespace SpacetimeDB.Types
     [SpacetimeDB.Type]
     public enum AbilityTypeEnum
     {
-        _Unsupported,
+        Unsupported,
         Eat,
         CombatAction,
         AutoAttack,

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void Eat(SpacetimeDB.Types.PlayerEatRequest request)
         {
-            conn.InternalCallReducer(new Reducer.Eat(request), this.SetCallReducerFlags.EatFlags);
+            conn.InternalCallReducer(new Reducer.Eat(request));
         }
 
         public bool InvokeEat(ReducerEventContext ctx, Reducer.Eat args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "eat";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EatFlags;
-        public void Eat(CallReducerFlags flags) => EatFlags = flags;
     }
 }

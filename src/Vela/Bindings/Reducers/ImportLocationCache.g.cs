@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportLocationCache(System.Collections.Generic.List<SpacetimeDB.Types.LocationCache> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportLocationCache(records), this.SetCallReducerFlags.ImportLocationCacheFlags);
+            conn.InternalCallReducer(new Reducer.ImportLocationCache(records));
         }
 
         public bool InvokeImportLocationCache(ReducerEventContext ctx, Reducer.ImportLocationCache args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_location_cache";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportLocationCacheFlags;
-        public void ImportLocationCache(CallReducerFlags flags) => ImportLocationCacheFlags = flags;
     }
 }

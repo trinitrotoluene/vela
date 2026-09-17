@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportResourceCount(System.Collections.Generic.List<SpacetimeDB.Types.ResourceCount> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportResourceCount(records), this.SetCallReducerFlags.ImportResourceCountFlags);
+            conn.InternalCallReducer(new Reducer.ImportResourceCount(records));
         }
 
         public bool InvokeImportResourceCount(ReducerEventContext ctx, Reducer.ImportResourceCount args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_resource_count";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportResourceCountFlags;
-        public void ImportResourceCount(CallReducerFlags flags) => ImportResourceCountFlags = flags;
     }
 }

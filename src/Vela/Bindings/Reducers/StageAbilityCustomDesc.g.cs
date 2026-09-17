@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageAbilityCustomDesc(System.Collections.Generic.List<SpacetimeDB.Types.AbilityCustomDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageAbilityCustomDesc(records), this.SetCallReducerFlags.StageAbilityCustomDescFlags);
+            conn.InternalCallReducer(new Reducer.StageAbilityCustomDesc(records));
         }
 
         public bool InvokeStageAbilityCustomDesc(ReducerEventContext ctx, Reducer.StageAbilityCustomDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_ability_custom_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageAbilityCustomDescFlags;
-        public void StageAbilityCustomDesc(CallReducerFlags flags) => StageAbilityCustomDescFlags = flags;
     }
 }

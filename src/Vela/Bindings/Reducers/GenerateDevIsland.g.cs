@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void GenerateDevIsland()
         {
-            conn.InternalCallReducer(new Reducer.GenerateDevIsland(), this.SetCallReducerFlags.GenerateDevIslandFlags);
+            conn.InternalCallReducer(new Reducer.GenerateDevIsland());
         }
 
         public bool InvokeGenerateDevIsland(ReducerEventContext ctx, Reducer.GenerateDevIsland args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "generate_dev_island";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags GenerateDevIslandFlags;
-        public void GenerateDevIsland(CallReducerFlags flags) => GenerateDevIslandFlags = flags;
     }
 }

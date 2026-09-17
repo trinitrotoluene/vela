@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportKnowledgeResourcePlacementState(System.Collections.Generic.List<SpacetimeDB.Types.KnowledgeResourcePlacementState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportKnowledgeResourcePlacementState(records), this.SetCallReducerFlags.ImportKnowledgeResourcePlacementStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportKnowledgeResourcePlacementState(records));
         }
 
         public bool InvokeImportKnowledgeResourcePlacementState(ReducerEventContext ctx, Reducer.ImportKnowledgeResourcePlacementState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_knowledge_resource_placement_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportKnowledgeResourcePlacementStateFlags;
-        public void ImportKnowledgeResourcePlacementState(CallReducerFlags flags) => ImportKnowledgeResourcePlacementStateFlags = flags;
     }
 }

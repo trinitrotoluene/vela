@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminUpdateRegionModerationConfig(uint maxMessagesPerTimePeriod, int rateLimitWindowSec, int newAccountMinPlaytimeSec)
         {
-            conn.InternalCallReducer(new Reducer.AdminUpdateRegionModerationConfig(maxMessagesPerTimePeriod, rateLimitWindowSec, newAccountMinPlaytimeSec), this.SetCallReducerFlags.AdminUpdateRegionModerationConfigFlags);
+            conn.InternalCallReducer(new Reducer.AdminUpdateRegionModerationConfig(maxMessagesPerTimePeriod, rateLimitWindowSec, newAccountMinPlaytimeSec));
         }
 
         public bool InvokeAdminUpdateRegionModerationConfig(ReducerEventContext ctx, Reducer.AdminUpdateRegionModerationConfig args)
@@ -74,11 +74,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_update_region_moderation_config";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminUpdateRegionModerationConfigFlags;
-        public void AdminUpdateRegionModerationConfig(CallReducerFlags flags) => AdminUpdateRegionModerationConfigFlags = flags;
     }
 }

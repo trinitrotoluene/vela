@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class PavingTileDescHandle : RemoteTableHandle<EventContext, PavingTileDesc>
         {
-            protected override string RemoteTableName => "paving_tile_desc";
+            public override string RemoteTableName => "paving_tile_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {

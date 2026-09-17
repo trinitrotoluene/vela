@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportTerrainChunkState(System.Collections.Generic.List<SpacetimeDB.Types.TerrainChunkState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportTerrainChunkState(records), this.SetCallReducerFlags.ImportTerrainChunkStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportTerrainChunkState(records));
         }
 
         public bool InvokeImportTerrainChunkState(ReducerEventContext ctx, Reducer.ImportTerrainChunkState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_terrain_chunk_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportTerrainChunkStateFlags;
-        public void ImportTerrainChunkState(CallReducerFlags flags) => ImportTerrainChunkStateFlags = flags;
     }
 }

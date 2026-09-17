@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PassiveCraftQueue(SpacetimeDB.Types.PlayerPassiveCraftQueueRequest request)
         {
-            conn.InternalCallReducer(new Reducer.PassiveCraftQueue(request), this.SetCallReducerFlags.PassiveCraftQueueFlags);
+            conn.InternalCallReducer(new Reducer.PassiveCraftQueue(request));
         }
 
         public bool InvokePassiveCraftQueue(ReducerEventContext ctx, Reducer.PassiveCraftQueue args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "passive_craft_queue";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PassiveCraftQueueFlags;
-        public void PassiveCraftQueue(CallReducerFlags flags) => PassiveCraftQueueFlags = flags;
     }
 }

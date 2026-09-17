@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminUnlockHouse(ulong playerEntityId)
         {
-            conn.InternalCallReducer(new Reducer.AdminUnlockHouse(playerEntityId), this.SetCallReducerFlags.AdminUnlockHouseFlags);
+            conn.InternalCallReducer(new Reducer.AdminUnlockHouse(playerEntityId));
         }
 
         public bool InvokeAdminUnlockHouse(ReducerEventContext ctx, Reducer.AdminUnlockHouse args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_unlock_house";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminUnlockHouseFlags;
-        public void AdminUnlockHouse(CallReducerFlags flags) => AdminUnlockHouseFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminCreateEntityNameReport(string reportType, ulong entityId, string entityName, string message)
         {
-            conn.InternalCallReducer(new Reducer.AdminCreateEntityNameReport(reportType, entityId, entityName, message), this.SetCallReducerFlags.AdminCreateEntityNameReportFlags);
+            conn.InternalCallReducer(new Reducer.AdminCreateEntityNameReport(reportType, entityId, entityName, message));
         }
 
         public bool InvokeAdminCreateEntityNameReport(ReducerEventContext ctx, Reducer.AdminCreateEntityNameReport args)
@@ -82,11 +82,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_create_entity_name_report";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminCreateEntityNameReportFlags;
-        public void AdminCreateEntityNameReport(CallReducerFlags flags) => AdminCreateEntityNameReportFlags = flags;
     }
 }

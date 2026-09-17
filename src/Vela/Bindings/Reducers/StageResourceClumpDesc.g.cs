@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageResourceClumpDesc(System.Collections.Generic.List<SpacetimeDB.Types.ResourceClumpDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageResourceClumpDesc(records), this.SetCallReducerFlags.StageResourceClumpDescFlags);
+            conn.InternalCallReducer(new Reducer.StageResourceClumpDesc(records));
         }
 
         public bool InvokeStageResourceClumpDesc(ReducerEventContext ctx, Reducer.StageResourceClumpDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_resource_clump_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageResourceClumpDescFlags;
-        public void StageResourceClumpDesc(CallReducerFlags flags) => StageResourceClumpDescFlags = flags;
     }
 }

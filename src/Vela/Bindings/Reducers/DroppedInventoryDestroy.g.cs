@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DroppedInventoryDestroy(ulong droppedInventoryEntityId)
         {
-            conn.InternalCallReducer(new Reducer.DroppedInventoryDestroy(droppedInventoryEntityId), this.SetCallReducerFlags.DroppedInventoryDestroyFlags);
+            conn.InternalCallReducer(new Reducer.DroppedInventoryDestroy(droppedInventoryEntityId));
         }
 
         public bool InvokeDroppedInventoryDestroy(ReducerEventContext ctx, Reducer.DroppedInventoryDestroy args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "dropped_inventory_destroy";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DroppedInventoryDestroyFlags;
-        public void DroppedInventoryDestroy(CallReducerFlags flags) => DroppedInventoryDestroyFlags = flags;
     }
 }

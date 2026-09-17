@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ItemUseStart(SpacetimeDB.Types.PlayerItemUseRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ItemUseStart(request), this.SetCallReducerFlags.ItemUseStartFlags);
+            conn.InternalCallReducer(new Reducer.ItemUseStart(request));
         }
 
         public bool InvokeItemUseStart(ReducerEventContext ctx, Reducer.ItemUseStart args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "item_use_start";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ItemUseStartFlags;
-        public void ItemUseStart(CallReducerFlags flags) => ItemUseStartFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatProjectSiteAddAllMaterials(ulong projectSiteEntityId)
         {
-            conn.InternalCallReducer(new Reducer.CheatProjectSiteAddAllMaterials(projectSiteEntityId), this.SetCallReducerFlags.CheatProjectSiteAddAllMaterialsFlags);
+            conn.InternalCallReducer(new Reducer.CheatProjectSiteAddAllMaterials(projectSiteEntityId));
         }
 
         public bool InvokeCheatProjectSiteAddAllMaterials(ReducerEventContext ctx, Reducer.CheatProjectSiteAddAllMaterials args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_project_site_add_all_materials";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatProjectSiteAddAllMaterialsFlags;
-        public void CheatProjectSiteAddAllMaterials(CallReducerFlags flags) => CheatProjectSiteAddAllMaterialsFlags = flags;
     }
 }

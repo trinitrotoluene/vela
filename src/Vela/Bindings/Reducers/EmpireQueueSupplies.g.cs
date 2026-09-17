@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EmpireQueueSupplies(SpacetimeDB.Types.EmpireQueueSuppliesRequest request)
         {
-            conn.InternalCallReducer(new Reducer.EmpireQueueSupplies(request), this.SetCallReducerFlags.EmpireQueueSuppliesFlags);
+            conn.InternalCallReducer(new Reducer.EmpireQueueSupplies(request));
         }
 
         public bool InvokeEmpireQueueSupplies(ReducerEventContext ctx, Reducer.EmpireQueueSupplies args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "empire_queue_supplies";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EmpireQueueSuppliesFlags;
-        public void EmpireQueueSupplies(CallReducerFlags flags) => EmpireQueueSuppliesFlags = flags;
     }
 }

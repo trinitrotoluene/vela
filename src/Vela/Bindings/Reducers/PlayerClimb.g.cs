@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerClimb(SpacetimeDB.Types.PlayerClimbRequest request)
         {
-            conn.InternalCallReducer(new Reducer.PlayerClimb(request), this.SetCallReducerFlags.PlayerClimbFlags);
+            conn.InternalCallReducer(new Reducer.PlayerClimb(request));
         }
 
         public bool InvokePlayerClimb(ReducerEventContext ctx, Reducer.PlayerClimb args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "player_climb";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerClimbFlags;
-        public void PlayerClimb(CallReducerFlags flags) => PlayerClimbFlags = flags;
     }
 }

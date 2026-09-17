@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatRemoveItemQuantityAll(ulong inventoryEntityId, int pocketIndex)
         {
-            conn.InternalCallReducer(new Reducer.CheatRemoveItemQuantityAll(inventoryEntityId, pocketIndex), this.SetCallReducerFlags.CheatRemoveItemQuantityAllFlags);
+            conn.InternalCallReducer(new Reducer.CheatRemoveItemQuantityAll(inventoryEntityId, pocketIndex));
         }
 
         public bool InvokeCheatRemoveItemQuantityAll(ReducerEventContext ctx, Reducer.CheatRemoveItemQuantityAll args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_remove_item_quantity_all";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatRemoveItemQuantityAllFlags;
-        public void CheatRemoveItemQuantityAll(CallReducerFlags flags) => CheatRemoveItemQuantityAllFlags = flags;
     }
 }

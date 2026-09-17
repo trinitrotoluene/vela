@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminSetSignTextCoord(SpacetimeDB.Types.OffsetCoordinatesSmallMessage coord, string newName)
         {
-            conn.InternalCallReducer(new Reducer.AdminSetSignTextCoord(coord, newName), this.SetCallReducerFlags.AdminSetSignTextCoordFlags);
+            conn.InternalCallReducer(new Reducer.AdminSetSignTextCoord(coord, newName));
         }
 
         public bool InvokeAdminSetSignTextCoord(ReducerEventContext ctx, Reducer.AdminSetSignTextCoord args)
@@ -71,11 +71,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_set_sign_text_coord";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminSetSignTextCoordFlags;
-        public void AdminSetSignTextCoord(CallReducerFlags flags) => AdminSetSignTextCoordFlags = flags;
     }
 }

@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class KnowledgeResourcePlacementStateHandle : RemoteTableHandle<EventContext, KnowledgeResourcePlacementState>
         {
-            protected override string RemoteTableName => "knowledge_resource_placement_state";
+            public override string RemoteTableName => "knowledge_resource_placement_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

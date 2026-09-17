@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void SetHome(SpacetimeDB.Types.PlayerSetHomeRequest request)
         {
-            conn.InternalCallReducer(new Reducer.SetHome(request), this.SetCallReducerFlags.SetHomeFlags);
+            conn.InternalCallReducer(new Reducer.SetHome(request));
         }
 
         public bool InvokeSetHome(ReducerEventContext ctx, Reducer.SetHome args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "set_home";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags SetHomeFlags;
-        public void SetHome(CallReducerFlags flags) => SetHomeFlags = flags;
     }
 }

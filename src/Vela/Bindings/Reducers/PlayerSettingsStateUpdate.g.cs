@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerSettingsStateUpdate(SpacetimeDB.Types.PlayerSettingsState playerSettingsState)
         {
-            conn.InternalCallReducer(new Reducer.PlayerSettingsStateUpdate(playerSettingsState), this.SetCallReducerFlags.PlayerSettingsStateUpdateFlags);
+            conn.InternalCallReducer(new Reducer.PlayerSettingsStateUpdate(playerSettingsState));
         }
 
         public bool InvokePlayerSettingsStateUpdate(ReducerEventContext ctx, Reducer.PlayerSettingsStateUpdate args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "player_settings_state_update";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerSettingsStateUpdateFlags;
-        public void PlayerSettingsStateUpdate(CallReducerFlags flags) => PlayerSettingsStateUpdateFlags = flags;
     }
 }

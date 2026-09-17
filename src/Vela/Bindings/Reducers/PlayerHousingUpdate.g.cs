@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerHousingUpdate(ulong buildingEntityId)
         {
-            conn.InternalCallReducer(new Reducer.PlayerHousingUpdate(buildingEntityId), this.SetCallReducerFlags.PlayerHousingUpdateFlags);
+            conn.InternalCallReducer(new Reducer.PlayerHousingUpdate(buildingEntityId));
         }
 
         public bool InvokePlayerHousingUpdate(ReducerEventContext ctx, Reducer.PlayerHousingUpdate args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "player_housing_update";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerHousingUpdateFlags;
-        public void PlayerHousingUpdate(CallReducerFlags flags) => PlayerHousingUpdateFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportKnowledgePillarShapingState(System.Collections.Generic.List<SpacetimeDB.Types.KnowledgePillarShapingState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportKnowledgePillarShapingState(records), this.SetCallReducerFlags.ImportKnowledgePillarShapingStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportKnowledgePillarShapingState(records));
         }
 
         public bool InvokeImportKnowledgePillarShapingState(ReducerEventContext ctx, Reducer.ImportKnowledgePillarShapingState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_knowledge_pillar_shaping_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportKnowledgePillarShapingStateFlags;
-        public void ImportKnowledgePillarShapingState(CallReducerFlags flags) => ImportKnowledgePillarShapingStateFlags = flags;
     }
 }

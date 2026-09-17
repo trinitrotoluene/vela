@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatExperienceGrant(SpacetimeDB.Types.CheatExperienceGrantRequest request)
         {
-            conn.InternalCallReducer(new Reducer.CheatExperienceGrant(request), this.SetCallReducerFlags.CheatExperienceGrantFlags);
+            conn.InternalCallReducer(new Reducer.CheatExperienceGrant(request));
         }
 
         public bool InvokeCheatExperienceGrant(ReducerEventContext ctx, Reducer.CheatExperienceGrant args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_experience_grant";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatExperienceGrantFlags;
-        public void CheatExperienceGrant(CallReducerFlags flags) => CheatExperienceGrantFlags = flags;
     }
 }

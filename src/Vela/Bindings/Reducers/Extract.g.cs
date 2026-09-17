@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void Extract(SpacetimeDB.Types.PlayerExtractRequest request)
         {
-            conn.InternalCallReducer(new Reducer.Extract(request), this.SetCallReducerFlags.ExtractFlags);
+            conn.InternalCallReducer(new Reducer.Extract(request));
         }
 
         public bool InvokeExtract(ReducerEventContext ctx, Reducer.Extract args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "extract";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ExtractFlags;
-        public void Extract(CallReducerFlags flags) => ExtractFlags = flags;
     }
 }

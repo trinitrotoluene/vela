@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class SellOrderStateHandle : RemoteTableHandle<EventContext, AuctionListingState>
         {
-            protected override string RemoteTableName => "sell_order_state";
+            public override string RemoteTableName => "sell_order_state";
 
             public sealed class ClaimEntityIdIndex : BTreeIndexBase<ulong>
             {

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ItemDrop(SpacetimeDB.Types.PlayerItemDropRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ItemDrop(request), this.SetCallReducerFlags.ItemDropFlags);
+            conn.InternalCallReducer(new Reducer.ItemDrop(request));
         }
 
         public bool InvokeItemDrop(ReducerEventContext ctx, Reducer.ItemDrop args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "item_drop";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ItemDropFlags;
-        public void ItemDrop(CallReducerFlags flags) => ItemDropFlags = flags;
     }
 }

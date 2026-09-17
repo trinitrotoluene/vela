@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class OnboardingRewardDescHandle : RemoteTableHandle<EventContext, OnboardingRewardDesc>
         {
-            protected override string RemoteTableName => "onboarding_reward_desc";
+            public override string RemoteTableName => "onboarding_reward_desc";
 
             public sealed class StateIdUniqueIndex : UniqueIndexBase<ushort>
             {

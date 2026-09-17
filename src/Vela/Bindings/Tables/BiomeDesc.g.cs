@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class BiomeDescHandle : RemoteTableHandle<EventContext, BiomeDesc>
         {
-            protected override string RemoteTableName => "biome_desc";
+            public override string RemoteTableName => "biome_desc";
 
             public sealed class BiomeTypeUniqueIndex : UniqueIndexBase<byte>
             {

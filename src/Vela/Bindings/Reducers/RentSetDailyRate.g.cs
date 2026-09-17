@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void RentSetDailyRate(SpacetimeDB.Types.RentSetDailyRateRequest request)
         {
-            conn.InternalCallReducer(new Reducer.RentSetDailyRate(request), this.SetCallReducerFlags.RentSetDailyRateFlags);
+            conn.InternalCallReducer(new Reducer.RentSetDailyRate(request));
         }
 
         public bool InvokeRentSetDailyRate(ReducerEventContext ctx, Reducer.RentSetDailyRate args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "rent_set_daily_rate";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags RentSetDailyRateFlags;
-        public void RentSetDailyRate(CallReducerFlags flags) => RentSetDailyRateFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EmpireCollectHexiteCapsule(SpacetimeDB.Types.EmpireCollectHexiteCapsuleRequest request)
         {
-            conn.InternalCallReducer(new Reducer.EmpireCollectHexiteCapsule(request), this.SetCallReducerFlags.EmpireCollectHexiteCapsuleFlags);
+            conn.InternalCallReducer(new Reducer.EmpireCollectHexiteCapsule(request));
         }
 
         public bool InvokeEmpireCollectHexiteCapsule(ReducerEventContext ctx, Reducer.EmpireCollectHexiteCapsule args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "empire_collect_hexite_capsule";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EmpireCollectHexiteCapsuleFlags;
-        public void EmpireCollectHexiteCapsule(CallReducerFlags flags) => EmpireCollectHexiteCapsuleFlags = flags;
     }
 }

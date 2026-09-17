@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportStaminaState(System.Collections.Generic.List<SpacetimeDB.Types.StaminaState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportStaminaState(records), this.SetCallReducerFlags.ImportStaminaStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportStaminaState(records));
         }
 
         public bool InvokeImportStaminaState(ReducerEventContext ctx, Reducer.ImportStaminaState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_stamina_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportStaminaStateFlags;
-        public void ImportStaminaState(CallReducerFlags flags) => ImportStaminaStateFlags = flags;
     }
 }

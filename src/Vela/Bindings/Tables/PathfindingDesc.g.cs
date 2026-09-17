@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class PathfindingDescHandle : RemoteTableHandle<EventContext, PathfindingDesc>
         {
-            protected override string RemoteTableName => "pathfinding_desc";
+            public override string RemoteTableName => "pathfinding_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {

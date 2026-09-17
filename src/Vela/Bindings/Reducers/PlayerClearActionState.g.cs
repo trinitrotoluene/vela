@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerClearActionState(ulong actorId, SpacetimeDB.Types.PlayerActionType currentAction, SpacetimeDB.Types.PlayerActionLayer layer, SpacetimeDB.Types.PlayerActionResult lastActionResult)
         {
-            conn.InternalCallReducer(new Reducer.PlayerClearActionState(actorId, currentAction, layer, lastActionResult), this.SetCallReducerFlags.PlayerClearActionStateFlags);
+            conn.InternalCallReducer(new Reducer.PlayerClearActionState(actorId, currentAction, layer, lastActionResult));
         }
 
         public bool InvokePlayerClearActionState(ReducerEventContext ctx, Reducer.PlayerClearActionState args)
@@ -79,11 +79,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "player_clear_action_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerClearActionStateFlags;
-        public void PlayerClearActionState(CallReducerFlags flags) => PlayerClearActionStateFlags = flags;
     }
 }

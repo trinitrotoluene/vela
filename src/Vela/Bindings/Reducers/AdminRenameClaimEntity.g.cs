@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminRenameClaimEntity(ulong entityId, string newName)
         {
-            conn.InternalCallReducer(new Reducer.AdminRenameClaimEntity(entityId, newName), this.SetCallReducerFlags.AdminRenameClaimEntityFlags);
+            conn.InternalCallReducer(new Reducer.AdminRenameClaimEntity(entityId, newName));
         }
 
         public bool InvokeAdminRenameClaimEntity(ReducerEventContext ctx, Reducer.AdminRenameClaimEntity args)
@@ -70,11 +70,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_rename_claim_entity";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminRenameClaimEntityFlags;
-        public void AdminRenameClaimEntity(CallReducerFlags flags) => AdminRenameClaimEntityFlags = flags;
     }
 }

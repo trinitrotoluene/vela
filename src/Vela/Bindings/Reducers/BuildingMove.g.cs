@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void BuildingMove(SpacetimeDB.Types.PlayerBuildingMoveRequest request)
         {
-            conn.InternalCallReducer(new Reducer.BuildingMove(request), this.SetCallReducerFlags.BuildingMoveFlags);
+            conn.InternalCallReducer(new Reducer.BuildingMove(request));
         }
 
         public bool InvokeBuildingMove(ReducerEventContext ctx, Reducer.BuildingMove args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "building_move";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags BuildingMoveFlags;
-        public void BuildingMove(CallReducerFlags flags) => BuildingMoveFlags = flags;
     }
 }

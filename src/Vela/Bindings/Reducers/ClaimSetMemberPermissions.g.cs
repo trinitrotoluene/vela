@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ClaimSetMemberPermissions(SpacetimeDB.Types.PlayerClaimSetMemberPermissionsRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ClaimSetMemberPermissions(request), this.SetCallReducerFlags.ClaimSetMemberPermissionsFlags);
+            conn.InternalCallReducer(new Reducer.ClaimSetMemberPermissions(request));
         }
 
         public bool InvokeClaimSetMemberPermissions(ReducerEventContext ctx, Reducer.ClaimSetMemberPermissions args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "claim_set_member_permissions";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ClaimSetMemberPermissionsFlags;
-        public void ClaimSetMemberPermissions(CallReducerFlags flags) => ClaimSetMemberPermissionsFlags = flags;
     }
 }

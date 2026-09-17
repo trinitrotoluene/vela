@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class PlayerSetNameOutcomeEventHandle : RemoteTableHandle<EventContext, PlayerSetNameOutcomeEvent>
         {
-            protected override string RemoteTableName => "player_set_name_outcome_event";
+            public override string RemoteTableName => "player_set_name_outcome_event";
 
             public sealed class ScheduledIdUniqueIndex : UniqueIndexBase<ulong>
             {

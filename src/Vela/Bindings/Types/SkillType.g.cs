@@ -11,7 +11,7 @@ namespace SpacetimeDB.Types
     public enum SkillType
     {
         None,
-        ANY,
+        Any,
         Forestry,
         Carpentry,
         Masonry,

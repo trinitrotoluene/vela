@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class CraftingRecipeDescHandle : RemoteTableHandle<EventContext, CraftingRecipeDesc>
         {
-            protected override string RemoteTableName => "crafting_recipe_desc";
+            public override string RemoteTableName => "crafting_recipe_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {
@@ -54,7 +54,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<CraftingRecipeDesc, float> TimeRequirement { get; }
         public global::SpacetimeDB.Col<CraftingRecipeDesc, float> StaminaRequirement { get; }
         public global::SpacetimeDB.Col<CraftingRecipeDesc, int> ToolDurabilityLost { get; }
-        public global::SpacetimeDB.NullableCol<CraftingRecipeDesc, BuildingRequirement> BuildingRequirement { get; }
+        public global::SpacetimeDB.Col<CraftingRecipeDesc, BuildingRequirement> BuildingRequirement { get; }
         public global::SpacetimeDB.Col<CraftingRecipeDesc, System.Collections.Generic.List<LevelRequirement>> LevelRequirements { get; }
         public global::SpacetimeDB.Col<CraftingRecipeDesc, System.Collections.Generic.List<ToolRequirement>> ToolRequirements { get; }
         public global::SpacetimeDB.Col<CraftingRecipeDesc, System.Collections.Generic.List<InputItemStack>> ConsumedItemStacks { get; }
@@ -81,7 +81,7 @@ namespace SpacetimeDB.Types
             TimeRequirement = new global::SpacetimeDB.Col<CraftingRecipeDesc, float>(tableName, "time_requirement");
             StaminaRequirement = new global::SpacetimeDB.Col<CraftingRecipeDesc, float>(tableName, "stamina_requirement");
             ToolDurabilityLost = new global::SpacetimeDB.Col<CraftingRecipeDesc, int>(tableName, "tool_durability_lost");
-            BuildingRequirement = new global::SpacetimeDB.NullableCol<CraftingRecipeDesc, BuildingRequirement>(tableName, "building_requirement");
+            BuildingRequirement = new global::SpacetimeDB.Col<CraftingRecipeDesc, BuildingRequirement>(tableName, "building_requirement");
             LevelRequirements = new global::SpacetimeDB.Col<CraftingRecipeDesc, System.Collections.Generic.List<LevelRequirement>>(tableName, "level_requirements");
             ToolRequirements = new global::SpacetimeDB.Col<CraftingRecipeDesc, System.Collections.Generic.List<ToolRequirement>>(tableName, "tool_requirements");
             ConsumedItemStacks = new global::SpacetimeDB.Col<CraftingRecipeDesc, System.Collections.Generic.List<InputItemStack>>(tableName, "consumed_item_stacks");

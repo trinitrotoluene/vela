@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AbilitySet(byte actionBarIndex, byte localAbilityIndex, SpacetimeDB.Types.AbilityType ability)
         {
-            conn.InternalCallReducer(new Reducer.AbilitySet(actionBarIndex, localAbilityIndex, ability), this.SetCallReducerFlags.AbilitySetFlags);
+            conn.InternalCallReducer(new Reducer.AbilitySet(actionBarIndex, localAbilityIndex, ability));
         }
 
         public bool InvokeAbilitySet(ReducerEventContext ctx, Reducer.AbilitySet args)
@@ -75,11 +75,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "ability_set";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AbilitySetFlags;
-        public void AbilitySet(CallReducerFlags flags) => AbilitySetFlags = flags;
     }
 }

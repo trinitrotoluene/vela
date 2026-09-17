@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ChatPostMessage(SpacetimeDB.Types.PlayerChatPostMessageRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ChatPostMessage(request), this.SetCallReducerFlags.ChatPostMessageFlags);
+            conn.InternalCallReducer(new Reducer.ChatPostMessage(request));
         }
 
         public bool InvokeChatPostMessage(ReducerEventContext ctx, Reducer.ChatPostMessage args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "chat_post_message";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ChatPostMessageFlags;
-        public void ChatPostMessage(CallReducerFlags flags) => ChatPostMessageFlags = flags;
     }
 }

@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class QuestDropDescHandle : RemoteTableHandle<EventContext, QuestDropDesc>
         {
-            protected override string RemoteTableName => "quest_drop_desc";
+            public override string RemoteTableName => "quest_drop_desc";
 
             public sealed class EnemyIdIndex : BTreeIndexBase<int>
             {

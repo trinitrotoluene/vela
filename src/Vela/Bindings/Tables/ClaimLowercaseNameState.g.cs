@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ClaimLowercaseNameStateHandle : RemoteTableHandle<EventContext, ClaimLowercaseNameState>
         {
-            protected override string RemoteTableName => "claim_lowercase_name_state";
+            public override string RemoteTableName => "claim_lowercase_name_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

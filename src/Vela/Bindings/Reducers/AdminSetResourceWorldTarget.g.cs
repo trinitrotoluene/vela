@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminSetResourceWorldTarget(int resourceId, int worldTarget)
         {
-            conn.InternalCallReducer(new Reducer.AdminSetResourceWorldTarget(resourceId, worldTarget), this.SetCallReducerFlags.AdminSetResourceWorldTargetFlags);
+            conn.InternalCallReducer(new Reducer.AdminSetResourceWorldTarget(resourceId, worldTarget));
         }
 
         public bool InvokeAdminSetResourceWorldTarget(ReducerEventContext ctx, Reducer.AdminSetResourceWorldTarget args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_set_resource_world_target";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminSetResourceWorldTargetFlags;
-        public void AdminSetResourceWorldTarget(CallReducerFlags flags) => AdminSetResourceWorldTargetFlags = flags;
     }
 }

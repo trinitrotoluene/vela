@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CompleteQuestChain(int id)
         {
-            conn.InternalCallReducer(new Reducer.CompleteQuestChain(id), this.SetCallReducerFlags.CompleteQuestChainFlags);
+            conn.InternalCallReducer(new Reducer.CompleteQuestChain(id));
         }
 
         public bool InvokeCompleteQuestChain(ReducerEventContext ctx, Reducer.CompleteQuestChain args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "complete_quest_chain";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CompleteQuestChainFlags;
-        public void CompleteQuestChain(CallReducerFlags flags) => CompleteQuestChainFlags = flags;
     }
 }

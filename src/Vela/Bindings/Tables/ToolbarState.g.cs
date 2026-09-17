@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ToolbarStateHandle : RemoteTableHandle<EventContext, ToolbarState>
         {
-            protected override string RemoteTableName => "toolbar_state";
+            public override string RemoteTableName => "toolbar_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DiscoverCollectible(int collectibleId)
         {
-            conn.InternalCallReducer(new Reducer.DiscoverCollectible(collectibleId), this.SetCallReducerFlags.DiscoverCollectibleFlags);
+            conn.InternalCallReducer(new Reducer.DiscoverCollectible(collectibleId));
         }
 
         public bool InvokeDiscoverCollectible(ReducerEventContext ctx, Reducer.DiscoverCollectible args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "discover_collectible";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DiscoverCollectibleFlags;
-        public void DiscoverCollectible(CallReducerFlags flags) => DiscoverCollectibleFlags = flags;
     }
 }

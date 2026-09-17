@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void RentCollectEvictionFee(ulong rentEntityId)
         {
-            conn.InternalCallReducer(new Reducer.RentCollectEvictionFee(rentEntityId), this.SetCallReducerFlags.RentCollectEvictionFeeFlags);
+            conn.InternalCallReducer(new Reducer.RentCollectEvictionFee(rentEntityId));
         }
 
         public bool InvokeRentCollectEvictionFee(ReducerEventContext ctx, Reducer.RentCollectEvictionFee args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "rent_collect_eviction_fee";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags RentCollectEvictionFeeFlags;
-        public void RentCollectEvictionFee(CallReducerFlags flags) => RentCollectEvictionFeeFlags = flags;
     }
 }

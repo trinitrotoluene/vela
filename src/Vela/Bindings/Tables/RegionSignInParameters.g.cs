@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class RegionSignInParametersHandle : RemoteTableHandle<EventContext, RegionSignInParameters>
         {
-            protected override string RemoteTableName => "region_sign_in_parameters";
+            public override string RemoteTableName => "region_sign_in_parameters";
 
             public sealed class RegionIdUniqueIndex : UniqueIndexBase<byte>
             {

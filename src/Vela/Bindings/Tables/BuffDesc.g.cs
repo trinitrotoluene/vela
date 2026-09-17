@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class BuffDescHandle : RemoteTableHandle<EventContext, BuffDesc>
         {
-            protected override string RemoteTableName => "buff_desc";
+            public override string RemoteTableName => "buff_desc";
 
             public sealed class BuffTypeIdIndex : BTreeIndexBase<int>
             {

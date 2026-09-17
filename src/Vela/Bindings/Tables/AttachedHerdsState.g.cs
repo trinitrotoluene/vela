@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class AttachedHerdsStateHandle : RemoteTableHandle<EventContext, AttachedHerdsState>
         {
-            protected override string RemoteTableName => "attached_herds_state";
+            public override string RemoteTableName => "attached_herds_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

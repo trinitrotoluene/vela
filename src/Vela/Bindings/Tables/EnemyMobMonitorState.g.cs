@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class EnemyMobMonitorStateHandle : RemoteTableHandle<EventContext, EnemyMobMonitorState>
         {
-            protected override string RemoteTableName => "enemy_mob_monitor_state";
+            public override string RemoteTableName => "enemy_mob_monitor_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

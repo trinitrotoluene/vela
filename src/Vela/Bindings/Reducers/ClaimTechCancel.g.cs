@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ClaimTechCancel(SpacetimeDB.Types.PlayerClaimTechCancelRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ClaimTechCancel(request), this.SetCallReducerFlags.ClaimTechCancelFlags);
+            conn.InternalCallReducer(new Reducer.ClaimTechCancel(request));
         }
 
         public bool InvokeClaimTechCancel(ReducerEventContext ctx, Reducer.ClaimTechCancel args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "claim_tech_cancel";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ClaimTechCancelFlags;
-        public void ClaimTechCancel(CallReducerFlags flags) => ClaimTechCancelFlags = flags;
     }
 }

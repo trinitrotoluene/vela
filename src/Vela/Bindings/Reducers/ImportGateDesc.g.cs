@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportGateDesc(System.Collections.Generic.List<SpacetimeDB.Types.GateDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportGateDesc(records), this.SetCallReducerFlags.ImportGateDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportGateDesc(records));
         }
 
         public bool InvokeImportGateDesc(ReducerEventContext ctx, Reducer.ImportGateDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_gate_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportGateDescFlags;
-        public void ImportGateDesc(CallReducerFlags flags) => ImportGateDescFlags = flags;
     }
 }

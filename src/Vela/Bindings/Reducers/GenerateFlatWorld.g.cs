@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void GenerateFlatWorld()
         {
-            conn.InternalCallReducer(new Reducer.GenerateFlatWorld(), this.SetCallReducerFlags.GenerateFlatWorldFlags);
+            conn.InternalCallReducer(new Reducer.GenerateFlatWorld());
         }
 
         public bool InvokeGenerateFlatWorld(ReducerEventContext ctx, Reducer.GenerateFlatWorld args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "generate_flat_world";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags GenerateFlatWorldFlags;
-        public void GenerateFlatWorld(CallReducerFlags flags) => GenerateFlatWorldFlags = flags;
     }
 }

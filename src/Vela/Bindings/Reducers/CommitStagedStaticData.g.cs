@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CommitStagedStaticData()
         {
-            conn.InternalCallReducer(new Reducer.CommitStagedStaticData(), this.SetCallReducerFlags.CommitStagedStaticDataFlags);
+            conn.InternalCallReducer(new Reducer.CommitStagedStaticData());
         }
 
         public bool InvokeCommitStagedStaticData(ReducerEventContext ctx, Reducer.CommitStagedStaticData args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "commit_staged_static_data";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CommitStagedStaticDataFlags;
-        public void CommitStagedStaticData(CallReducerFlags flags) => CommitStagedStaticDataFlags = flags;
     }
 }

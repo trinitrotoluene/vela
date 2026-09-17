@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void Sleep(SpacetimeDB.Types.PlayerSleepRequest request)
         {
-            conn.InternalCallReducer(new Reducer.Sleep(request), this.SetCallReducerFlags.SleepFlags);
+            conn.InternalCallReducer(new Reducer.Sleep(request));
         }
 
         public bool InvokeSleep(ReducerEventContext ctx, Reducer.Sleep args)
@@ -48,7 +48,7 @@ namespace SpacetimeDB.Types
         [DataContract]
         public sealed partial class Sleep : Reducer, IReducerArgs
         {
-            [DataMember(Name = "_request")]
+            [DataMember(Name = "request")]
             public PlayerSleepRequest Request;
 
             public Sleep(PlayerSleepRequest Request)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "sleep";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags SleepFlags;
-        public void Sleep(CallReducerFlags flags) => SleepFlags = flags;
     }
 }

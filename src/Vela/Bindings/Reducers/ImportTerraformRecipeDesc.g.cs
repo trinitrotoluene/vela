@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportTerraformRecipeDesc(System.Collections.Generic.List<SpacetimeDB.Types.TerraformRecipeDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportTerraformRecipeDesc(records), this.SetCallReducerFlags.ImportTerraformRecipeDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportTerraformRecipeDesc(records));
         }
 
         public bool InvokeImportTerraformRecipeDesc(ReducerEventContext ctx, Reducer.ImportTerraformRecipeDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_terraform_recipe_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportTerraformRecipeDescFlags;
-        public void ImportTerraformRecipeDesc(CallReducerFlags flags) => ImportTerraformRecipeDescFlags = flags;
     }
 }

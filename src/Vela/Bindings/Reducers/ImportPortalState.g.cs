@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportPortalState(System.Collections.Generic.List<SpacetimeDB.Types.PortalState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportPortalState(records), this.SetCallReducerFlags.ImportPortalStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportPortalState(records));
         }
 
         public bool InvokeImportPortalState(ReducerEventContext ctx, Reducer.ImportPortalState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_portal_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportPortalStateFlags;
-        public void ImportPortalState(CallReducerFlags flags) => ImportPortalStateFlags = flags;
     }
 }

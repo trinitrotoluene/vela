@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class AdminBroadcastHandle : RemoteTableHandle<EventContext, AdminBroadcast>
         {
-            protected override string RemoteTableName => "admin_broadcast";
+            public override string RemoteTableName => "admin_broadcast";
 
             public sealed class VersionUniqueIndex : UniqueIndexBase<int>
             {

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportLootChestState(System.Collections.Generic.List<SpacetimeDB.Types.LootChestState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportLootChestState(records), this.SetCallReducerFlags.ImportLootChestStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportLootChestState(records));
         }
 
         public bool InvokeImportLootChestState(ReducerEventContext ctx, Reducer.ImportLootChestState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_loot_chest_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportLootChestStateFlags;
-        public void ImportLootChestState(CallReducerFlags flags) => ImportLootChestStateFlags = flags;
     }
 }

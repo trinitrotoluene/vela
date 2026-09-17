@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ClaimTileCostHandle : RemoteTableHandle<EventContext, ClaimTileCost>
         {
-            protected override string RemoteTableName => "claim_tile_cost";
+            public override string RemoteTableName => "claim_tile_cost";
 
             public sealed class TileCountUniqueIndex : UniqueIndexBase<int>
             {

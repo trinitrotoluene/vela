@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EmpireClaimJoin(ulong buildingEntityId, ulong empireEntityId)
         {
-            conn.InternalCallReducer(new Reducer.EmpireClaimJoin(buildingEntityId, empireEntityId), this.SetCallReducerFlags.EmpireClaimJoinFlags);
+            conn.InternalCallReducer(new Reducer.EmpireClaimJoin(buildingEntityId, empireEntityId));
         }
 
         public bool InvokeEmpireClaimJoin(ReducerEventContext ctx, Reducer.EmpireClaimJoin args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "empire_claim_join";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EmpireClaimJoinFlags;
-        public void EmpireClaimJoin(CallReducerFlags flags) => EmpireClaimJoinFlags = flags;
     }
 }

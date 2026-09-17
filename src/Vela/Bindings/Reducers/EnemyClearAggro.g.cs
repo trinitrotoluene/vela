@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EnemyClearAggro(SpacetimeDB.Types.EnemyClearAggroRequest request)
         {
-            conn.InternalCallReducer(new Reducer.EnemyClearAggro(request), this.SetCallReducerFlags.EnemyClearAggroFlags);
+            conn.InternalCallReducer(new Reducer.EnemyClearAggro(request));
         }
 
         public bool InvokeEnemyClearAggro(ReducerEventContext ctx, Reducer.EnemyClearAggro args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "enemy_clear_aggro";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EnemyClearAggroFlags;
-        public void EnemyClearAggro(CallReducerFlags flags) => EnemyClearAggroFlags = flags;
     }
 }

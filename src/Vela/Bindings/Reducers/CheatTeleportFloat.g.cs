@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatTeleportFloat(SpacetimeDB.Types.CheatTeleportFloatRequest request)
         {
-            conn.InternalCallReducer(new Reducer.CheatTeleportFloat(request), this.SetCallReducerFlags.CheatTeleportFloatFlags);
+            conn.InternalCallReducer(new Reducer.CheatTeleportFloat(request));
         }
 
         public bool InvokeCheatTeleportFloat(ReducerEventContext ctx, Reducer.CheatTeleportFloat args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_teleport_float";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatTeleportFloatFlags;
-        public void CheatTeleportFloat(CallReducerFlags flags) => CheatTeleportFloatFlags = flags;
     }
 }

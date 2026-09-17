@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminCapSkill(int skillId, int level, int newLevel, bool commit)
         {
-            conn.InternalCallReducer(new Reducer.AdminCapSkill(skillId, level, newLevel, commit), this.SetCallReducerFlags.AdminCapSkillFlags);
+            conn.InternalCallReducer(new Reducer.AdminCapSkill(skillId, level, newLevel, commit));
         }
 
         public bool InvokeAdminCapSkill(ReducerEventContext ctx, Reducer.AdminCapSkill args)
@@ -79,11 +79,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_cap_skill";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminCapSkillFlags;
-        public void AdminCapSkill(CallReducerFlags flags) => AdminCapSkillFlags = flags;
     }
 }

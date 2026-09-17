@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatDeployableStore(ulong deployableEntityId)
         {
-            conn.InternalCallReducer(new Reducer.CheatDeployableStore(deployableEntityId), this.SetCallReducerFlags.CheatDeployableStoreFlags);
+            conn.InternalCallReducer(new Reducer.CheatDeployableStore(deployableEntityId));
         }
 
         public bool InvokeCheatDeployableStore(ReducerEventContext ctx, Reducer.CheatDeployableStore args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_deployable_store";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatDeployableStoreFlags;
-        public void CheatDeployableStore(CallReducerFlags flags) => CheatDeployableStoreFlags = flags;
     }
 }

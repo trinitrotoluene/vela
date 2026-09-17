@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class TradeSessionStateHandle : RemoteTableHandle<EventContext, TradeSessionState>
         {
-            protected override string RemoteTableName => "trade_session_state";
+            public override string RemoteTableName => "trade_session_state";
 
             public sealed class AcceptorEntityIdIndex : BTreeIndexBase<ulong>
             {

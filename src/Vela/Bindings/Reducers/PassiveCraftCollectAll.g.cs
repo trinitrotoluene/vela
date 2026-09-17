@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PassiveCraftCollectAll(ulong buildingEntityId)
         {
-            conn.InternalCallReducer(new Reducer.PassiveCraftCollectAll(buildingEntityId), this.SetCallReducerFlags.PassiveCraftCollectAllFlags);
+            conn.InternalCallReducer(new Reducer.PassiveCraftCollectAll(buildingEntityId));
         }
 
         public bool InvokePassiveCraftCollectAll(ReducerEventContext ctx, Reducer.PassiveCraftCollectAll args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "passive_craft_collect_all";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PassiveCraftCollectAllFlags;
-        public void PassiveCraftCollectAll(CallReducerFlags flags) => PassiveCraftCollectAllFlags = flags;
     }
 }

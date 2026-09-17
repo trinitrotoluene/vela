@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CrumbTailCleanupAgentInsert()
         {
-            conn.InternalCallReducer(new Reducer.CrumbTailCleanupAgentInsert(), this.SetCallReducerFlags.CrumbTailCleanupAgentInsertFlags);
+            conn.InternalCallReducer(new Reducer.CrumbTailCleanupAgentInsert());
         }
 
         public bool InvokeCrumbTailCleanupAgentInsert(ReducerEventContext ctx, Reducer.CrumbTailCleanupAgentInsert args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "crumb_tail_cleanup_agent_insert";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CrumbTailCleanupAgentInsertFlags;
-        public void CrumbTailCleanupAgentInsert(CallReducerFlags flags) => CrumbTailCleanupAgentInsertFlags = flags;
     }
 }

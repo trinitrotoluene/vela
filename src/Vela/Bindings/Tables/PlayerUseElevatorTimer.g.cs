@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class PlayerUseElevatorTimerHandle : RemoteTableHandle<EventContext, PlayerUseElevatorTimer>
         {
-            protected override string RemoteTableName => "player_use_elevator_timer";
+            public override string RemoteTableName => "player_use_elevator_timer";
 
             public sealed class DestinationPlatformEntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

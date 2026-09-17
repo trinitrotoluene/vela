@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportDimensionDescriptionState(System.Collections.Generic.List<SpacetimeDB.Types.DimensionDescriptionState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportDimensionDescriptionState(records), this.SetCallReducerFlags.ImportDimensionDescriptionStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportDimensionDescriptionState(records));
         }
 
         public bool InvokeImportDimensionDescriptionState(ReducerEventContext ctx, Reducer.ImportDimensionDescriptionState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_dimension_description_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportDimensionDescriptionStateFlags;
-        public void ImportDimensionDescriptionState(CallReducerFlags flags) => ImportDimensionDescriptionStateFlags = flags;
     }
 }

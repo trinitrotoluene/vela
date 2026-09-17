@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class PlayerHousingEvictPlayerTimerHandle : RemoteTableHandle<EventContext, PlayerHousingEvictPlayerTimer>
         {
-            protected override string RemoteTableName => "player_housing_evict_player_timer";
+            public override string RemoteTableName => "player_housing_evict_player_timer";
 
             public sealed class PlayerEntityIdIndex : BTreeIndexBase<ulong>
             {

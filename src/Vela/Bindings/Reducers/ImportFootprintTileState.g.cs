@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportFootprintTileState(System.Collections.Generic.List<SpacetimeDB.Types.FootprintTileState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportFootprintTileState(records), this.SetCallReducerFlags.ImportFootprintTileStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportFootprintTileState(records));
         }
 
         public bool InvokeImportFootprintTileState(ReducerEventContext ctx, Reducer.ImportFootprintTileState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_footprint_tile_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportFootprintTileStateFlags;
-        public void ImportFootprintTileState(CallReducerFlags flags) => ImportFootprintTileStateFlags = flags;
     }
 }

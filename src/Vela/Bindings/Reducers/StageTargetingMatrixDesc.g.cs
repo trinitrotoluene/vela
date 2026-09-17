@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageTargetingMatrixDesc(System.Collections.Generic.List<SpacetimeDB.Types.TargetingMatrixDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageTargetingMatrixDesc(records), this.SetCallReducerFlags.StageTargetingMatrixDescFlags);
+            conn.InternalCallReducer(new Reducer.StageTargetingMatrixDesc(records));
         }
 
         public bool InvokeStageTargetingMatrixDesc(ReducerEventContext ctx, Reducer.StageTargetingMatrixDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_targeting_matrix_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageTargetingMatrixDescFlags;
-        public void StageTargetingMatrixDesc(CallReducerFlags flags) => StageTargetingMatrixDescFlags = flags;
     }
 }

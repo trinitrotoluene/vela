@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void MigrationSetBuildingDescParams(bool allowBuildingHealthChange)
         {
-            conn.InternalCallReducer(new Reducer.MigrationSetBuildingDescParams(allowBuildingHealthChange), this.SetCallReducerFlags.MigrationSetBuildingDescParamsFlags);
+            conn.InternalCallReducer(new Reducer.MigrationSetBuildingDescParams(allowBuildingHealthChange));
         }
 
         public bool InvokeMigrationSetBuildingDescParams(ReducerEventContext ctx, Reducer.MigrationSetBuildingDescParams args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "migration_set_building_desc_params";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags MigrationSetBuildingDescParamsFlags;
-        public void MigrationSetBuildingDescParams(CallReducerFlags flags) => MigrationSetBuildingDescParamsFlags = flags;
     }
 }

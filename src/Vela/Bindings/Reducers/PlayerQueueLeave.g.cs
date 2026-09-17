@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerQueueLeave()
         {
-            conn.InternalCallReducer(new Reducer.PlayerQueueLeave(), this.SetCallReducerFlags.PlayerQueueLeaveFlags);
+            conn.InternalCallReducer(new Reducer.PlayerQueueLeave());
         }
 
         public bool InvokePlayerQueueLeave(ReducerEventContext ctx, Reducer.PlayerQueueLeave args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "player_queue_leave";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerQueueLeaveFlags;
-        public void PlayerQueueLeave(CallReducerFlags flags) => PlayerQueueLeaveFlags = flags;
     }
 }

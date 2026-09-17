@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ItemStackSplit(SpacetimeDB.Types.PlayerItemStackSplitRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ItemStackSplit(request), this.SetCallReducerFlags.ItemStackSplitFlags);
+            conn.InternalCallReducer(new Reducer.ItemStackSplit(request));
         }
 
         public bool InvokeItemStackSplit(ReducerEventContext ctx, Reducer.ItemStackSplit args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "item_stack_split";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ItemStackSplitFlags;
-        public void ItemStackSplit(CallReducerFlags flags) => ItemStackSplitFlags = flags;
     }
 }

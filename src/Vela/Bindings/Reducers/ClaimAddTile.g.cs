@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ClaimAddTile(SpacetimeDB.Types.PlayerClaimAddTileRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ClaimAddTile(request), this.SetCallReducerFlags.ClaimAddTileFlags);
+            conn.InternalCallReducer(new Reducer.ClaimAddTile(request));
         }
 
         public bool InvokeClaimAddTile(ReducerEventContext ctx, Reducer.ClaimAddTile args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "claim_add_tile";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ClaimAddTileFlags;
-        public void ClaimAddTile(CallReducerFlags flags) => ClaimAddTileFlags = flags;
     }
 }

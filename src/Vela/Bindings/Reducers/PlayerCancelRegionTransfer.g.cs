@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerCancelRegionTransfer()
         {
-            conn.InternalCallReducer(new Reducer.PlayerCancelRegionTransfer(), this.SetCallReducerFlags.PlayerCancelRegionTransferFlags);
+            conn.InternalCallReducer(new Reducer.PlayerCancelRegionTransfer());
         }
 
         public bool InvokePlayerCancelRegionTransfer(ReducerEventContext ctx, Reducer.PlayerCancelRegionTransfer args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "player_cancel_region_transfer";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerCancelRegionTransferFlags;
-        public void PlayerCancelRegionTransfer(CallReducerFlags flags) => PlayerCancelRegionTransferFlags = flags;
     }
 }

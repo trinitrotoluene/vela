@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class WorldRegionStateHandle : RemoteTableHandle<EventContext, WorldRegionState>
         {
-            protected override string RemoteTableName => "world_region_state";
+            public override string RemoteTableName => "world_region_state";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<byte>
             {

@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class CombatActionMultiHitDescHandle : RemoteTableHandle<EventContext, CombatActionMultiHitDesc>
         {
-            protected override string RemoteTableName => "combat_action_multi_hit_desc";
+            public override string RemoteTableName => "combat_action_multi_hit_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportKnowledgeItemState(System.Collections.Generic.List<SpacetimeDB.Types.KnowledgeItemState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportKnowledgeItemState(records), this.SetCallReducerFlags.ImportKnowledgeItemStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportKnowledgeItemState(records));
         }
 
         public bool InvokeImportKnowledgeItemState(ReducerEventContext ctx, Reducer.ImportKnowledgeItemState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_knowledge_item_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportKnowledgeItemStateFlags;
-        public void ImportKnowledgeItemState(CallReducerFlags flags) => ImportKnowledgeItemStateFlags = flags;
     }
 }

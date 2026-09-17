@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportToolDesc(System.Collections.Generic.List<SpacetimeDB.Types.ToolDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportToolDesc(records), this.SetCallReducerFlags.ImportToolDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportToolDesc(records));
         }
 
         public bool InvokeImportToolDesc(ReducerEventContext ctx, Reducer.ImportToolDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_tool_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportToolDescFlags;
-        public void ImportToolDesc(CallReducerFlags flags) => ImportToolDescFlags = flags;
     }
 }

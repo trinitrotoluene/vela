@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportPlayerActionState(System.Collections.Generic.List<SpacetimeDB.Types.PlayerActionState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportPlayerActionState(records), this.SetCallReducerFlags.ImportPlayerActionStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportPlayerActionState(records));
         }
 
         public bool InvokeImportPlayerActionState(ReducerEventContext ctx, Reducer.ImportPlayerActionState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_player_action_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportPlayerActionStateFlags;
-        public void ImportPlayerActionState(CallReducerFlags flags) => ImportPlayerActionStateFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminGrantAllClaimSupplies(int daysOfSupplies, bool dryRun)
         {
-            conn.InternalCallReducer(new Reducer.AdminGrantAllClaimSupplies(daysOfSupplies, dryRun), this.SetCallReducerFlags.AdminGrantAllClaimSuppliesFlags);
+            conn.InternalCallReducer(new Reducer.AdminGrantAllClaimSupplies(daysOfSupplies, dryRun));
         }
 
         public bool InvokeAdminGrantAllClaimSupplies(ReducerEventContext ctx, Reducer.AdminGrantAllClaimSupplies args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_grant_all_claim_supplies";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminGrantAllClaimSuppliesFlags;
-        public void AdminGrantAllClaimSupplies(CallReducerFlags flags) => AdminGrantAllClaimSuppliesFlags = flags;
     }
 }

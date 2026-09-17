@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class CrumbTrailContributionSpentStateHandle : RemoteTableHandle<EventContext, CrumbTrailContributionSpentState>
         {
-            protected override string RemoteTableName => "crumb_trail_contribution_spent_state";
+            public override string RemoteTableName => "crumb_trail_contribution_spent_state";
 
             public sealed class CrumbTrailEntityIdIndex : BTreeIndexBase<ulong>
             {

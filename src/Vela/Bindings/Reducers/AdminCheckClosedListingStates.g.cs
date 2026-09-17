@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminCheckClosedListingStates(ulong maxValue)
         {
-            conn.InternalCallReducer(new Reducer.AdminCheckClosedListingStates(maxValue), this.SetCallReducerFlags.AdminCheckClosedListingStatesFlags);
+            conn.InternalCallReducer(new Reducer.AdminCheckClosedListingStates(maxValue));
         }
 
         public bool InvokeAdminCheckClosedListingStates(ReducerEventContext ctx, Reducer.AdminCheckClosedListingStates args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_check_closed_listing_states";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminCheckClosedListingStatesFlags;
-        public void AdminCheckClosedListingStates(CallReducerFlags flags) => AdminCheckClosedListingStatesFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void TargetUpdate(SpacetimeDB.Types.TargetUpdateRequest request)
         {
-            conn.InternalCallReducer(new Reducer.TargetUpdate(request), this.SetCallReducerFlags.TargetUpdateFlags);
+            conn.InternalCallReducer(new Reducer.TargetUpdate(request));
         }
 
         public bool InvokeTargetUpdate(ReducerEventContext ctx, Reducer.TargetUpdate args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "target_update";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags TargetUpdateFlags;
-        public void TargetUpdate(CallReducerFlags flags) => TargetUpdateFlags = flags;
     }
 }

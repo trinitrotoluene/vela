@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportResourcePlacementRecipeDesc(System.Collections.Generic.List<SpacetimeDB.Types.ResourcePlacementRecipeDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportResourcePlacementRecipeDesc(records), this.SetCallReducerFlags.ImportResourcePlacementRecipeDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportResourcePlacementRecipeDesc(records));
         }
 
         public bool InvokeImportResourcePlacementRecipeDesc(ReducerEventContext ctx, Reducer.ImportResourcePlacementRecipeDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_resource_placement_recipe_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportResourcePlacementRecipeDescFlags;
-        public void ImportResourcePlacementRecipeDesc(CallReducerFlags flags) => ImportResourcePlacementRecipeDescFlags = flags;
     }
 }

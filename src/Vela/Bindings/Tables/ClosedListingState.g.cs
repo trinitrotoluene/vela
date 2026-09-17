@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ClosedListingStateHandle : RemoteTableHandle<EventContext, ClosedListingState>
         {
-            protected override string RemoteTableName => "closed_listing_state";
+            public override string RemoteTableName => "closed_listing_state";
 
             public sealed class ClaimEntityIdIndex : BTreeIndexBase<ulong>
             {

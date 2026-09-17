@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportInteriorCollapseTriggerState(System.Collections.Generic.List<SpacetimeDB.Types.InteriorCollapseTriggerState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportInteriorCollapseTriggerState(records), this.SetCallReducerFlags.ImportInteriorCollapseTriggerStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportInteriorCollapseTriggerState(records));
         }
 
         public bool InvokeImportInteriorCollapseTriggerState(ReducerEventContext ctx, Reducer.ImportInteriorCollapseTriggerState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_interior_collapse_trigger_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportInteriorCollapseTriggerStateFlags;
-        public void ImportInteriorCollapseTriggerState(CallReducerFlags flags) => ImportInteriorCollapseTriggerStateFlags = flags;
     }
 }

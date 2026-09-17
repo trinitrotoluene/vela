@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void SearchForClosestBuildingType(int buildingTypeId)
         {
-            conn.InternalCallReducer(new Reducer.SearchForClosestBuildingType(buildingTypeId), this.SetCallReducerFlags.SearchForClosestBuildingTypeFlags);
+            conn.InternalCallReducer(new Reducer.SearchForClosestBuildingType(buildingTypeId));
         }
 
         public bool InvokeSearchForClosestBuildingType(ReducerEventContext ctx, Reducer.SearchForClosestBuildingType args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "search_for_closest_building_type";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags SearchForClosestBuildingTypeFlags;
-        public void SearchForClosestBuildingType(CallReducerFlags flags) => SearchForClosestBuildingTypeFlags = flags;
     }
 }

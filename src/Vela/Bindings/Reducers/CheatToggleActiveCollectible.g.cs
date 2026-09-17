@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatToggleActiveCollectible(SpacetimeDB.Types.CheatToggleActiveCollectibleRequest request)
         {
-            conn.InternalCallReducer(new Reducer.CheatToggleActiveCollectible(request), this.SetCallReducerFlags.CheatToggleActiveCollectibleFlags);
+            conn.InternalCallReducer(new Reducer.CheatToggleActiveCollectible(request));
         }
 
         public bool InvokeCheatToggleActiveCollectible(ReducerEventContext ctx, Reducer.CheatToggleActiveCollectible args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_toggle_active_collectible";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatToggleActiveCollectibleFlags;
-        public void CheatToggleActiveCollectible(CallReducerFlags flags) => CheatToggleActiveCollectibleFlags = flags;
     }
 }

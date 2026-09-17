@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ResourceGrowthRecipeDescHandle : RemoteTableHandle<EventContext, ResourceGrowthRecipeDesc>
         {
-            protected override string RemoteTableName => "resource_growth_recipe_desc";
+            public override string RemoteTableName => "resource_growth_recipe_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {
@@ -53,6 +53,9 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<ResourceGrowthRecipeDesc, int> ResourceId { get; }
         public global::SpacetimeDB.Col<ResourceGrowthRecipeDesc, System.Collections.Generic.List<float>> Time { get; }
         public global::SpacetimeDB.Col<ResourceGrowthRecipeDesc, int> GrownResourceId { get; }
+        public global::SpacetimeDB.Col<ResourceGrowthRecipeDesc, float> GrownResourceChance { get; }
+        public global::SpacetimeDB.Col<ResourceGrowthRecipeDesc, int> GrownResourceMinRadius { get; }
+        public global::SpacetimeDB.Col<ResourceGrowthRecipeDesc, int> GrownResourceMaxRadius { get; }
 
         public ResourceGrowthRecipeDescCols(string tableName)
         {
@@ -60,6 +63,9 @@ namespace SpacetimeDB.Types
             ResourceId = new global::SpacetimeDB.Col<ResourceGrowthRecipeDesc, int>(tableName, "resource_id");
             Time = new global::SpacetimeDB.Col<ResourceGrowthRecipeDesc, System.Collections.Generic.List<float>>(tableName, "time");
             GrownResourceId = new global::SpacetimeDB.Col<ResourceGrowthRecipeDesc, int>(tableName, "grown_resource_id");
+            GrownResourceChance = new global::SpacetimeDB.Col<ResourceGrowthRecipeDesc, float>(tableName, "grown_resource_chance");
+            GrownResourceMinRadius = new global::SpacetimeDB.Col<ResourceGrowthRecipeDesc, int>(tableName, "grown_resource_min_radius");
+            GrownResourceMaxRadius = new global::SpacetimeDB.Col<ResourceGrowthRecipeDesc, int>(tableName, "grown_resource_max_radius");
         }
     }
 

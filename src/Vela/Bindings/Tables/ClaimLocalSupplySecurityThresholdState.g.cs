@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ClaimLocalSupplySecurityThresholdStateHandle : RemoteTableHandle<EventContext, ClaimLocalSupplySecurityThresholdState>
         {
-            protected override string RemoteTableName => "claim_local_supply_security_threshold_state";
+            public override string RemoteTableName => "claim_local_supply_security_threshold_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

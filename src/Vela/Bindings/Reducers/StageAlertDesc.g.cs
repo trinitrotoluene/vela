@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageAlertDesc(System.Collections.Generic.List<SpacetimeDB.Types.AlertDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageAlertDesc(records), this.SetCallReducerFlags.StageAlertDescFlags);
+            conn.InternalCallReducer(new Reducer.StageAlertDesc(records));
         }
 
         public bool InvokeStageAlertDesc(ReducerEventContext ctx, Reducer.StageAlertDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_alert_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageAlertDescFlags;
-        public void StageAlertDesc(CallReducerFlags flags) => StageAlertDescFlags = flags;
     }
 }

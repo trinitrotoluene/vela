@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatUndiscoverMap(ulong playerEntityId)
         {
-            conn.InternalCallReducer(new Reducer.CheatUndiscoverMap(playerEntityId), this.SetCallReducerFlags.CheatUndiscoverMapFlags);
+            conn.InternalCallReducer(new Reducer.CheatUndiscoverMap(playerEntityId));
         }
 
         public bool InvokeCheatUndiscoverMap(ReducerEventContext ctx, Reducer.CheatUndiscoverMap args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_undiscover_map";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatUndiscoverMapFlags;
-        public void CheatUndiscoverMap(CallReducerFlags flags) => CheatUndiscoverMapFlags = flags;
     }
 }

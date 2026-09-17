@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatClaimTotemResearchAll(ulong claimEntityId)
         {
-            conn.InternalCallReducer(new Reducer.CheatClaimTotemResearchAll(claimEntityId), this.SetCallReducerFlags.CheatClaimTotemResearchAllFlags);
+            conn.InternalCallReducer(new Reducer.CheatClaimTotemResearchAll(claimEntityId));
         }
 
         public bool InvokeCheatClaimTotemResearchAll(ReducerEventContext ctx, Reducer.CheatClaimTotemResearchAll args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_claim_totem_research_all";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatClaimTotemResearchAllFlags;
-        public void CheatClaimTotemResearchAll(CallReducerFlags flags) => CheatClaimTotemResearchAllFlags = flags;
     }
 }

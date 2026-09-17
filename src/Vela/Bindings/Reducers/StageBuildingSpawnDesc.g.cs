@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageBuildingSpawnDesc(System.Collections.Generic.List<SpacetimeDB.Types.BuildingSpawnDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageBuildingSpawnDesc(records), this.SetCallReducerFlags.StageBuildingSpawnDescFlags);
+            conn.InternalCallReducer(new Reducer.StageBuildingSpawnDesc(records));
         }
 
         public bool InvokeStageBuildingSpawnDesc(ReducerEventContext ctx, Reducer.StageBuildingSpawnDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_building_spawn_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageBuildingSpawnDescFlags;
-        public void StageBuildingSpawnDesc(CallReducerFlags flags) => StageBuildingSpawnDescFlags = flags;
     }
 }

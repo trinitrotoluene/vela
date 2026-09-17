@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void SignIn(SpacetimeDB.Types.PlayerSignInRequest request)
         {
-            conn.InternalCallReducer(new Reducer.SignIn(request), this.SetCallReducerFlags.SignInFlags);
+            conn.InternalCallReducer(new Reducer.SignIn(request));
         }
 
         public bool InvokeSignIn(ReducerEventContext ctx, Reducer.SignIn args)
@@ -48,7 +48,7 @@ namespace SpacetimeDB.Types
         [DataContract]
         public sealed partial class SignIn : Reducer, IReducerArgs
         {
-            [DataMember(Name = "_request")]
+            [DataMember(Name = "request")]
             public PlayerSignInRequest Request;
 
             public SignIn(PlayerSignInRequest Request)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "sign_in";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags SignInFlags;
-        public void SignIn(CallReducerFlags flags) => SignInFlags = flags;
     }
 }

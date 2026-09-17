@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class PlayerActionDescHandle : RemoteTableHandle<EventContext, PlayerActionDesc>
         {
-            protected override string RemoteTableName => "player_action_desc";
+            public override string RemoteTableName => "player_action_desc";
 
             public sealed class ActionTypeIdUniqueIndex : UniqueIndexBase<int>
             {

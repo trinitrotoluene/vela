@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminGrantCollectibles(string identity, System.Collections.Generic.List<int> collectibles)
         {
-            conn.InternalCallReducer(new Reducer.AdminGrantCollectibles(identity, collectibles), this.SetCallReducerFlags.AdminGrantCollectiblesFlags);
+            conn.InternalCallReducer(new Reducer.AdminGrantCollectibles(identity, collectibles));
         }
 
         public bool InvokeAdminGrantCollectibles(ReducerEventContext ctx, Reducer.AdminGrantCollectibles args)
@@ -71,11 +71,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_grant_collectibles";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminGrantCollectiblesFlags;
-        public void AdminGrantCollectibles(CallReducerFlags flags) => AdminGrantCollectiblesFlags = flags;
     }
 }

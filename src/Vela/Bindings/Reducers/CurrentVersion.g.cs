@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CurrentVersion()
         {
-            conn.InternalCallReducer(new Reducer.CurrentVersion(), this.SetCallReducerFlags.CurrentVersionFlags);
+            conn.InternalCallReducer(new Reducer.CurrentVersion());
         }
 
         public bool InvokeCurrentVersion(ReducerEventContext ctx, Reducer.CurrentVersion args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "current_version";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CurrentVersionFlags;
-        public void CurrentVersion(CallReducerFlags flags) => CurrentVersionFlags = flags;
     }
 }

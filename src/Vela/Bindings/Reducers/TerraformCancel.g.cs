@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void TerraformCancel(SpacetimeDB.Types.PlayerTerraformCancelRequest request)
         {
-            conn.InternalCallReducer(new Reducer.TerraformCancel(request), this.SetCallReducerFlags.TerraformCancelFlags);
+            conn.InternalCallReducer(new Reducer.TerraformCancel(request));
         }
 
         public bool InvokeTerraformCancel(ReducerEventContext ctx, Reducer.TerraformCancel args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "terraform_cancel";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags TerraformCancelFlags;
-        public void TerraformCancel(CallReducerFlags flags) => TerraformCancelFlags = flags;
     }
 }

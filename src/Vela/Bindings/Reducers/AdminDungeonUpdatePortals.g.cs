@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminDungeonUpdatePortals()
         {
-            conn.InternalCallReducer(new Reducer.AdminDungeonUpdatePortals(), this.SetCallReducerFlags.AdminDungeonUpdatePortalsFlags);
+            conn.InternalCallReducer(new Reducer.AdminDungeonUpdatePortals());
         }
 
         public bool InvokeAdminDungeonUpdatePortals(ReducerEventContext ctx, Reducer.AdminDungeonUpdatePortals args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "admin_dungeon_update_portals";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminDungeonUpdatePortalsFlags;
-        public void AdminDungeonUpdatePortals(CallReducerFlags flags) => AdminDungeonUpdatePortalsFlags = flags;
     }
 }

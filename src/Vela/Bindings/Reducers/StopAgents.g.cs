@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StopAgents()
         {
-            conn.InternalCallReducer(new Reducer.StopAgents(), this.SetCallReducerFlags.StopAgentsFlags);
+            conn.InternalCallReducer(new Reducer.StopAgents());
         }
 
         public bool InvokeStopAgents(ReducerEventContext ctx, Reducer.StopAgents args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "stop_agents";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StopAgentsFlags;
-        public void StopAgents(CallReducerFlags flags) => StopAgentsFlags = flags;
     }
 }

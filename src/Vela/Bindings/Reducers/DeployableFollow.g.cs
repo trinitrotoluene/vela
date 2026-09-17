@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DeployableFollow(SpacetimeDB.Types.PlayerDeployableMoveRequest request)
         {
-            conn.InternalCallReducer(new Reducer.DeployableFollow(request), this.SetCallReducerFlags.DeployableFollowFlags);
+            conn.InternalCallReducer(new Reducer.DeployableFollow(request));
         }
 
         public bool InvokeDeployableFollow(ReducerEventContext ctx, Reducer.DeployableFollow args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "deployable_follow";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DeployableFollowFlags;
-        public void DeployableFollow(CallReducerFlags flags) => DeployableFollowFlags = flags;
     }
 }

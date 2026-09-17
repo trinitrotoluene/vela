@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportEquipmentPresetKnowledgeDesc(System.Collections.Generic.List<SpacetimeDB.Types.EquipmentPresetKnowledgeDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportEquipmentPresetKnowledgeDesc(records), this.SetCallReducerFlags.ImportEquipmentPresetKnowledgeDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportEquipmentPresetKnowledgeDesc(records));
         }
 
         public bool InvokeImportEquipmentPresetKnowledgeDesc(ReducerEventContext ctx, Reducer.ImportEquipmentPresetKnowledgeDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_equipment_preset_knowledge_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportEquipmentPresetKnowledgeDescFlags;
-        public void ImportEquipmentPresetKnowledgeDesc(CallReducerFlags flags) => ImportEquipmentPresetKnowledgeDescFlags = flags;
     }
 }

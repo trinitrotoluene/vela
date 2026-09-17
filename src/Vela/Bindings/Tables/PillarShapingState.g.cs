@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class PillarShapingStateHandle : RemoteTableHandle<EventContext, PillarShapingState>
         {
-            protected override string RemoteTableName => "pillar_shaping_state";
+            public override string RemoteTableName => "pillar_shaping_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

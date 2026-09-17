@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void OrderCollect(SpacetimeDB.Types.PlayerOrderCollectRequest request)
         {
-            conn.InternalCallReducer(new Reducer.OrderCollect(request), this.SetCallReducerFlags.OrderCollectFlags);
+            conn.InternalCallReducer(new Reducer.OrderCollect(request));
         }
 
         public bool InvokeOrderCollect(ReducerEventContext ctx, Reducer.OrderCollect args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "order_collect";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags OrderCollectFlags;
-        public void OrderCollect(CallReducerFlags flags) => OrderCollectFlags = flags;
     }
 }

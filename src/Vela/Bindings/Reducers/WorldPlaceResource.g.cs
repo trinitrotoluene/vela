@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void WorldPlaceResource(SpacetimeDB.Types.WorldPlaceResourceRequest request)
         {
-            conn.InternalCallReducer(new Reducer.WorldPlaceResource(request), this.SetCallReducerFlags.WorldPlaceResourceFlags);
+            conn.InternalCallReducer(new Reducer.WorldPlaceResource(request));
         }
 
         public bool InvokeWorldPlaceResource(ReducerEventContext ctx, Reducer.WorldPlaceResource args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "world_place_resource";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags WorldPlaceResourceFlags;
-        public void WorldPlaceResource(CallReducerFlags flags) => WorldPlaceResourceFlags = flags;
     }
 }

@@ -34,5 +34,7 @@ namespace SpacetimeDB.Types
         HousingWalls,
         HousingFloor,
         DeployableAppearanceOverride,
+        FaceAccessory,
+        FacialHair,
     }
 }

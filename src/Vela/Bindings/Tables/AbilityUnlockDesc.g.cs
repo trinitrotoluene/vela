@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class AbilityUnlockDescHandle : RemoteTableHandle<EventContext, AbilityUnlockDesc>
         {
-            protected override string RemoteTableName => "ability_unlock_desc";
+            public override string RemoteTableName => "ability_unlock_desc";
 
             public sealed class AbilityTypeEnumIndex : BTreeIndexBase<int>
             {
@@ -61,7 +61,7 @@ namespace SpacetimeDB.Types
     {
         public global::SpacetimeDB.Col<AbilityUnlockDesc, int> Id { get; }
         public global::SpacetimeDB.Col<AbilityUnlockDesc, int> AbilityTypeEnumId { get; }
-        public global::SpacetimeDB.NullableCol<AbilityUnlockDesc, AbilityType> AbilityData { get; }
+        public global::SpacetimeDB.Col<AbilityUnlockDesc, AbilityType> AbilityData { get; }
         public global::SpacetimeDB.Col<AbilityUnlockDesc, System.Collections.Generic.List<LevelRequirement>> LevelRequirements { get; }
         public global::SpacetimeDB.Col<AbilityUnlockDesc, int> RequiredClaimTechId { get; }
         public global::SpacetimeDB.Col<AbilityUnlockDesc, System.Collections.Generic.List<int>> RequiredKnowledges { get; }
@@ -72,7 +72,7 @@ namespace SpacetimeDB.Types
         {
             Id = new global::SpacetimeDB.Col<AbilityUnlockDesc, int>(tableName, "id");
             AbilityTypeEnumId = new global::SpacetimeDB.Col<AbilityUnlockDesc, int>(tableName, "ability_type_enum_id");
-            AbilityData = new global::SpacetimeDB.NullableCol<AbilityUnlockDesc, AbilityType>(tableName, "ability_data");
+            AbilityData = new global::SpacetimeDB.Col<AbilityUnlockDesc, AbilityType>(tableName, "ability_data");
             LevelRequirements = new global::SpacetimeDB.Col<AbilityUnlockDesc, System.Collections.Generic.List<LevelRequirement>>(tableName, "level_requirements");
             RequiredClaimTechId = new global::SpacetimeDB.Col<AbilityUnlockDesc, int>(tableName, "required_claim_tech_id");
             RequiredKnowledges = new global::SpacetimeDB.Col<AbilityUnlockDesc, System.Collections.Generic.List<int>>(tableName, "required_knowledges");

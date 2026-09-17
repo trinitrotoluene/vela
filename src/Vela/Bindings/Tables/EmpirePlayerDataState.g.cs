@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class EmpirePlayerDataStateHandle : RemoteTableHandle<EventContext, EmpirePlayerDataState>
         {
-            protected override string RemoteTableName => "empire_player_data_state";
+            public override string RemoteTableName => "empire_player_data_state";
 
             public sealed class EmpireEntityIdIndex : BTreeIndexBase<ulong>
             {
@@ -53,7 +53,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<EmpirePlayerDataState, ulong> EmpireEntityId { get; }
         public global::SpacetimeDB.Col<EmpirePlayerDataState, byte> Rank { get; }
         public global::SpacetimeDB.Col<EmpirePlayerDataState, uint> DonatedShards { get; }
-        public global::SpacetimeDB.NullableCol<EmpirePlayerDataState, SpacetimeDB.Timestamp> Noble { get; }
+        public global::SpacetimeDB.Col<EmpirePlayerDataState, SpacetimeDB.Timestamp> Noble { get; }
         public global::SpacetimeDB.Col<EmpirePlayerDataState, uint> DonatedEmpireCurrency { get; }
 
         public EmpirePlayerDataStateCols(string tableName)
@@ -62,7 +62,7 @@ namespace SpacetimeDB.Types
             EmpireEntityId = new global::SpacetimeDB.Col<EmpirePlayerDataState, ulong>(tableName, "empire_entity_id");
             Rank = new global::SpacetimeDB.Col<EmpirePlayerDataState, byte>(tableName, "rank");
             DonatedShards = new global::SpacetimeDB.Col<EmpirePlayerDataState, uint>(tableName, "donated_shards");
-            Noble = new global::SpacetimeDB.NullableCol<EmpirePlayerDataState, SpacetimeDB.Timestamp>(tableName, "noble");
+            Noble = new global::SpacetimeDB.Col<EmpirePlayerDataState, SpacetimeDB.Timestamp>(tableName, "noble");
             DonatedEmpireCurrency = new global::SpacetimeDB.Col<EmpirePlayerDataState, uint>(tableName, "donated_empire_currency");
         }
     }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatBuildingPlace(SpacetimeDB.Types.PlayerProjectSitePlaceRequest request)
         {
-            conn.InternalCallReducer(new Reducer.CheatBuildingPlace(request), this.SetCallReducerFlags.CheatBuildingPlaceFlags);
+            conn.InternalCallReducer(new Reducer.CheatBuildingPlace(request));
         }
 
         public bool InvokeCheatBuildingPlace(ReducerEventContext ctx, Reducer.CheatBuildingPlace args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_building_place";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatBuildingPlaceFlags;
-        public void CheatBuildingPlace(CallReducerFlags flags) => CheatBuildingPlaceFlags = flags;
     }
 }

@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ExtractionRecipeDescHandle : RemoteTableHandle<EventContext, ExtractionRecipeDesc>
         {
-            protected override string RemoteTableName => "extraction_recipe_desc";
+            public override string RemoteTableName => "extraction_recipe_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {
@@ -78,10 +78,11 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<ExtractionRecipeDesc, string> VerbPhrase { get; }
         public global::SpacetimeDB.Col<ExtractionRecipeDesc, int> ToolMeshIndex { get; }
         public global::SpacetimeDB.Col<ExtractionRecipeDesc, int> RecipePerformanceId { get; }
-        public global::SpacetimeDB.NullableCol<ExtractionRecipeDesc, int> EmpireRankRequirement { get; }
+        public global::SpacetimeDB.Col<ExtractionRecipeDesc, int> EmpireRankRequirement { get; }
         public global::SpacetimeDB.Col<ExtractionRecipeDesc, bool> ShowInProgression { get; }
-        public global::SpacetimeDB.NullableCol<ExtractionRecipeDesc, EmpirePermission> EmpirePermissionRequired { get; }
-        public global::SpacetimeDB.NullableCol<ExtractionRecipeDesc, System.Collections.Generic.List<ExtractionSpawnedPlaceable>> SpawnedPlaceables { get; }
+        public global::SpacetimeDB.Col<ExtractionRecipeDesc, EmpirePermission> EmpirePermissionRequired { get; }
+        public global::SpacetimeDB.Col<ExtractionRecipeDesc, System.Collections.Generic.List<ExtractionSpawnedPlaceable>> SpawnedPlaceables { get; }
+        public global::SpacetimeDB.Col<ExtractionRecipeDesc, System.Collections.Generic.List<PlaceableSelfBuffChance>> SelfBuffs { get; }
 
         public ExtractionRecipeDescCols(string tableName)
         {
@@ -104,10 +105,11 @@ namespace SpacetimeDB.Types
             VerbPhrase = new global::SpacetimeDB.Col<ExtractionRecipeDesc, string>(tableName, "verb_phrase");
             ToolMeshIndex = new global::SpacetimeDB.Col<ExtractionRecipeDesc, int>(tableName, "tool_mesh_index");
             RecipePerformanceId = new global::SpacetimeDB.Col<ExtractionRecipeDesc, int>(tableName, "recipe_performance_id");
-            EmpireRankRequirement = new global::SpacetimeDB.NullableCol<ExtractionRecipeDesc, int>(tableName, "empire_rank_requirement");
+            EmpireRankRequirement = new global::SpacetimeDB.Col<ExtractionRecipeDesc, int>(tableName, "empire_rank_requirement");
             ShowInProgression = new global::SpacetimeDB.Col<ExtractionRecipeDesc, bool>(tableName, "show_in_progression");
-            EmpirePermissionRequired = new global::SpacetimeDB.NullableCol<ExtractionRecipeDesc, EmpirePermission>(tableName, "empire_permission_required");
-            SpawnedPlaceables = new global::SpacetimeDB.NullableCol<ExtractionRecipeDesc, System.Collections.Generic.List<ExtractionSpawnedPlaceable>>(tableName, "spawned_placeables");
+            EmpirePermissionRequired = new global::SpacetimeDB.Col<ExtractionRecipeDesc, EmpirePermission>(tableName, "empire_permission_required");
+            SpawnedPlaceables = new global::SpacetimeDB.Col<ExtractionRecipeDesc, System.Collections.Generic.List<ExtractionSpawnedPlaceable>>(tableName, "spawned_placeables");
+            SelfBuffs = new global::SpacetimeDB.Col<ExtractionRecipeDesc, System.Collections.Generic.List<PlaceableSelfBuffChance>>(tableName, "self_buffs");
         }
     }
 

@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class GlobalsHandle : RemoteTableHandle<EventContext, Globals>
         {
-            protected override string RemoteTableName => "globals";
+            public override string RemoteTableName => "globals";
 
             public sealed class VersionUniqueIndex : UniqueIndexBase<int>
             {

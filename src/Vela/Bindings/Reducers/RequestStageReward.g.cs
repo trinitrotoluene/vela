@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void RequestStageReward(int rewardId)
         {
-            conn.InternalCallReducer(new Reducer.RequestStageReward(rewardId), this.SetCallReducerFlags.RequestStageRewardFlags);
+            conn.InternalCallReducer(new Reducer.RequestStageReward(rewardId));
         }
 
         public bool InvokeRequestStageReward(ReducerEventContext ctx, Reducer.RequestStageReward args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "request_stage_reward";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags RequestStageRewardFlags;
-        public void RequestStageReward(CallReducerFlags flags) => RequestStageRewardFlags = flags;
     }
 }

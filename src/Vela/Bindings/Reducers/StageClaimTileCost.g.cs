@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageClaimTileCost(System.Collections.Generic.List<SpacetimeDB.Types.ClaimTileCost> records)
         {
-            conn.InternalCallReducer(new Reducer.StageClaimTileCost(records), this.SetCallReducerFlags.StageClaimTileCostFlags);
+            conn.InternalCallReducer(new Reducer.StageClaimTileCost(records));
         }
 
         public bool InvokeStageClaimTileCost(ReducerEventContext ctx, Reducer.StageClaimTileCost args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_claim_tile_cost";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageClaimTileCostFlags;
-        public void StageClaimTileCost(CallReducerFlags flags) => StageClaimTileCostFlags = flags;
     }
 }

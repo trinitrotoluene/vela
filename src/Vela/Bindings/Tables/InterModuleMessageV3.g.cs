@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class InterModuleMessageV3Handle : RemoteTableHandle<EventContext, InterModuleMessageV3>
         {
-            protected override string RemoteTableName => "inter_module_message_v3";
+            public override string RemoteTableName => "inter_module_message_v3";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<ulong>
             {

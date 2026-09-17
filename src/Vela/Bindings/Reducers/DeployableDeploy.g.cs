@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DeployableDeploy(SpacetimeDB.Types.DeployableDeployRequest request)
         {
-            conn.InternalCallReducer(new Reducer.DeployableDeploy(request), this.SetCallReducerFlags.DeployableDeployFlags);
+            conn.InternalCallReducer(new Reducer.DeployableDeploy(request));
         }
 
         public bool InvokeDeployableDeploy(ReducerEventContext ctx, Reducer.DeployableDeploy args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "deployable_deploy";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DeployableDeployFlags;
-        public void DeployableDeploy(CallReducerFlags flags) => DeployableDeployFlags = flags;
     }
 }

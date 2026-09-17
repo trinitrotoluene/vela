@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EnemyDespawnFromMobMonitor(ulong enemyEntityId)
         {
-            conn.InternalCallReducer(new Reducer.EnemyDespawnFromMobMonitor(enemyEntityId), this.SetCallReducerFlags.EnemyDespawnFromMobMonitorFlags);
+            conn.InternalCallReducer(new Reducer.EnemyDespawnFromMobMonitor(enemyEntityId));
         }
 
         public bool InvokeEnemyDespawnFromMobMonitor(ReducerEventContext ctx, Reducer.EnemyDespawnFromMobMonitor args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "enemy_despawn_from_mob_monitor";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EnemyDespawnFromMobMonitorFlags;
-        public void EnemyDespawnFromMobMonitor(CallReducerFlags flags) => EnemyDespawnFromMobMonitorFlags = flags;
     }
 }

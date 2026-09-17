@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatBuildingMove(SpacetimeDB.Types.PlayerBuildingMoveRequest request)
         {
-            conn.InternalCallReducer(new Reducer.CheatBuildingMove(request), this.SetCallReducerFlags.CheatBuildingMoveFlags);
+            conn.InternalCallReducer(new Reducer.CheatBuildingMove(request));
         }
 
         public bool InvokeCheatBuildingMove(ReducerEventContext ctx, Reducer.CheatBuildingMove args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_building_move";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatBuildingMoveFlags;
-        public void CheatBuildingMove(CallReducerFlags flags) => CheatBuildingMoveFlags = flags;
     }
 }

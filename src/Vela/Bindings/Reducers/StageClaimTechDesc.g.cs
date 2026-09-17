@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageClaimTechDesc(System.Collections.Generic.List<SpacetimeDB.Types.ClaimTechDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageClaimTechDesc(records), this.SetCallReducerFlags.StageClaimTechDescFlags);
+            conn.InternalCallReducer(new Reducer.StageClaimTechDesc(records));
         }
 
         public bool InvokeStageClaimTechDesc(ReducerEventContext ctx, Reducer.StageClaimTechDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_claim_tech_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageClaimTechDescFlags;
-        public void StageClaimTechDesc(CallReducerFlags flags) => StageClaimTechDescFlags = flags;
     }
 }

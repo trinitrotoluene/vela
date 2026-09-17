@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ClaimTechDescHandle : RemoteTableHandle<EventContext, ClaimTechDesc>
         {
-            protected override string RemoteTableName => "claim_tech_desc";
+            public override string RemoteTableName => "claim_tech_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {

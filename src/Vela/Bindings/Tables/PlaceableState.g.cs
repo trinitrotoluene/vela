@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class PlaceableStateHandle : RemoteTableHandle<EventContext, PlaceableState>
         {
-            protected override string RemoteTableName => "placeable_state";
+            public override string RemoteTableName => "placeable_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

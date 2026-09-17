@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ItemConvert(SpacetimeDB.Types.PlayerItemConvertRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ItemConvert(request), this.SetCallReducerFlags.ItemConvertFlags);
+            conn.InternalCallReducer(new Reducer.ItemConvert(request));
         }
 
         public bool InvokeItemConvert(ReducerEventContext ctx, Reducer.ItemConvert args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "item_convert";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ItemConvertFlags;
-        public void ItemConvert(CallReducerFlags flags) => ItemConvertFlags = flags;
     }
 }

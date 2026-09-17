@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class PublicProgressiveActionStateHandle : RemoteTableHandle<EventContext, PublicProgressiveActionState>
         {
-            protected override string RemoteTableName => "public_progressive_action_state";
+            public override string RemoteTableName => "public_progressive_action_state";
 
             public sealed class BuildingEntityIdIndex : BTreeIndexBase<ulong>
             {

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerRespawn(bool teleportHome)
         {
-            conn.InternalCallReducer(new Reducer.PlayerRespawn(teleportHome), this.SetCallReducerFlags.PlayerRespawnFlags);
+            conn.InternalCallReducer(new Reducer.PlayerRespawn(teleportHome));
         }
 
         public bool InvokePlayerRespawn(ReducerEventContext ctx, Reducer.PlayerRespawn args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "player_respawn";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerRespawnFlags;
-        public void PlayerRespawn(CallReducerFlags flags) => PlayerRespawnFlags = flags;
     }
 }

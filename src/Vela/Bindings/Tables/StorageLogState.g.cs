@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class StorageLogStateHandle : RemoteTableHandle<EventContext, ActionLogState>
         {
-            protected override string RemoteTableName => "storage_log_state";
+            public override string RemoteTableName => "storage_log_state";
 
             public sealed class DaysSinceEpochIndex : BTreeIndexBase<int>
             {

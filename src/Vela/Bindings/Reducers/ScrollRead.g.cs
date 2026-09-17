@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ScrollRead(SpacetimeDB.Types.PlayerScrollReadRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ScrollRead(request), this.SetCallReducerFlags.ScrollReadFlags);
+            conn.InternalCallReducer(new Reducer.ScrollRead(request));
         }
 
         public bool InvokeScrollRead(ReducerEventContext ctx, Reducer.ScrollRead args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "scroll_read";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ScrollReadFlags;
-        public void ScrollRead(CallReducerFlags flags) => ScrollReadFlags = flags;
     }
 }

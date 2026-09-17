@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportLocationState(System.Collections.Generic.List<SpacetimeDB.Types.LocationState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportLocationState(records), this.SetCallReducerFlags.ImportLocationStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportLocationState(records));
         }
 
         public bool InvokeImportLocationState(ReducerEventContext ctx, Reducer.ImportLocationState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_location_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportLocationStateFlags;
-        public void ImportLocationState(CallReducerFlags flags) => ImportLocationStateFlags = flags;
     }
 }

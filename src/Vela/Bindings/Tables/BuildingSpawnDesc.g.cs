@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class BuildingSpawnDescHandle : RemoteTableHandle<EventContext, BuildingSpawnDesc>
         {
-            protected override string RemoteTableName => "building_spawn_desc";
+            public override string RemoteTableName => "building_spawn_desc";
 
             public sealed class BuildingIdIndex : BTreeIndexBase<int>
             {
@@ -55,8 +55,8 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<BuildingSpawnDesc, int> Z { get; }
         public global::SpacetimeDB.Col<BuildingSpawnDesc, int> Direction { get; }
         public global::SpacetimeDB.Col<BuildingSpawnDesc, BuildingSpawnType> SpawnType { get; }
-        public global::SpacetimeDB.NullableCol<BuildingSpawnDesc, NpcType> TravelerType { get; }
-        public global::SpacetimeDB.NullableCol<BuildingSpawnDesc, EnemyType> EnemyType { get; }
+        public global::SpacetimeDB.Col<BuildingSpawnDesc, NpcType> TravelerType { get; }
+        public global::SpacetimeDB.Col<BuildingSpawnDesc, EnemyType> EnemyType { get; }
         public global::SpacetimeDB.Col<BuildingSpawnDesc, System.Collections.Generic.List<int>> SpawnIds { get; }
         public global::SpacetimeDB.Col<BuildingSpawnDesc, float> RespawnTimeMin { get; }
         public global::SpacetimeDB.Col<BuildingSpawnDesc, float> RespawnTimeMax { get; }
@@ -69,8 +69,8 @@ namespace SpacetimeDB.Types
             Z = new global::SpacetimeDB.Col<BuildingSpawnDesc, int>(tableName, "z");
             Direction = new global::SpacetimeDB.Col<BuildingSpawnDesc, int>(tableName, "direction");
             SpawnType = new global::SpacetimeDB.Col<BuildingSpawnDesc, BuildingSpawnType>(tableName, "spawn_type");
-            TravelerType = new global::SpacetimeDB.NullableCol<BuildingSpawnDesc, NpcType>(tableName, "traveler_type");
-            EnemyType = new global::SpacetimeDB.NullableCol<BuildingSpawnDesc, EnemyType>(tableName, "enemy_type");
+            TravelerType = new global::SpacetimeDB.Col<BuildingSpawnDesc, NpcType>(tableName, "traveler_type");
+            EnemyType = new global::SpacetimeDB.Col<BuildingSpawnDesc, EnemyType>(tableName, "enemy_type");
             SpawnIds = new global::SpacetimeDB.Col<BuildingSpawnDesc, System.Collections.Generic.List<int>>(tableName, "spawn_ids");
             RespawnTimeMin = new global::SpacetimeDB.Col<BuildingSpawnDesc, float>(tableName, "respawn_time_min");
             RespawnTimeMax = new global::SpacetimeDB.Col<BuildingSpawnDesc, float>(tableName, "respawn_time_max");

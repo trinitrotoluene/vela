@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportDeployableDesc(System.Collections.Generic.List<SpacetimeDB.Types.DeployableDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportDeployableDesc(records), this.SetCallReducerFlags.ImportDeployableDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportDeployableDesc(records));
         }
 
         public bool InvokeImportDeployableDesc(ReducerEventContext ctx, Reducer.ImportDeployableDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_deployable_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportDeployableDescFlags;
-        public void ImportDeployableDesc(CallReducerFlags flags) => ImportDeployableDescFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageOnboardingRewardDesc(System.Collections.Generic.List<SpacetimeDB.Types.OnboardingRewardDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageOnboardingRewardDesc(records), this.SetCallReducerFlags.StageOnboardingRewardDescFlags);
+            conn.InternalCallReducer(new Reducer.StageOnboardingRewardDesc(records));
         }
 
         public bool InvokeStageOnboardingRewardDesc(ReducerEventContext ctx, Reducer.StageOnboardingRewardDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_onboarding_reward_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageOnboardingRewardDescFlags;
-        public void StageOnboardingRewardDesc(CallReducerFlags flags) => StageOnboardingRewardDescFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void BarterStallOrderDelete(SpacetimeDB.Types.PlayerBarterStallOrderDeleteRequest request)
         {
-            conn.InternalCallReducer(new Reducer.BarterStallOrderDelete(request), this.SetCallReducerFlags.BarterStallOrderDeleteFlags);
+            conn.InternalCallReducer(new Reducer.BarterStallOrderDelete(request));
         }
 
         public bool InvokeBarterStallOrderDelete(ReducerEventContext ctx, Reducer.BarterStallOrderDelete args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "barter_stall_order_delete";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags BarterStallOrderDeleteFlags;
-        public void BarterStallOrderDelete(CallReducerFlags flags) => BarterStallOrderDeleteFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void WorldClearNpcWatchtowers(System.Collections.Generic.List<ulong> buildingEntityIds)
         {
-            conn.InternalCallReducer(new Reducer.WorldClearNpcWatchtowers(buildingEntityIds), this.SetCallReducerFlags.WorldClearNpcWatchtowersFlags);
+            conn.InternalCallReducer(new Reducer.WorldClearNpcWatchtowers(buildingEntityIds));
         }
 
         public bool InvokeWorldClearNpcWatchtowers(ReducerEventContext ctx, Reducer.WorldClearNpcWatchtowers args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "world_clear_npc_watchtowers";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags WorldClearNpcWatchtowersFlags;
-        public void WorldClearNpcWatchtowers(CallReducerFlags flags) => WorldClearNpcWatchtowersFlags = flags;
     }
 }

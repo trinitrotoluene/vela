@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class AttackTimerHandle : RemoteTableHandle<EventContext, AttackTimer>
         {
-            protected override string RemoteTableName => "attack_timer";
+            public override string RemoteTableName => "attack_timer";
 
             public sealed class ScheduledIdUniqueIndex : UniqueIndexBase<ulong>
             {

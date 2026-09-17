@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class EquipmentPresetKnowledgeDescHandle : RemoteTableHandle<EventContext, EquipmentPresetKnowledgeDesc>
         {
-            protected override string RemoteTableName => "equipment_preset_knowledge_desc";
+            public override string RemoteTableName => "equipment_preset_knowledge_desc";
 
             public sealed class KnowledgeIdUniqueIndex : UniqueIndexBase<int>
             {

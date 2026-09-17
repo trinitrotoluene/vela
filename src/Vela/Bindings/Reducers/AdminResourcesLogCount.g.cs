@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminResourcesLogCount(float threshold)
         {
-            conn.InternalCallReducer(new Reducer.AdminResourcesLogCount(threshold), this.SetCallReducerFlags.AdminResourcesLogCountFlags);
+            conn.InternalCallReducer(new Reducer.AdminResourcesLogCount(threshold));
         }
 
         public bool InvokeAdminResourcesLogCount(ReducerEventContext ctx, Reducer.AdminResourcesLogCount args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_resources_log_count";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminResourcesLogCountFlags;
-        public void AdminResourcesLogCount(CallReducerFlags flags) => AdminResourcesLogCountFlags = flags;
     }
 }

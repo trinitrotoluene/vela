@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportAbilityCustomDesc(System.Collections.Generic.List<SpacetimeDB.Types.AbilityCustomDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportAbilityCustomDesc(records), this.SetCallReducerFlags.ImportAbilityCustomDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportAbilityCustomDesc(records));
         }
 
         public bool InvokeImportAbilityCustomDesc(ReducerEventContext ctx, Reducer.ImportAbilityCustomDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_ability_custom_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportAbilityCustomDescFlags;
-        public void ImportAbilityCustomDesc(CallReducerFlags flags) => ImportAbilityCustomDescFlags = flags;
     }
 }

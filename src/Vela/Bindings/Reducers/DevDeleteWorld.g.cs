@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DevDeleteWorld()
         {
-            conn.InternalCallReducer(new Reducer.DevDeleteWorld(), this.SetCallReducerFlags.DevDeleteWorldFlags);
+            conn.InternalCallReducer(new Reducer.DevDeleteWorld());
         }
 
         public bool InvokeDevDeleteWorld(ReducerEventContext ctx, Reducer.DevDeleteWorld args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "dev_delete_world";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DevDeleteWorldFlags;
-        public void DevDeleteWorld(CallReducerFlags flags) => DevDeleteWorldFlags = flags;
     }
 }

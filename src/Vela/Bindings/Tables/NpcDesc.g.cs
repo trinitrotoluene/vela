@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class NpcDescHandle : RemoteTableHandle<EventContext, NpcDesc>
         {
-            protected override string RemoteTableName => "npc_desc";
+            public override string RemoteTableName => "npc_desc";
 
             public sealed class NpcTypeUniqueIndex : UniqueIndexBase<int>
             {

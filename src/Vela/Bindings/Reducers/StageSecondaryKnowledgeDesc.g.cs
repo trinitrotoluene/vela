@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageSecondaryKnowledgeDesc(System.Collections.Generic.List<SpacetimeDB.Types.SecondaryKnowledgeDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageSecondaryKnowledgeDesc(records), this.SetCallReducerFlags.StageSecondaryKnowledgeDescFlags);
+            conn.InternalCallReducer(new Reducer.StageSecondaryKnowledgeDesc(records));
         }
 
         public bool InvokeStageSecondaryKnowledgeDesc(ReducerEventContext ctx, Reducer.StageSecondaryKnowledgeDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_secondary_knowledge_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageSecondaryKnowledgeDescFlags;
-        public void StageSecondaryKnowledgeDesc(CallReducerFlags flags) => StageSecondaryKnowledgeDescFlags = flags;
     }
 }

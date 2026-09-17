@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminUpdateLoreKnowledge()
         {
-            conn.InternalCallReducer(new Reducer.AdminUpdateLoreKnowledge(), this.SetCallReducerFlags.AdminUpdateLoreKnowledgeFlags);
+            conn.InternalCallReducer(new Reducer.AdminUpdateLoreKnowledge());
         }
 
         public bool InvokeAdminUpdateLoreKnowledge(ReducerEventContext ctx, Reducer.AdminUpdateLoreKnowledge args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "admin_update_lore_knowledge";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminUpdateLoreKnowledgeFlags;
-        public void AdminUpdateLoreKnowledge(CallReducerFlags flags) => AdminUpdateLoreKnowledgeFlags = flags;
     }
 }

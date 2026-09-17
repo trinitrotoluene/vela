@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class AlertStateHandle : RemoteTableHandle<EventContext, AlertState>
         {
-            protected override string RemoteTableName => "alert_state";
+            public override string RemoteTableName => "alert_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

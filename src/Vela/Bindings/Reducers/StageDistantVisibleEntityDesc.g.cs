@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageDistantVisibleEntityDesc(System.Collections.Generic.List<SpacetimeDB.Types.DistantVisibleEntityDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageDistantVisibleEntityDesc(records), this.SetCallReducerFlags.StageDistantVisibleEntityDescFlags);
+            conn.InternalCallReducer(new Reducer.StageDistantVisibleEntityDesc(records));
         }
 
         public bool InvokeStageDistantVisibleEntityDesc(ReducerEventContext ctx, Reducer.StageDistantVisibleEntityDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_distant_visible_entity_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageDistantVisibleEntityDescFlags;
-        public void StageDistantVisibleEntityDesc(CallReducerFlags flags) => StageDistantVisibleEntityDescFlags = flags;
     }
 }

@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class PlayerPrefsStateHandle : RemoteTableHandle<EventContext, PlayerPrefsState>
         {
-            protected override string RemoteTableName => "player_prefs_state";
+            public override string RemoteTableName => "player_prefs_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

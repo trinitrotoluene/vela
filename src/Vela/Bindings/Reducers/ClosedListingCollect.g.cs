@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ClosedListingCollect(SpacetimeDB.Types.PlayerClosedListingCollectRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ClosedListingCollect(request), this.SetCallReducerFlags.ClosedListingCollectFlags);
+            conn.InternalCallReducer(new Reducer.ClosedListingCollect(request));
         }
 
         public bool InvokeClosedListingCollect(ReducerEventContext ctx, Reducer.ClosedListingCollect args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "closed_listing_collect";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ClosedListingCollectFlags;
-        public void ClosedListingCollect(CallReducerFlags flags) => ClosedListingCollectFlags = flags;
     }
 }

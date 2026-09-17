@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class EmpireRankDescHandle : RemoteTableHandle<EventContext, EmpireRankDesc>
         {
-            protected override string RemoteTableName => "empire_rank_desc";
+            public override string RemoteTableName => "empire_rank_desc";
 
             public sealed class RankUniqueIndex : UniqueIndexBase<int>
             {
@@ -41,14 +41,14 @@ namespace SpacetimeDB.Types
     {
         public global::SpacetimeDB.Col<EmpireRankDesc, int> Rank { get; }
         public global::SpacetimeDB.Col<EmpireRankDesc, string> Title { get; }
-        public global::SpacetimeDB.NullableCol<EmpireRankDesc, int> MaxCount { get; }
+        public global::SpacetimeDB.Col<EmpireRankDesc, int> MaxCount { get; }
         public global::SpacetimeDB.Col<EmpireRankDesc, System.Collections.Generic.List<bool>> Permissions { get; }
 
         public EmpireRankDescCols(string tableName)
         {
             Rank = new global::SpacetimeDB.Col<EmpireRankDesc, int>(tableName, "rank");
             Title = new global::SpacetimeDB.Col<EmpireRankDesc, string>(tableName, "title");
-            MaxCount = new global::SpacetimeDB.NullableCol<EmpireRankDesc, int>(tableName, "max_count");
+            MaxCount = new global::SpacetimeDB.Col<EmpireRankDesc, int>(tableName, "max_count");
             Permissions = new global::SpacetimeDB.Col<EmpireRankDesc, System.Collections.Generic.List<bool>>(tableName, "permissions");
         }
     }

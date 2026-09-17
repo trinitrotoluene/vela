@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminRenameBuilding(string buildingName, string newName)
         {
-            conn.InternalCallReducer(new Reducer.AdminRenameBuilding(buildingName, newName), this.SetCallReducerFlags.AdminRenameBuildingFlags);
+            conn.InternalCallReducer(new Reducer.AdminRenameBuilding(buildingName, newName));
         }
 
         public bool InvokeAdminRenameBuilding(ReducerEventContext ctx, Reducer.AdminRenameBuilding args)
@@ -71,11 +71,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_rename_building";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminRenameBuildingFlags;
-        public void AdminRenameBuilding(CallReducerFlags flags) => AdminRenameBuildingFlags = flags;
     }
 }

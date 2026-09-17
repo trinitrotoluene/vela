@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class HerdStateHandle : RemoteTableHandle<EventContext, HerdState>
         {
-            protected override string RemoteTableName => "herd_state";
+            public override string RemoteTableName => "herd_state";
 
             public sealed class EnemyAiParamsDescIdIndex : BTreeIndexBase<int>
             {

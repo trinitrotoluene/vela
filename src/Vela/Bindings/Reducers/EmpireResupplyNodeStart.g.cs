@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EmpireResupplyNodeStart(SpacetimeDB.Types.EmpireResupplyNodeRequest request)
         {
-            conn.InternalCallReducer(new Reducer.EmpireResupplyNodeStart(request), this.SetCallReducerFlags.EmpireResupplyNodeStartFlags);
+            conn.InternalCallReducer(new Reducer.EmpireResupplyNodeStart(request));
         }
 
         public bool InvokeEmpireResupplyNodeStart(ReducerEventContext ctx, Reducer.EmpireResupplyNodeStart args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "empire_resupply_node_start";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EmpireResupplyNodeStartFlags;
-        public void EmpireResupplyNodeStart(CallReducerFlags flags) => EmpireResupplyNodeStartFlags = flags;
     }
 }

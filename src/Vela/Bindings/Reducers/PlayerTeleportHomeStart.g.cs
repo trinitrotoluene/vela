@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerTeleportHomeStart(SpacetimeDB.Types.PlayerTeleportHomeRequest request)
         {
-            conn.InternalCallReducer(new Reducer.PlayerTeleportHomeStart(request), this.SetCallReducerFlags.PlayerTeleportHomeStartFlags);
+            conn.InternalCallReducer(new Reducer.PlayerTeleportHomeStart(request));
         }
 
         public bool InvokePlayerTeleportHomeStart(ReducerEventContext ctx, Reducer.PlayerTeleportHomeStart args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "player_teleport_home_start";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerTeleportHomeStartFlags;
-        public void PlayerTeleportHomeStart(CallReducerFlags flags) => PlayerTeleportHomeStartFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatDropItemOnEntity(ulong entityId, int itemId, int quantity, bool isCargo, ulong ownerEntityId)
         {
-            conn.InternalCallReducer(new Reducer.CheatDropItemOnEntity(entityId, itemId, quantity, isCargo, ownerEntityId), this.SetCallReducerFlags.CheatDropItemOnEntityFlags);
+            conn.InternalCallReducer(new Reducer.CheatDropItemOnEntity(entityId, itemId, quantity, isCargo, ownerEntityId));
         }
 
         public bool InvokeCheatDropItemOnEntity(ReducerEventContext ctx, Reducer.CheatDropItemOnEntity args)
@@ -84,11 +84,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_drop_item_on_entity";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatDropItemOnEntityFlags;
-        public void CheatDropItemOnEntity(CallReducerFlags flags) => CheatDropItemOnEntityFlags = flags;
     }
 }

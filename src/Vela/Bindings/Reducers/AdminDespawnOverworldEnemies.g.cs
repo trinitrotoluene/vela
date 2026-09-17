@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminDespawnOverworldEnemies()
         {
-            conn.InternalCallReducer(new Reducer.AdminDespawnOverworldEnemies(), this.SetCallReducerFlags.AdminDespawnOverworldEnemiesFlags);
+            conn.InternalCallReducer(new Reducer.AdminDespawnOverworldEnemies());
         }
 
         public bool InvokeAdminDespawnOverworldEnemies(ReducerEventContext ctx, Reducer.AdminDespawnOverworldEnemies args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "admin_despawn_overworld_enemies";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminDespawnOverworldEnemiesFlags;
-        public void AdminDespawnOverworldEnemies(CallReducerFlags flags) => AdminDespawnOverworldEnemiesFlags = flags;
     }
 }

@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class TerraformRecipeDescHandle : RemoteTableHandle<EventContext, TerraformRecipeDesc>
         {
-            protected override string RemoteTableName => "terraform_recipe_desc";
+            public override string RemoteTableName => "terraform_recipe_desc";
 
             public sealed class DifferenceUniqueIndex : UniqueIndexBase<short>
             {
@@ -41,21 +41,23 @@ namespace SpacetimeDB.Types
     {
         public global::SpacetimeDB.Col<TerraformRecipeDesc, short> Difference { get; }
         public global::SpacetimeDB.Col<TerraformRecipeDesc, int> ActionsCount { get; }
-        public global::SpacetimeDB.NullableCol<TerraformRecipeDesc, ToolRequirement> ToolRequirement { get; }
+        public global::SpacetimeDB.Col<TerraformRecipeDesc, ToolRequirement> ToolRequirement { get; }
         public global::SpacetimeDB.Col<TerraformRecipeDesc, float> StaminaPerAction { get; }
         public global::SpacetimeDB.Col<TerraformRecipeDesc, float> TimePerAction { get; }
         public global::SpacetimeDB.Col<TerraformRecipeDesc, int> ToolMeshIndex { get; }
         public global::SpacetimeDB.Col<TerraformRecipeDesc, int> RecipePerformanceId { get; }
+        public global::SpacetimeDB.Col<TerraformRecipeDesc, System.Collections.Generic.List<ProbabilisticItemStack>> OutputItemStacks { get; }
 
         public TerraformRecipeDescCols(string tableName)
         {
             Difference = new global::SpacetimeDB.Col<TerraformRecipeDesc, short>(tableName, "difference");
             ActionsCount = new global::SpacetimeDB.Col<TerraformRecipeDesc, int>(tableName, "actions_count");
-            ToolRequirement = new global::SpacetimeDB.NullableCol<TerraformRecipeDesc, ToolRequirement>(tableName, "tool_requirement");
+            ToolRequirement = new global::SpacetimeDB.Col<TerraformRecipeDesc, ToolRequirement>(tableName, "tool_requirement");
             StaminaPerAction = new global::SpacetimeDB.Col<TerraformRecipeDesc, float>(tableName, "stamina_per_action");
             TimePerAction = new global::SpacetimeDB.Col<TerraformRecipeDesc, float>(tableName, "time_per_action");
             ToolMeshIndex = new global::SpacetimeDB.Col<TerraformRecipeDesc, int>(tableName, "tool_mesh_index");
             RecipePerformanceId = new global::SpacetimeDB.Col<TerraformRecipeDesc, int>(tableName, "recipe_performance_id");
+            OutputItemStacks = new global::SpacetimeDB.Col<TerraformRecipeDesc, System.Collections.Generic.List<ProbabilisticItemStack>>(tableName, "output_item_stacks");
         }
     }
 

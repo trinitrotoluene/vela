@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerSetDefaultDeployable(SpacetimeDB.Types.PlayerSetDefaultDeployableRequest request)
         {
-            conn.InternalCallReducer(new Reducer.PlayerSetDefaultDeployable(request), this.SetCallReducerFlags.PlayerSetDefaultDeployableFlags);
+            conn.InternalCallReducer(new Reducer.PlayerSetDefaultDeployable(request));
         }
 
         public bool InvokePlayerSetDefaultDeployable(ReducerEventContext ctx, Reducer.PlayerSetDefaultDeployable args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "player_set_default_deployable";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerSetDefaultDeployableFlags;
-        public void PlayerSetDefaultDeployable(CallReducerFlags flags) => PlayerSetDefaultDeployableFlags = flags;
     }
 }

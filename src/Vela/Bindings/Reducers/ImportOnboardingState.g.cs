@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportOnboardingState(System.Collections.Generic.List<SpacetimeDB.Types.OnboardingState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportOnboardingState(records), this.SetCallReducerFlags.ImportOnboardingStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportOnboardingState(records));
         }
 
         public bool InvokeImportOnboardingState(ReducerEventContext ctx, Reducer.ImportOnboardingState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_onboarding_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportOnboardingStateFlags;
-        public void ImportOnboardingState(CallReducerFlags flags) => ImportOnboardingStateFlags = flags;
     }
 }

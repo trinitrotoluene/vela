@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void InsertDeveloperIdentity(string identity, string developerName, string serviceName, string email, bool isExternal)
         {
-            conn.InternalCallReducer(new Reducer.InsertDeveloperIdentity(identity, developerName, serviceName, email, isExternal), this.SetCallReducerFlags.InsertDeveloperIdentityFlags);
+            conn.InternalCallReducer(new Reducer.InsertDeveloperIdentity(identity, developerName, serviceName, email, isExternal));
         }
 
         public bool InvokeInsertDeveloperIdentity(ReducerEventContext ctx, Reducer.InsertDeveloperIdentity args)
@@ -88,11 +88,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "insert_developer_identity";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags InsertDeveloperIdentityFlags;
-        public void InsertDeveloperIdentity(CallReducerFlags flags) => InsertDeveloperIdentityFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportStageRewardsDesc(System.Collections.Generic.List<SpacetimeDB.Types.StageRewardsDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportStageRewardsDesc(records), this.SetCallReducerFlags.ImportStageRewardsDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportStageRewardsDesc(records));
         }
 
         public bool InvokeImportStageRewardsDesc(ReducerEventContext ctx, Reducer.ImportStageRewardsDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_stage_rewards_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportStageRewardsDescFlags;
-        public void ImportStageRewardsDesc(CallReducerFlags flags) => ImportStageRewardsDescFlags = flags;
     }
 }

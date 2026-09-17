@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportSecondaryKnowledgeDesc(System.Collections.Generic.List<SpacetimeDB.Types.SecondaryKnowledgeDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportSecondaryKnowledgeDesc(records), this.SetCallReducerFlags.ImportSecondaryKnowledgeDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportSecondaryKnowledgeDesc(records));
         }
 
         public bool InvokeImportSecondaryKnowledgeDesc(ReducerEventContext ctx, Reducer.ImportSecondaryKnowledgeDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_secondary_knowledge_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportSecondaryKnowledgeDescFlags;
-        public void ImportSecondaryKnowledgeDesc(CallReducerFlags flags) => ImportSecondaryKnowledgeDescFlags = flags;
     }
 }

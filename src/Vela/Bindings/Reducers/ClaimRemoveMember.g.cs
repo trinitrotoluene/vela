@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ClaimRemoveMember(SpacetimeDB.Types.PlayerClaimRemoveMemberRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ClaimRemoveMember(request), this.SetCallReducerFlags.ClaimRemoveMemberFlags);
+            conn.InternalCallReducer(new Reducer.ClaimRemoveMember(request));
         }
 
         public bool InvokeClaimRemoveMember(ReducerEventContext ctx, Reducer.ClaimRemoveMember args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "claim_remove_member";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ClaimRemoveMemberFlags;
-        public void ClaimRemoveMember(CallReducerFlags flags) => ClaimRemoveMemberFlags = flags;
     }
 }

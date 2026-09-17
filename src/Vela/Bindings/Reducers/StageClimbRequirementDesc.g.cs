@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageClimbRequirementDesc(System.Collections.Generic.List<SpacetimeDB.Types.ClimbRequirementDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageClimbRequirementDesc(records), this.SetCallReducerFlags.StageClimbRequirementDescFlags);
+            conn.InternalCallReducer(new Reducer.StageClimbRequirementDesc(records));
         }
 
         public bool InvokeStageClimbRequirementDesc(ReducerEventContext ctx, Reducer.StageClimbRequirementDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_climb_requirement_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageClimbRequirementDescFlags;
-        public void StageClimbRequirementDesc(CallReducerFlags flags) => StageClimbRequirementDescFlags = flags;
     }
 }

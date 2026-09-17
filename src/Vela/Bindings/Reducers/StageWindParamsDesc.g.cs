@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageWindParamsDesc(System.Collections.Generic.List<SpacetimeDB.Types.WindParamsDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageWindParamsDesc(records), this.SetCallReducerFlags.StageWindParamsDescFlags);
+            conn.InternalCallReducer(new Reducer.StageWindParamsDesc(records));
         }
 
         public bool InvokeStageWindParamsDesc(ReducerEventContext ctx, Reducer.StageWindParamsDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_wind_params_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageWindParamsDescFlags;
-        public void StageWindParamsDesc(CallReducerFlags flags) => StageWindParamsDescFlags = flags;
     }
 }

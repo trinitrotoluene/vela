@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DeployableMoveOffClaim(ulong deployableEntityId)
         {
-            conn.InternalCallReducer(new Reducer.DeployableMoveOffClaim(deployableEntityId), this.SetCallReducerFlags.DeployableMoveOffClaimFlags);
+            conn.InternalCallReducer(new Reducer.DeployableMoveOffClaim(deployableEntityId));
         }
 
         public bool InvokeDeployableMoveOffClaim(ReducerEventContext ctx, Reducer.DeployableMoveOffClaim args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "deployable_move_off_claim";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DeployableMoveOffClaimFlags;
-        public void DeployableMoveOffClaim(CallReducerFlags flags) => DeployableMoveOffClaimFlags = flags;
     }
 }

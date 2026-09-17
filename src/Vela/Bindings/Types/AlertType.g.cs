@@ -18,7 +18,7 @@ namespace SpacetimeDB.Types
         OutOfSuppliesInOneTick,
         OutOfSuppliesInTwelveTicks,
         NewLostItems,
-        CoOwnerClaimOwnershipTransferIn24h,
+        CoOwnerClaimOwnershipTransferIn24H,
         CoOwnerClaimOwnershipTransfer,
         OfficerClaimOwnershipTransfer,
         MemberClaimOwnershipTransfer,

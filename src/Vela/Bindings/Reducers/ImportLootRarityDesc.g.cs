@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportLootRarityDesc(System.Collections.Generic.List<SpacetimeDB.Types.LootRarityDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportLootRarityDesc(records), this.SetCallReducerFlags.ImportLootRarityDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportLootRarityDesc(records));
         }
 
         public bool InvokeImportLootRarityDesc(ReducerEventContext ctx, Reducer.ImportLootRarityDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_loot_rarity_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportLootRarityDescFlags;
-        public void ImportLootRarityDesc(CallReducerFlags flags) => ImportLootRarityDescFlags = flags;
     }
 }

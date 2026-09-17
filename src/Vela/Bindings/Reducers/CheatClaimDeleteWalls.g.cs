@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatClaimDeleteWalls(ulong claimEntityId)
         {
-            conn.InternalCallReducer(new Reducer.CheatClaimDeleteWalls(claimEntityId), this.SetCallReducerFlags.CheatClaimDeleteWallsFlags);
+            conn.InternalCallReducer(new Reducer.CheatClaimDeleteWalls(claimEntityId));
         }
 
         public bool InvokeCheatClaimDeleteWalls(ReducerEventContext ctx, Reducer.CheatClaimDeleteWalls args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_claim_delete_walls";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatClaimDeleteWallsFlags;
-        public void CheatClaimDeleteWalls(CallReducerFlags flags) => CheatClaimDeleteWallsFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportPlayerHousingDesc(System.Collections.Generic.List<SpacetimeDB.Types.PlayerHousingDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportPlayerHousingDesc(records), this.SetCallReducerFlags.ImportPlayerHousingDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportPlayerHousingDesc(records));
         }
 
         public bool InvokeImportPlayerHousingDesc(ReducerEventContext ctx, Reducer.ImportPlayerHousingDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_player_housing_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportPlayerHousingDescFlags;
-        public void ImportPlayerHousingDesc(CallReducerFlags flags) => ImportPlayerHousingDescFlags = flags;
     }
 }

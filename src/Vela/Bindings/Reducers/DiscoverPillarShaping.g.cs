@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DiscoverPillarShaping(int pillarShapingId)
         {
-            conn.InternalCallReducer(new Reducer.DiscoverPillarShaping(pillarShapingId), this.SetCallReducerFlags.DiscoverPillarShapingFlags);
+            conn.InternalCallReducer(new Reducer.DiscoverPillarShaping(pillarShapingId));
         }
 
         public bool InvokeDiscoverPillarShaping(ReducerEventContext ctx, Reducer.DiscoverPillarShaping args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "discover_pillar_shaping";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DiscoverPillarShapingFlags;
-        public void DiscoverPillarShaping(CallReducerFlags flags) => DiscoverPillarShapingFlags = flags;
     }
 }

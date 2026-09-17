@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageFoodDesc(System.Collections.Generic.List<SpacetimeDB.Types.FoodDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageFoodDesc(records), this.SetCallReducerFlags.StageFoodDescFlags);
+            conn.InternalCallReducer(new Reducer.StageFoodDesc(records));
         }
 
         public bool InvokeStageFoodDesc(ReducerEventContext ctx, Reducer.StageFoodDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_food_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageFoodDescFlags;
-        public void StageFoodDesc(CallReducerFlags flags) => StageFoodDescFlags = flags;
     }
 }

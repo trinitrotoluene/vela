@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageEmpireRankDesc(System.Collections.Generic.List<SpacetimeDB.Types.EmpireRankDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageEmpireRankDesc(records), this.SetCallReducerFlags.StageEmpireRankDescFlags);
+            conn.InternalCallReducer(new Reducer.StageEmpireRankDesc(records));
         }
 
         public bool InvokeStageEmpireRankDesc(ReducerEventContext ctx, Reducer.StageEmpireRankDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_empire_rank_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageEmpireRankDescFlags;
-        public void StageEmpireRankDesc(CallReducerFlags flags) => StageEmpireRankDescFlags = flags;
     }
 }

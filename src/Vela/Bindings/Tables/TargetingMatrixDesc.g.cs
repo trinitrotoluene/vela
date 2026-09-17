@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class TargetingMatrixDescHandle : RemoteTableHandle<EventContext, TargetingMatrixDesc>
         {
-            protected override string RemoteTableName => "targeting_matrix_desc";
+            public override string RemoteTableName => "targeting_matrix_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {

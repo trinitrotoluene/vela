@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ClaimAddMember(SpacetimeDB.Types.PlayerClaimAddMemberRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ClaimAddMember(request), this.SetCallReducerFlags.ClaimAddMemberFlags);
+            conn.InternalCallReducer(new Reducer.ClaimAddMember(request));
         }
 
         public bool InvokeClaimAddMember(ReducerEventContext ctx, Reducer.ClaimAddMember args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "claim_add_member";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ClaimAddMemberFlags;
-        public void ClaimAddMember(CallReducerFlags flags) => ClaimAddMemberFlags = flags;
     }
 }

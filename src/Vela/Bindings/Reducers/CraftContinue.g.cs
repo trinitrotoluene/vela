@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CraftContinue(SpacetimeDB.Types.PlayerCraftContinueRequest request)
         {
-            conn.InternalCallReducer(new Reducer.CraftContinue(request), this.SetCallReducerFlags.CraftContinueFlags);
+            conn.InternalCallReducer(new Reducer.CraftContinue(request));
         }
 
         public bool InvokeCraftContinue(ReducerEventContext ctx, Reducer.CraftContinue args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "craft_continue";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CraftContinueFlags;
-        public void CraftContinue(CallReducerFlags flags) => CraftContinueFlags = flags;
     }
 }

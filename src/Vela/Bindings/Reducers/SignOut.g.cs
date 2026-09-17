@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void SignOut()
         {
-            conn.InternalCallReducer(new Reducer.SignOut(), this.SetCallReducerFlags.SignOutFlags);
+            conn.InternalCallReducer(new Reducer.SignOut());
         }
 
         public bool InvokeSignOut(ReducerEventContext ctx, Reducer.SignOut args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "sign_out";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags SignOutFlags;
-        public void SignOut(CallReducerFlags flags) => SignOutFlags = flags;
     }
 }

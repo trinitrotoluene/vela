@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class AIDebugStateHandle : RemoteTableHandle<EventContext, AiDebugState>
         {
-            protected override string RemoteTableName => "a_i_debug_state";
+            public override string RemoteTableName => "a_i_debug_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

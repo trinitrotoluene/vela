@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class DeconstructionRecipeDescHandle : RemoteTableHandle<EventContext, DeconstructionRecipeDesc>
         {
-            protected override string RemoteTableName => "deconstruction_recipe_desc";
+            public override string RemoteTableName => "deconstruction_recipe_desc";
 
             public sealed class ConsumedBuildingIndex : BTreeIndexBase<int>
             {

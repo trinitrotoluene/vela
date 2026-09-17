@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StartAgents()
         {
-            conn.InternalCallReducer(new Reducer.StartAgents(), this.SetCallReducerFlags.StartAgentsFlags);
+            conn.InternalCallReducer(new Reducer.StartAgents());
         }
 
         public bool InvokeStartAgents(ReducerEventContext ctx, Reducer.StartAgents args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "start_agents";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StartAgentsFlags;
-        public void StartAgents(CallReducerFlags flags) => StartAgentsFlags = flags;
     }
 }

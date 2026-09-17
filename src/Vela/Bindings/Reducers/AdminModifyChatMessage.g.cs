@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminModifyChatMessage(ulong entityId, string newMessageText)
         {
-            conn.InternalCallReducer(new Reducer.AdminModifyChatMessage(entityId, newMessageText), this.SetCallReducerFlags.AdminModifyChatMessageFlags);
+            conn.InternalCallReducer(new Reducer.AdminModifyChatMessage(entityId, newMessageText));
         }
 
         public bool InvokeAdminModifyChatMessage(ReducerEventContext ctx, Reducer.AdminModifyChatMessage args)
@@ -70,11 +70,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_modify_chat_message";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminModifyChatMessageFlags;
-        public void AdminModifyChatMessage(CallReducerFlags flags) => AdminModifyChatMessageFlags = flags;
     }
 }

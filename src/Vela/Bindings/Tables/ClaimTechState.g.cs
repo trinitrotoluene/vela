@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ClaimTechStateHandle : RemoteTableHandle<EventContext, ClaimTechState>
         {
-            protected override string RemoteTableName => "claim_tech_state";
+            public override string RemoteTableName => "claim_tech_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {
@@ -43,7 +43,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<ClaimTechState, System.Collections.Generic.List<int>> Learned { get; }
         public global::SpacetimeDB.Col<ClaimTechState, int> Researching { get; }
         public global::SpacetimeDB.Col<ClaimTechState, SpacetimeDB.Timestamp> StartTimestamp { get; }
-        public global::SpacetimeDB.NullableCol<ClaimTechState, ulong> ScheduledId { get; }
+        public global::SpacetimeDB.Col<ClaimTechState, ulong> ScheduledId { get; }
 
         public ClaimTechStateCols(string tableName)
         {
@@ -51,7 +51,7 @@ namespace SpacetimeDB.Types
             Learned = new global::SpacetimeDB.Col<ClaimTechState, System.Collections.Generic.List<int>>(tableName, "learned");
             Researching = new global::SpacetimeDB.Col<ClaimTechState, int>(tableName, "researching");
             StartTimestamp = new global::SpacetimeDB.Col<ClaimTechState, SpacetimeDB.Timestamp>(tableName, "start_timestamp");
-            ScheduledId = new global::SpacetimeDB.NullableCol<ClaimTechState, ulong>(tableName, "scheduled_id");
+            ScheduledId = new global::SpacetimeDB.Col<ClaimTechState, ulong>(tableName, "scheduled_id");
         }
     }
 

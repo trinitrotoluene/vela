@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void TradeCancelServer(ulong sessionEntityId, string resolutionMessage)
         {
-            conn.InternalCallReducer(new Reducer.TradeCancelServer(sessionEntityId, resolutionMessage), this.SetCallReducerFlags.TradeCancelServerFlags);
+            conn.InternalCallReducer(new Reducer.TradeCancelServer(sessionEntityId, resolutionMessage));
         }
 
         public bool InvokeTradeCancelServer(ReducerEventContext ctx, Reducer.TradeCancelServer args)
@@ -70,11 +70,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "trade_cancel_server";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags TradeCancelServerFlags;
-        public void TradeCancelServer(CallReducerFlags flags) => TradeCancelServerFlags = flags;
     }
 }

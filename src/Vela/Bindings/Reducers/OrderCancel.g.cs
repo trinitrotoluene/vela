@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void OrderCancel(SpacetimeDB.Types.PlayerOrderCancelRequest request)
         {
-            conn.InternalCallReducer(new Reducer.OrderCancel(request), this.SetCallReducerFlags.OrderCancelFlags);
+            conn.InternalCallReducer(new Reducer.OrderCancel(request));
         }
 
         public bool InvokeOrderCancel(ReducerEventContext ctx, Reducer.OrderCancel args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "order_cancel";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags OrderCancelFlags;
-        public void OrderCancel(CallReducerFlags flags) => OrderCancelFlags = flags;
     }
 }

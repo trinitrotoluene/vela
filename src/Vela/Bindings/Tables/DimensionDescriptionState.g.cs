@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class DimensionDescriptionStateHandle : RemoteTableHandle<EventContext, DimensionDescriptionState>
         {
-            protected override string RemoteTableName => "dimension_description_state";
+            public override string RemoteTableName => "dimension_description_state";
 
             public sealed class DimensionIdUniqueIndex : UniqueIndexBase<uint>
             {

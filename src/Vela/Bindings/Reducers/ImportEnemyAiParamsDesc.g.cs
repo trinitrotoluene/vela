@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportEnemyAiParamsDesc(System.Collections.Generic.List<SpacetimeDB.Types.EnemyAiParamsDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportEnemyAiParamsDesc(records), this.SetCallReducerFlags.ImportEnemyAiParamsDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportEnemyAiParamsDesc(records));
         }
 
         public bool InvokeImportEnemyAiParamsDesc(ReducerEventContext ctx, Reducer.ImportEnemyAiParamsDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_enemy_ai_params_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportEnemyAiParamsDescFlags;
-        public void ImportEnemyAiParamsDesc(CallReducerFlags flags) => ImportEnemyAiParamsDescFlags = flags;
     }
 }

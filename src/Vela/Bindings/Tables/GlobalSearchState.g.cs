@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class GlobalSearchStateHandle : RemoteTableHandle<EventContext, GlobalSearchState>
         {
-            protected override string RemoteTableName => "global_search_state";
+            public override string RemoteTableName => "global_search_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

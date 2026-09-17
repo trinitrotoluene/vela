@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AchievementClaim(SpacetimeDB.Types.PlayerAchievementClaimRequest request)
         {
-            conn.InternalCallReducer(new Reducer.AchievementClaim(request), this.SetCallReducerFlags.AchievementClaimFlags);
+            conn.InternalCallReducer(new Reducer.AchievementClaim(request));
         }
 
         public bool InvokeAchievementClaim(ReducerEventContext ctx, Reducer.AchievementClaim args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "achievement_claim";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AchievementClaimFlags;
-        public void AchievementClaim(CallReducerFlags flags) => AchievementClaimFlags = flags;
     }
 }

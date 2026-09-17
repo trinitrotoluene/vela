@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class MarketplaceStateHandle : RemoteTableHandle<EventContext, MarketplaceState>
         {
-            protected override string RemoteTableName => "marketplace_state";
+            public override string RemoteTableName => "marketplace_state";
 
             public sealed class BuildingEntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

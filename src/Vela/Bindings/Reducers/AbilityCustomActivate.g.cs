@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AbilityCustomActivate(int abilityCustomId, ulong targetEntityId, ulong timestamp)
         {
-            conn.InternalCallReducer(new Reducer.AbilityCustomActivate(abilityCustomId, targetEntityId, timestamp), this.SetCallReducerFlags.AbilityCustomActivateFlags);
+            conn.InternalCallReducer(new Reducer.AbilityCustomActivate(abilityCustomId, targetEntityId, timestamp));
         }
 
         public bool InvokeAbilityCustomActivate(ReducerEventContext ctx, Reducer.AbilityCustomActivate args)
@@ -74,11 +74,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "ability_custom_activate";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AbilityCustomActivateFlags;
-        public void AbilityCustomActivate(CallReducerFlags flags) => AbilityCustomActivateFlags = flags;
     }
 }

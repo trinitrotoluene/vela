@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatPillarShapingAddPillar(SpacetimeDB.Types.PlayerPillarShapingPlaceRequest request)
         {
-            conn.InternalCallReducer(new Reducer.CheatPillarShapingAddPillar(request), this.SetCallReducerFlags.CheatPillarShapingAddPillarFlags);
+            conn.InternalCallReducer(new Reducer.CheatPillarShapingAddPillar(request));
         }
 
         public bool InvokeCheatPillarShapingAddPillar(ReducerEventContext ctx, Reducer.CheatPillarShapingAddPillar args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_pillar_shaping_add_pillar";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatPillarShapingAddPillarFlags;
-        public void CheatPillarShapingAddPillar(CallReducerFlags flags) => CheatPillarShapingAddPillarFlags = flags;
     }
 }

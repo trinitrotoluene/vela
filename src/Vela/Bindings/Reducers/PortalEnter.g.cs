@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PortalEnter(SpacetimeDB.Types.PlayerPortalEnterRequest request)
         {
-            conn.InternalCallReducer(new Reducer.PortalEnter(request), this.SetCallReducerFlags.PortalEnterFlags);
+            conn.InternalCallReducer(new Reducer.PortalEnter(request));
         }
 
         public bool InvokePortalEnter(ReducerEventContext ctx, Reducer.PortalEnter args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "portal_enter";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PortalEnterFlags;
-        public void PortalEnter(CallReducerFlags flags) => PortalEnterFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StagePlayerHousingDesc(System.Collections.Generic.List<SpacetimeDB.Types.PlayerHousingDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StagePlayerHousingDesc(records), this.SetCallReducerFlags.StagePlayerHousingDescFlags);
+            conn.InternalCallReducer(new Reducer.StagePlayerHousingDesc(records));
         }
 
         public bool InvokeStagePlayerHousingDesc(ReducerEventContext ctx, Reducer.StagePlayerHousingDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_player_housing_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StagePlayerHousingDescFlags;
-        public void StagePlayerHousingDesc(CallReducerFlags flags) => StagePlayerHousingDescFlags = flags;
     }
 }

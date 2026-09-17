@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportKnowledgeAchievementState(System.Collections.Generic.List<SpacetimeDB.Types.KnowledgeAchievementState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportKnowledgeAchievementState(records), this.SetCallReducerFlags.ImportKnowledgeAchievementStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportKnowledgeAchievementState(records));
         }
 
         public bool InvokeImportKnowledgeAchievementState(ReducerEventContext ctx, Reducer.ImportKnowledgeAchievementState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_knowledge_achievement_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportKnowledgeAchievementStateFlags;
-        public void ImportKnowledgeAchievementState(CallReducerFlags flags) => ImportKnowledgeAchievementStateFlags = flags;
     }
 }

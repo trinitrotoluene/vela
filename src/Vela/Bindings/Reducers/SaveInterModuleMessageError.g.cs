@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void SaveInterModuleMessageError(byte sender, ulong messageId, string error)
         {
-            conn.InternalCallReducer(new Reducer.SaveInterModuleMessageError(sender, messageId, error), this.SetCallReducerFlags.SaveInterModuleMessageErrorFlags);
+            conn.InternalCallReducer(new Reducer.SaveInterModuleMessageError(sender, messageId, error));
         }
 
         public bool InvokeSaveInterModuleMessageError(ReducerEventContext ctx, Reducer.SaveInterModuleMessageError args)
@@ -75,11 +75,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "save_inter_module_message_error";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags SaveInterModuleMessageErrorFlags;
-        public void SaveInterModuleMessageError(CallReducerFlags flags) => SaveInterModuleMessageErrorFlags = flags;
     }
 }

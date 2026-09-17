@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportServerIdentity(System.Collections.Generic.List<SpacetimeDB.Types.ServerIdentity> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportServerIdentity(records), this.SetCallReducerFlags.ImportServerIdentityFlags);
+            conn.InternalCallReducer(new Reducer.ImportServerIdentity(records));
         }
 
         public bool InvokeImportServerIdentity(ReducerEventContext ctx, Reducer.ImportServerIdentity args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_server_identity";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportServerIdentityFlags;
-        public void ImportServerIdentity(CallReducerFlags flags) => ImportServerIdentityFlags = flags;
     }
 }

@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class EmpireColorDescHandle : RemoteTableHandle<EventContext, EmpireColorDesc>
         {
-            protected override string RemoteTableName => "empire_color_desc";
+            public override string RemoteTableName => "empire_color_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {
@@ -41,13 +41,13 @@ namespace SpacetimeDB.Types
     {
         public global::SpacetimeDB.Col<EmpireColorDesc, int> Id { get; }
         public global::SpacetimeDB.Col<EmpireColorDesc, ulong> ColorArgb { get; }
-        public global::SpacetimeDB.NullableCol<EmpireColorDesc, ulong> Color2Argb { get; }
+        public global::SpacetimeDB.Col<EmpireColorDesc, ulong> Color2Argb { get; }
 
         public EmpireColorDescCols(string tableName)
         {
             Id = new global::SpacetimeDB.Col<EmpireColorDesc, int>(tableName, "id");
             ColorArgb = new global::SpacetimeDB.Col<EmpireColorDesc, ulong>(tableName, "color_argb");
-            Color2Argb = new global::SpacetimeDB.NullableCol<EmpireColorDesc, ulong>(tableName, "color2_argb");
+            Color2Argb = new global::SpacetimeDB.Col<EmpireColorDesc, ulong>(tableName, "color2_argb");
         }
     }
 

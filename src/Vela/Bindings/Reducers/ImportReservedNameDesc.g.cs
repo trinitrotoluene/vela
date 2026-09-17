@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportReservedNameDesc(System.Collections.Generic.List<SpacetimeDB.Types.ReservedNameDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportReservedNameDesc(records), this.SetCallReducerFlags.ImportReservedNameDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportReservedNameDesc(records));
         }
 
         public bool InvokeImportReservedNameDesc(ReducerEventContext ctx, Reducer.ImportReservedNameDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_reserved_name_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportReservedNameDescFlags;
-        public void ImportReservedNameDesc(CallReducerFlags flags) => ImportReservedNameDescFlags = flags;
     }
 }

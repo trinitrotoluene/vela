@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class DeployableAppearanceOverrideDescHandle : RemoteTableHandle<EventContext, DeployableAppearanceOverrideDesc>
         {
-            protected override string RemoteTableName => "deployable_appearance_override_desc";
+            public override string RemoteTableName => "deployable_appearance_override_desc";
 
             public sealed class AffectedModelAddressIndex : BTreeIndexBase<string>
             {

@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class InteriorPortalConnectionsDescHandle : RemoteTableHandle<EventContext, InteriorPortalConnectionsDesc>
         {
-            protected override string RemoteTableName => "interior_portal_connections_desc";
+            public override string RemoteTableName => "interior_portal_connections_desc";
 
             public sealed class EntrancePortalIdIndex : BTreeIndexBase<int>
             {

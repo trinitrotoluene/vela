@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportPillarShapingDesc(System.Collections.Generic.List<SpacetimeDB.Types.PillarShapingDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportPillarShapingDesc(records), this.SetCallReducerFlags.ImportPillarShapingDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportPillarShapingDesc(records));
         }
 
         public bool InvokeImportPillarShapingDesc(ReducerEventContext ctx, Reducer.ImportPillarShapingDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_pillar_shaping_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportPillarShapingDescFlags;
-        public void ImportPillarShapingDesc(CallReducerFlags flags) => ImportPillarShapingDescFlags = flags;
     }
 }

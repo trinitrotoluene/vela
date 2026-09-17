@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminSetSignTextEntity(ulong entityId, string newName)
         {
-            conn.InternalCallReducer(new Reducer.AdminSetSignTextEntity(entityId, newName), this.SetCallReducerFlags.AdminSetSignTextEntityFlags);
+            conn.InternalCallReducer(new Reducer.AdminSetSignTextEntity(entityId, newName));
         }
 
         public bool InvokeAdminSetSignTextEntity(ReducerEventContext ctx, Reducer.AdminSetSignTextEntity args)
@@ -70,11 +70,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_set_sign_text_entity";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminSetSignTextEntityFlags;
-        public void AdminSetSignTextEntity(CallReducerFlags flags) => AdminSetSignTextEntityFlags = flags;
     }
 }

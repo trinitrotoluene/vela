@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void BarterStallOrderCreate(SpacetimeDB.Types.PlayerBarterStallOrderCreateRequest request)
         {
-            conn.InternalCallReducer(new Reducer.BarterStallOrderCreate(request), this.SetCallReducerFlags.BarterStallOrderCreateFlags);
+            conn.InternalCallReducer(new Reducer.BarterStallOrderCreate(request));
         }
 
         public bool InvokeBarterStallOrderCreate(ReducerEventContext ctx, Reducer.BarterStallOrderCreate args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "barter_stall_order_create";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags BarterStallOrderCreateFlags;
-        public void BarterStallOrderCreate(CallReducerFlags flags) => BarterStallOrderCreateFlags = flags;
     }
 }

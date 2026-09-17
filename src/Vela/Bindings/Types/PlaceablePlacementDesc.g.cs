@@ -63,6 +63,8 @@ namespace SpacetimeDB.Types
         public System.Collections.Generic.List<int> Buildings;
         [DataMember(Name = "recipe_performance_id")]
         public int RecipePerformanceId;
+        [DataMember(Name = "self_buffs")]
+        public System.Collections.Generic.List<PlaceableSelfBuffChance>? SelfBuffs;
 
         public PlaceablePlacementDesc(
             int Id,
@@ -89,7 +91,8 @@ namespace SpacetimeDB.Types
             int MinDistanceToExistingFootprints,
             int MaxDistanceToBuildings,
             System.Collections.Generic.List<int> Buildings,
-            int RecipePerformanceId
+            int RecipePerformanceId,
+            System.Collections.Generic.List<PlaceableSelfBuffChance>? SelfBuffs
         )
         {
             this.Id = Id;
@@ -117,6 +120,7 @@ namespace SpacetimeDB.Types
             this.MaxDistanceToBuildings = MaxDistanceToBuildings;
             this.Buildings = Buildings;
             this.RecipePerformanceId = RecipePerformanceId;
+            this.SelfBuffs = SelfBuffs;
         }
 
         public PlaceablePlacementDesc()

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void MigrateClaimTech()
         {
-            conn.InternalCallReducer(new Reducer.MigrateClaimTech(), this.SetCallReducerFlags.MigrateClaimTechFlags);
+            conn.InternalCallReducer(new Reducer.MigrateClaimTech());
         }
 
         public bool InvokeMigrateClaimTech(ReducerEventContext ctx, Reducer.MigrateClaimTech args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "migrate_claim_tech";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags MigrateClaimTechFlags;
-        public void MigrateClaimTech(CallReducerFlags flags) => MigrateClaimTechFlags = flags;
     }
 }

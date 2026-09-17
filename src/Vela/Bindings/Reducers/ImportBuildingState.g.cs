@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportBuildingState(System.Collections.Generic.List<SpacetimeDB.Types.BuildingState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportBuildingState(records), this.SetCallReducerFlags.ImportBuildingStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportBuildingState(records));
         }
 
         public bool InvokeImportBuildingState(ReducerEventContext ctx, Reducer.ImportBuildingState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_building_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportBuildingStateFlags;
-        public void ImportBuildingState(CallReducerFlags flags) => ImportBuildingStateFlags = flags;
     }
 }

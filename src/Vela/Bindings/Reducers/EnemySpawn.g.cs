@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EnemySpawn(SpacetimeDB.Types.EnemySpawnRequest request)
         {
-            conn.InternalCallReducer(new Reducer.EnemySpawn(request), this.SetCallReducerFlags.EnemySpawnFlags);
+            conn.InternalCallReducer(new Reducer.EnemySpawn(request));
         }
 
         public bool InvokeEnemySpawn(ReducerEventContext ctx, Reducer.EnemySpawn args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "enemy_spawn";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EnemySpawnFlags;
-        public void EnemySpawn(CallReducerFlags flags) => EnemySpawnFlags = flags;
     }
 }

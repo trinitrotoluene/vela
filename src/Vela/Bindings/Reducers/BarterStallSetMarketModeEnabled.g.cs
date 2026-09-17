@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void BarterStallSetMarketModeEnabled(SpacetimeDB.Types.BarterStallSetMarketModeEnabledRequest request)
         {
-            conn.InternalCallReducer(new Reducer.BarterStallSetMarketModeEnabled(request), this.SetCallReducerFlags.BarterStallSetMarketModeEnabledFlags);
+            conn.InternalCallReducer(new Reducer.BarterStallSetMarketModeEnabled(request));
         }
 
         public bool InvokeBarterStallSetMarketModeEnabled(ReducerEventContext ctx, Reducer.BarterStallSetMarketModeEnabled args)
@@ -48,7 +48,7 @@ namespace SpacetimeDB.Types
         [DataContract]
         public sealed partial class BarterStallSetMarketModeEnabled : Reducer, IReducerArgs
         {
-            [DataMember(Name = "_request")]
+            [DataMember(Name = "request")]
             public BarterStallSetMarketModeEnabledRequest Request;
 
             public BarterStallSetMarketModeEnabled(BarterStallSetMarketModeEnabledRequest Request)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "barter_stall_set_market_mode_enabled";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags BarterStallSetMarketModeEnabledFlags;
-        public void BarterStallSetMarketModeEnabled(CallReducerFlags flags) => BarterStallSetMarketModeEnabledFlags = flags;
     }
 }

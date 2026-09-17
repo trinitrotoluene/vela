@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ResetChunkIndex()
         {
-            conn.InternalCallReducer(new Reducer.ResetChunkIndex(), this.SetCallReducerFlags.ResetChunkIndexFlags);
+            conn.InternalCallReducer(new Reducer.ResetChunkIndex());
         }
 
         public bool InvokeResetChunkIndex(ReducerEventContext ctx, Reducer.ResetChunkIndex args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "reset_chunk_index";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ResetChunkIndexFlags;
-        public void ResetChunkIndex(CallReducerFlags flags) => ResetChunkIndexFlags = flags;
     }
 }

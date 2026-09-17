@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CraftCancel(SpacetimeDB.Types.PlayerCraftCancelRequest request)
         {
-            conn.InternalCallReducer(new Reducer.CraftCancel(request), this.SetCallReducerFlags.CraftCancelFlags);
+            conn.InternalCallReducer(new Reducer.CraftCancel(request));
         }
 
         public bool InvokeCraftCancel(ReducerEventContext ctx, Reducer.CraftCancel args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "craft_cancel";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CraftCancelFlags;
-        public void CraftCancel(CallReducerFlags flags) => CraftCancelFlags = flags;
     }
 }

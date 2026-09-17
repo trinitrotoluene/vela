@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageBuffTypeDesc(System.Collections.Generic.List<SpacetimeDB.Types.BuffTypeDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageBuffTypeDesc(records), this.SetCallReducerFlags.StageBuffTypeDescFlags);
+            conn.InternalCallReducer(new Reducer.StageBuffTypeDesc(records));
         }
 
         public bool InvokeStageBuffTypeDesc(ReducerEventContext ctx, Reducer.StageBuffTypeDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_buff_type_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageBuffTypeDescFlags;
-        public void StageBuffTypeDesc(CallReducerFlags flags) => StageBuffTypeDescFlags = flags;
     }
 }

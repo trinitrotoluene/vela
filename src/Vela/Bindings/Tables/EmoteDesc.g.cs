@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class EmoteDescHandle : RemoteTableHandle<EventContext, EmoteDesc>
         {
-            protected override string RemoteTableName => "emote_desc";
+            public override string RemoteTableName => "emote_desc";
 
             public sealed class EnabledByCollectibleIdIndex : BTreeIndexBase<int>
             {

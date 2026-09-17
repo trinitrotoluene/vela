@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminRemoveCollectible(string identity, int collectibleId, uint quantity)
         {
-            conn.InternalCallReducer(new Reducer.AdminRemoveCollectible(identity, collectibleId, quantity), this.SetCallReducerFlags.AdminRemoveCollectibleFlags);
+            conn.InternalCallReducer(new Reducer.AdminRemoveCollectible(identity, collectibleId, quantity));
         }
 
         public bool InvokeAdminRemoveCollectible(ReducerEventContext ctx, Reducer.AdminRemoveCollectible args)
@@ -75,11 +75,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_remove_collectible";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminRemoveCollectibleFlags;
-        public void AdminRemoveCollectible(CallReducerFlags flags) => AdminRemoveCollectibleFlags = flags;
     }
 }

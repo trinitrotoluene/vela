@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ClaimSetProtectionThreshold(ulong buildingEntityId, uint hours)
         {
-            conn.InternalCallReducer(new Reducer.ClaimSetProtectionThreshold(buildingEntityId, hours), this.SetCallReducerFlags.ClaimSetProtectionThresholdFlags);
+            conn.InternalCallReducer(new Reducer.ClaimSetProtectionThreshold(buildingEntityId, hours));
         }
 
         public bool InvokeClaimSetProtectionThreshold(ReducerEventContext ctx, Reducer.ClaimSetProtectionThreshold args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "claim_set_protection_threshold";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ClaimSetProtectionThresholdFlags;
-        public void ClaimSetProtectionThreshold(CallReducerFlags flags) => ClaimSetProtectionThresholdFlags = flags;
     }
 }

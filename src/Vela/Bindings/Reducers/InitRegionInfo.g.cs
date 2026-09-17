@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void InitRegionInfo(int worldWidth, int worldHeight, byte regionIndex, byte regionCount)
         {
-            conn.InternalCallReducer(new Reducer.InitRegionInfo(worldWidth, worldHeight, regionIndex, regionCount), this.SetCallReducerFlags.InitRegionInfoFlags);
+            conn.InternalCallReducer(new Reducer.InitRegionInfo(worldWidth, worldHeight, regionIndex, regionCount));
         }
 
         public bool InvokeInitRegionInfo(ReducerEventContext ctx, Reducer.InitRegionInfo args)
@@ -79,11 +79,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "init_region_info";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags InitRegionInfoFlags;
-        public void InitRegionInfo(CallReducerFlags flags) => InitRegionInfoFlags = flags;
     }
 }

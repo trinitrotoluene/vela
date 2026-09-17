@@ -10,17 +10,17 @@ namespace SpacetimeDB.Types
     [SpacetimeDB.Type]
     public enum HexDirection
     {
-        NE,
-        ENE,
+        Ne,
+        Ene,
         E,
-        ESE,
-        SE,
+        Ese,
+        Se,
         S,
-        SW,
-        WSW,
+        Sw,
+        Wsw,
         W,
-        WNW,
-        NW,
+        Wnw,
+        Nw,
         N,
     }
 }

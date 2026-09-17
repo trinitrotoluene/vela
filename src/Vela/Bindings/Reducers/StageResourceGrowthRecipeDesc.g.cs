@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageResourceGrowthRecipeDesc(System.Collections.Generic.List<SpacetimeDB.Types.ResourceGrowthRecipeDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageResourceGrowthRecipeDesc(records), this.SetCallReducerFlags.StageResourceGrowthRecipeDescFlags);
+            conn.InternalCallReducer(new Reducer.StageResourceGrowthRecipeDesc(records));
         }
 
         public bool InvokeStageResourceGrowthRecipeDesc(ReducerEventContext ctx, Reducer.StageResourceGrowthRecipeDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_resource_growth_recipe_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageResourceGrowthRecipeDescFlags;
-        public void StageResourceGrowthRecipeDesc(CallReducerFlags flags) => StageResourceGrowthRecipeDescFlags = flags;
     }
 }

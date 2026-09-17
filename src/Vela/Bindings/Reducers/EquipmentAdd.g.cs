@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EquipmentAdd(SpacetimeDB.Types.PlayerEquipmentAddRequest request)
         {
-            conn.InternalCallReducer(new Reducer.EquipmentAdd(request), this.SetCallReducerFlags.EquipmentAddFlags);
+            conn.InternalCallReducer(new Reducer.EquipmentAdd(request));
         }
 
         public bool InvokeEquipmentAdd(ReducerEventContext ctx, Reducer.EquipmentAdd args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "equipment_add";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EquipmentAddFlags;
-        public void EquipmentAdd(CallReducerFlags flags) => EquipmentAddFlags = flags;
     }
 }

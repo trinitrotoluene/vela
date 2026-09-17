@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void OnInterModuleMessageProcessed(ulong id, string? error)
         {
-            conn.InternalCallReducer(new Reducer.OnInterModuleMessageProcessed(id, error), this.SetCallReducerFlags.OnInterModuleMessageProcessedFlags);
+            conn.InternalCallReducer(new Reducer.OnInterModuleMessageProcessed(id, error));
         }
 
         public bool InvokeOnInterModuleMessageProcessed(ReducerEventContext ctx, Reducer.OnInterModuleMessageProcessed args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "on_inter_module_message_processed";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags OnInterModuleMessageProcessedFlags;
-        public void OnInterModuleMessageProcessed(CallReducerFlags flags) => OnInterModuleMessageProcessedFlags = flags;
     }
 }

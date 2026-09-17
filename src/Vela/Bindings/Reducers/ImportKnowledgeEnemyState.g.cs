@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportKnowledgeEnemyState(System.Collections.Generic.List<SpacetimeDB.Types.KnowledgeEnemyState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportKnowledgeEnemyState(records), this.SetCallReducerFlags.ImportKnowledgeEnemyStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportKnowledgeEnemyState(records));
         }
 
         public bool InvokeImportKnowledgeEnemyState(ReducerEventContext ctx, Reducer.ImportKnowledgeEnemyState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_knowledge_enemy_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportKnowledgeEnemyStateFlags;
-        public void ImportKnowledgeEnemyState(CallReducerFlags flags) => ImportKnowledgeEnemyStateFlags = flags;
     }
 }

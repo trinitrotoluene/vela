@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DiscoverAchievement(int achievementId)
         {
-            conn.InternalCallReducer(new Reducer.DiscoverAchievement(achievementId), this.SetCallReducerFlags.DiscoverAchievementFlags);
+            conn.InternalCallReducer(new Reducer.DiscoverAchievement(achievementId));
         }
 
         public bool InvokeDiscoverAchievement(ReducerEventContext ctx, Reducer.DiscoverAchievement args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "discover_achievement";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DiscoverAchievementFlags;
-        public void DiscoverAchievement(CallReducerFlags flags) => DiscoverAchievementFlags = flags;
     }
 }

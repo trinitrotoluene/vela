@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ProspectingParticipantsHandle : RemoteTableHandle<EventContext, ProspectingParticipant>
         {
-            protected override string RemoteTableName => "prospecting_participants";
+            public override string RemoteTableName => "prospecting_participants";
 
             internal ProspectingParticipantsHandle(DbConnection conn) : base(conn)
             {

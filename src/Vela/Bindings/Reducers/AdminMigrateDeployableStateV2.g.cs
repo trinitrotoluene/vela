@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminMigrateDeployableStateV2()
         {
-            conn.InternalCallReducer(new Reducer.AdminMigrateDeployableStateV2(), this.SetCallReducerFlags.AdminMigrateDeployableStateV2Flags);
+            conn.InternalCallReducer(new Reducer.AdminMigrateDeployableStateV2());
         }
 
         public bool InvokeAdminMigrateDeployableStateV2(ReducerEventContext ctx, Reducer.AdminMigrateDeployableStateV2 args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "admin_migrate_deployable_state_v2";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminMigrateDeployableStateV2Flags;
-        public void AdminMigrateDeployableStateV2(CallReducerFlags flags) => AdminMigrateDeployableStateV2Flags = flags;
     }
 }

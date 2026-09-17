@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DeployableToggleAutoFollow(int deployableDescId)
         {
-            conn.InternalCallReducer(new Reducer.DeployableToggleAutoFollow(deployableDescId), this.SetCallReducerFlags.DeployableToggleAutoFollowFlags);
+            conn.InternalCallReducer(new Reducer.DeployableToggleAutoFollow(deployableDescId));
         }
 
         public bool InvokeDeployableToggleAutoFollow(ReducerEventContext ctx, Reducer.DeployableToggleAutoFollow args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "deployable_toggle_auto_follow";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DeployableToggleAutoFollowFlags;
-        public void DeployableToggleAutoFollow(CallReducerFlags flags) => DeployableToggleAutoFollowFlags = flags;
     }
 }

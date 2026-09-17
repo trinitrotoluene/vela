@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportPremiumServiceDesc(System.Collections.Generic.List<SpacetimeDB.Types.PremiumServiceDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportPremiumServiceDesc(records), this.SetCallReducerFlags.ImportPremiumServiceDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportPremiumServiceDesc(records));
         }
 
         public bool InvokeImportPremiumServiceDesc(ReducerEventContext ctx, Reducer.ImportPremiumServiceDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_premium_service_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportPremiumServiceDescFlags;
-        public void ImportPremiumServiceDesc(CallReducerFlags flags) => ImportPremiumServiceDescFlags = flags;
     }
 }

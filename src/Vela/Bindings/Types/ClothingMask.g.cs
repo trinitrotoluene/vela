@@ -14,5 +14,6 @@ namespace SpacetimeDB.Types
         HairFront,
         HairBottom,
         HairFull,
+        Bald,
     }
 }

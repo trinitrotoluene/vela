@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportDroppedInventoryState(System.Collections.Generic.List<SpacetimeDB.Types.DroppedInventoryState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportDroppedInventoryState(records), this.SetCallReducerFlags.ImportDroppedInventoryStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportDroppedInventoryState(records));
         }
 
         public bool InvokeImportDroppedInventoryState(ReducerEventContext ctx, Reducer.ImportDroppedInventoryState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_dropped_inventory_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportDroppedInventoryStateFlags;
-        public void ImportDroppedInventoryState(CallReducerFlags flags) => ImportDroppedInventoryStateFlags = flags;
     }
 }

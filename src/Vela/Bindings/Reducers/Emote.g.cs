@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void Emote(SpacetimeDB.Types.PlayerEmoteRequest request)
         {
-            conn.InternalCallReducer(new Reducer.Emote(request), this.SetCallReducerFlags.EmoteFlags);
+            conn.InternalCallReducer(new Reducer.Emote(request));
         }
 
         public bool InvokeEmote(ReducerEventContext ctx, Reducer.Emote args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "emote";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EmoteFlags;
-        public void Emote(CallReducerFlags flags) => EmoteFlags = flags;
     }
 }

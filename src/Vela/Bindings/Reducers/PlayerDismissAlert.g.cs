@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerDismissAlert(SpacetimeDB.Types.PlayerDismissAlertRequest request)
         {
-            conn.InternalCallReducer(new Reducer.PlayerDismissAlert(request), this.SetCallReducerFlags.PlayerDismissAlertFlags);
+            conn.InternalCallReducer(new Reducer.PlayerDismissAlert(request));
         }
 
         public bool InvokePlayerDismissAlert(ReducerEventContext ctx, Reducer.PlayerDismissAlert args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "player_dismiss_alert";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerDismissAlertFlags;
-        public void PlayerDismissAlert(CallReducerFlags flags) => PlayerDismissAlertFlags = flags;
     }
 }

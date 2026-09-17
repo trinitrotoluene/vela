@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportHealthState(System.Collections.Generic.List<SpacetimeDB.Types.HealthState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportHealthState(records), this.SetCallReducerFlags.ImportHealthStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportHealthState(records));
         }
 
         public bool InvokeImportHealthState(ReducerEventContext ctx, Reducer.ImportHealthState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_health_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportHealthStateFlags;
-        public void ImportHealthState(CallReducerFlags flags) => ImportHealthStateFlags = flags;
     }
 }

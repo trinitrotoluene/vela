@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EnemyDespawnFromMobMonitorBatch(System.Collections.Generic.List<ulong> enemyEntityIds)
         {
-            conn.InternalCallReducer(new Reducer.EnemyDespawnFromMobMonitorBatch(enemyEntityIds), this.SetCallReducerFlags.EnemyDespawnFromMobMonitorBatchFlags);
+            conn.InternalCallReducer(new Reducer.EnemyDespawnFromMobMonitorBatch(enemyEntityIds));
         }
 
         public bool InvokeEnemyDespawnFromMobMonitorBatch(ReducerEventContext ctx, Reducer.EnemyDespawnFromMobMonitorBatch args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "enemy_despawn_from_mob_monitor_batch";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EnemyDespawnFromMobMonitorBatchFlags;
-        public void EnemyDespawnFromMobMonitorBatch(CallReducerFlags flags) => EnemyDespawnFromMobMonitorBatchFlags = flags;
     }
 }

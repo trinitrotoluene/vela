@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DeployableMoveOffBounds(ulong deployableEntityId)
         {
-            conn.InternalCallReducer(new Reducer.DeployableMoveOffBounds(deployableEntityId), this.SetCallReducerFlags.DeployableMoveOffBoundsFlags);
+            conn.InternalCallReducer(new Reducer.DeployableMoveOffBounds(deployableEntityId));
         }
 
         public bool InvokeDeployableMoveOffBounds(ReducerEventContext ctx, Reducer.DeployableMoveOffBounds args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "deployable_move_off_bounds";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DeployableMoveOffBoundsFlags;
-        public void DeployableMoveOffBounds(CallReducerFlags flags) => DeployableMoveOffBoundsFlags = flags;
     }
 }

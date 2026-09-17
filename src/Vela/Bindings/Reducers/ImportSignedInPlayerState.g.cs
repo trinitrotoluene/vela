@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportSignedInPlayerState(System.Collections.Generic.List<SpacetimeDB.Types.SignedInPlayerState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportSignedInPlayerState(records), this.SetCallReducerFlags.ImportSignedInPlayerStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportSignedInPlayerState(records));
         }
 
         public bool InvokeImportSignedInPlayerState(ReducerEventContext ctx, Reducer.ImportSignedInPlayerState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_signed_in_player_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportSignedInPlayerStateFlags;
-        public void ImportSignedInPlayerState(CallReducerFlags flags) => ImportSignedInPlayerStateFlags = flags;
     }
 }

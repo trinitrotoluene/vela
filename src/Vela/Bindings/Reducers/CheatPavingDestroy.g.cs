@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatPavingDestroy(int x, int z, uint dimension)
         {
-            conn.InternalCallReducer(new Reducer.CheatPavingDestroy(x, z, dimension), this.SetCallReducerFlags.CheatPavingDestroyFlags);
+            conn.InternalCallReducer(new Reducer.CheatPavingDestroy(x, z, dimension));
         }
 
         public bool InvokeCheatPavingDestroy(ReducerEventContext ctx, Reducer.CheatPavingDestroy args)
@@ -74,11 +74,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_paving_destroy";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatPavingDestroyFlags;
-        public void CheatPavingDestroy(CallReducerFlags flags) => CheatPavingDestroyFlags = flags;
     }
 }

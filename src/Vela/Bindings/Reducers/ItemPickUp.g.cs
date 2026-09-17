@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ItemPickUp(SpacetimeDB.Types.PlayerDroppedInventoryPickUpRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ItemPickUp(request), this.SetCallReducerFlags.ItemPickUpFlags);
+            conn.InternalCallReducer(new Reducer.ItemPickUp(request));
         }
 
         public bool InvokeItemPickUp(ReducerEventContext ctx, Reducer.ItemPickUp args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "item_pick_up";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ItemPickUpFlags;
-        public void ItemPickUp(CallReducerFlags flags) => ItemPickUpFlags = flags;
     }
 }

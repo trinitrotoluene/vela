@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportTradeOrderState(System.Collections.Generic.List<SpacetimeDB.Types.TradeOrderState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportTradeOrderState(records), this.SetCallReducerFlags.ImportTradeOrderStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportTradeOrderState(records));
         }
 
         public bool InvokeImportTradeOrderState(ReducerEventContext ctx, Reducer.ImportTradeOrderState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_trade_order_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportTradeOrderStateFlags;
-        public void ImportTradeOrderState(CallReducerFlags flags) => ImportTradeOrderStateFlags = flags;
     }
 }

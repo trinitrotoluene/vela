@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageEmoteDesc(System.Collections.Generic.List<SpacetimeDB.Types.EmoteDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageEmoteDesc(records), this.SetCallReducerFlags.StageEmoteDescFlags);
+            conn.InternalCallReducer(new Reducer.StageEmoteDesc(records));
         }
 
         public bool InvokeStageEmoteDesc(ReducerEventContext ctx, Reducer.StageEmoteDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_emote_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageEmoteDescFlags;
-        public void StageEmoteDesc(CallReducerFlags flags) => StageEmoteDescFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminFlipInteriorInstanceDoors(int interiorInstanceId)
         {
-            conn.InternalCallReducer(new Reducer.AdminFlipInteriorInstanceDoors(interiorInstanceId), this.SetCallReducerFlags.AdminFlipInteriorInstanceDoorsFlags);
+            conn.InternalCallReducer(new Reducer.AdminFlipInteriorInstanceDoors(interiorInstanceId));
         }
 
         public bool InvokeAdminFlipInteriorInstanceDoors(ReducerEventContext ctx, Reducer.AdminFlipInteriorInstanceDoors args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_flip_interior_instance_doors";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminFlipInteriorInstanceDoorsFlags;
-        public void AdminFlipInteriorInstanceDoors(CallReducerFlags flags) => AdminFlipInteriorInstanceDoorsFlags = flags;
     }
 }

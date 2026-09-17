@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminResetAllHerdLocations()
         {
-            conn.InternalCallReducer(new Reducer.AdminResetAllHerdLocations(), this.SetCallReducerFlags.AdminResetAllHerdLocationsFlags);
+            conn.InternalCallReducer(new Reducer.AdminResetAllHerdLocations());
         }
 
         public bool InvokeAdminResetAllHerdLocations(ReducerEventContext ctx, Reducer.AdminResetAllHerdLocations args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "admin_reset_all_herd_locations";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminResetAllHerdLocationsFlags;
-        public void AdminResetAllHerdLocations(CallReducerFlags flags) => AdminResetAllHerdLocationsFlags = flags;
     }
 }

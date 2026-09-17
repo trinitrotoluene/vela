@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void MigrateExplorationAchievementCounts()
         {
-            conn.InternalCallReducer(new Reducer.MigrateExplorationAchievementCounts(), this.SetCallReducerFlags.MigrateExplorationAchievementCountsFlags);
+            conn.InternalCallReducer(new Reducer.MigrateExplorationAchievementCounts());
         }
 
         public bool InvokeMigrateExplorationAchievementCounts(ReducerEventContext ctx, Reducer.MigrateExplorationAchievementCounts args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "migrate_exploration_achievement_counts";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags MigrateExplorationAchievementCountsFlags;
-        public void MigrateExplorationAchievementCounts(CallReducerFlags flags) => MigrateExplorationAchievementCountsFlags = flags;
     }
 }

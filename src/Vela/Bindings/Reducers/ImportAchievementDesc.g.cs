@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportAchievementDesc(System.Collections.Generic.List<SpacetimeDB.Types.AchievementDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportAchievementDesc(records), this.SetCallReducerFlags.ImportAchievementDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportAchievementDesc(records));
         }
 
         public bool InvokeImportAchievementDesc(ReducerEventContext ctx, Reducer.ImportAchievementDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_achievement_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportAchievementDescFlags;
-        public void ImportAchievementDesc(CallReducerFlags flags) => ImportAchievementDescFlags = flags;
     }
 }

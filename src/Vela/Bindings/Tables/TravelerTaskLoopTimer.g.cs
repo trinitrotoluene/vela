@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class TravelerTaskLoopTimerHandle : RemoteTableHandle<EventContext, TravelerTaskLoopTimer>
         {
-            protected override string RemoteTableName => "traveler_task_loop_timer";
+            public override string RemoteTableName => "traveler_task_loop_timer";
 
             public sealed class ScheduledIdUniqueIndex : UniqueIndexBase<ulong>
             {

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void MigrateGrantDefaultCollectibles()
         {
-            conn.InternalCallReducer(new Reducer.MigrateGrantDefaultCollectibles(), this.SetCallReducerFlags.MigrateGrantDefaultCollectiblesFlags);
+            conn.InternalCallReducer(new Reducer.MigrateGrantDefaultCollectibles());
         }
 
         public bool InvokeMigrateGrantDefaultCollectibles(ReducerEventContext ctx, Reducer.MigrateGrantDefaultCollectibles args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "migrate_grant_default_collectibles";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags MigrateGrantDefaultCollectiblesFlags;
-        public void MigrateGrantDefaultCollectibles(CallReducerFlags flags) => MigrateGrantDefaultCollectiblesFlags = flags;
     }
 }

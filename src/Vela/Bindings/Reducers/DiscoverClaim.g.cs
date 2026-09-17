@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DiscoverClaim(ulong claimEntityId)
         {
-            conn.InternalCallReducer(new Reducer.DiscoverClaim(claimEntityId), this.SetCallReducerFlags.DiscoverClaimFlags);
+            conn.InternalCallReducer(new Reducer.DiscoverClaim(claimEntityId));
         }
 
         public bool InvokeDiscoverClaim(ReducerEventContext ctx, Reducer.DiscoverClaim args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "discover_claim";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DiscoverClaimFlags;
-        public void DiscoverClaim(CallReducerFlags flags) => DiscoverClaimFlags = flags;
     }
 }

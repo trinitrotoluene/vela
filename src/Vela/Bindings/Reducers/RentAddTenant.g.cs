@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void RentAddTenant(SpacetimeDB.Types.RentAddTenantRequest request)
         {
-            conn.InternalCallReducer(new Reducer.RentAddTenant(request), this.SetCallReducerFlags.RentAddTenantFlags);
+            conn.InternalCallReducer(new Reducer.RentAddTenant(request));
         }
 
         public bool InvokeRentAddTenant(ReducerEventContext ctx, Reducer.RentAddTenant args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "rent_add_tenant";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags RentAddTenantFlags;
-        public void RentAddTenant(CallReducerFlags flags) => RentAddTenantFlags = flags;
     }
 }

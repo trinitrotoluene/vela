@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ExposedBreadcrumbsHandle : RemoteTableHandle<EventContext, CrumbTrailExposedState>
         {
-            protected override string RemoteTableName => "exposed_breadcrumbs";
+            public override string RemoteTableName => "exposed_breadcrumbs";
 
             internal ExposedBreadcrumbsHandle(DbConnection conn) : base(conn)
             {

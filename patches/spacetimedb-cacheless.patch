@@ -1,9 +1,9 @@
 diff --git a/src/Table.cs b/src/Table.cs
-index 3621901..b66a359 100644
+index 063d45b..cbd5756 100644
 --- a/src/Table.cs
 +++ b/src/Table.cs
-@@ -198,12 +198,11 @@ namespace SpacetimeDB
-         // These are provided by RemoteTableHandle.
+@@ -231,12 +231,11 @@ namespace SpacetimeDB
+         // These are provided by RemoteTableHandleBase.
          Type IRemoteTableHandle.ClientTableType => typeof(Row);
  
 -        // THE DATA IN THE TABLE.
@@ -20,9 +20,9 @@ index 3621901..b66a359 100644
  
          private static IReadWrite<Row>? _serializer;
  
-@@ -372,9 +371,9 @@ namespace SpacetimeDB
-             remove => OnUpdateHandler.RemoveListener(value);
+@@ -413,9 +412,9 @@ namespace SpacetimeDB
          }
+         public delegate void UpdateEventHandler(EventContext context, Row oldRow, Row newRow);
  
 -        public int Count => (int)Entries.CountDistinct;
 +        public int Count => _multiplicities.Count;
@@ -32,9 +32,9 @@ index 3621901..b66a359 100644
  
          public Task<Row[]> RemoteQuery(string query) =>
              conn.RemoteQuery<Row>($"SELECT {RemoteTableName}.* FROM {RemoteTableName} {query}");
-@@ -441,9 +440,22 @@ namespace SpacetimeDB
-         {
-             Debug.Assert(wasInserted.Count == 0 && wasUpdated.Count == 0 && wasRemoved.Count == 0, "Call Apply and PostApply before calling PreApply again");
+@@ -454,9 +453,22 @@ namespace SpacetimeDB
+             System.Diagnostics.Debug.Assert(wasInserted.Count == 0 && wasUpdated.Count == 0 && wasRemoved.Count == 0, "Call Apply and PostApply before calling PreApply again");
+             if (IsEventTable) return; // Event tables have no deletes.
              var delta = (ParsedTableUpdate)parsedTableUpdate;
 -            foreach (var (_, value) in Entries.WillRemove(delta.Delta))
 +            foreach (var (key, keyDelta) in delta.Delta.Entries)
@@ -57,10 +57,10 @@ index 3621901..b66a359 100644
              }
          }
  
-@@ -457,62 +469,78 @@ namespace SpacetimeDB
+@@ -485,62 +497,78 @@ namespace SpacetimeDB
+ 
              try
              {
-                 var delta = (ParsedTableUpdate)parsedTableUpdate;
 -                Entries.Apply(delta.Delta, wasInserted, wasUpdated, wasRemoved);
 +                foreach (var (key, their) in delta.Delta.Entries)
 +                {

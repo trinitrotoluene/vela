@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageInteriorNetworkDesc(System.Collections.Generic.List<SpacetimeDB.Types.InteriorNetworkDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageInteriorNetworkDesc(records), this.SetCallReducerFlags.StageInteriorNetworkDescFlags);
+            conn.InternalCallReducer(new Reducer.StageInteriorNetworkDesc(records));
         }
 
         public bool InvokeStageInteriorNetworkDesc(ReducerEventContext ctx, Reducer.StageInteriorNetworkDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_interior_network_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageInteriorNetworkDescFlags;
-        public void StageInteriorNetworkDesc(CallReducerFlags flags) => StageInteriorNetworkDescFlags = flags;
     }
 }

@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ItemConversionRecipeDescHandle : RemoteTableHandle<EventContext, ItemConversionRecipeDesc>
         {
-            protected override string RemoteTableName => "item_conversion_recipe_desc";
+            public override string RemoteTableName => "item_conversion_recipe_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {
@@ -45,7 +45,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<ItemConversionRecipeDesc, uint> StaminaCost { get; }
         public global::SpacetimeDB.Col<ItemConversionRecipeDesc, int> LocationContext { get; }
         public global::SpacetimeDB.Col<ItemConversionRecipeDesc, string> StringContext { get; }
-        public global::SpacetimeDB.NullableCol<ItemConversionRecipeDesc, ItemStack> OutputItem { get; }
+        public global::SpacetimeDB.Col<ItemConversionRecipeDesc, ItemStack> OutputItem { get; }
         public global::SpacetimeDB.Col<ItemConversionRecipeDesc, System.Collections.Generic.List<ItemStack>> InputItems { get; }
         public global::SpacetimeDB.Col<ItemConversionRecipeDesc, int> RequiredEquipmentId { get; }
         public global::SpacetimeDB.Col<ItemConversionRecipeDesc, int> RequiredEquipmentTier { get; }
@@ -60,7 +60,7 @@ namespace SpacetimeDB.Types
             StaminaCost = new global::SpacetimeDB.Col<ItemConversionRecipeDesc, uint>(tableName, "stamina_cost");
             LocationContext = new global::SpacetimeDB.Col<ItemConversionRecipeDesc, int>(tableName, "location_context");
             StringContext = new global::SpacetimeDB.Col<ItemConversionRecipeDesc, string>(tableName, "string_context");
-            OutputItem = new global::SpacetimeDB.NullableCol<ItemConversionRecipeDesc, ItemStack>(tableName, "output_item");
+            OutputItem = new global::SpacetimeDB.Col<ItemConversionRecipeDesc, ItemStack>(tableName, "output_item");
             InputItems = new global::SpacetimeDB.Col<ItemConversionRecipeDesc, System.Collections.Generic.List<ItemStack>>(tableName, "input_items");
             RequiredEquipmentId = new global::SpacetimeDB.Col<ItemConversionRecipeDesc, int>(tableName, "required_equipment_id");
             RequiredEquipmentTier = new global::SpacetimeDB.Col<ItemConversionRecipeDesc, int>(tableName, "required_equipment_tier");

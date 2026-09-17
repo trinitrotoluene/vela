@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class DistantVisibleEntityHandle : RemoteTableHandle<EventContext, DistantVisibleEntity>
         {
-            protected override string RemoteTableName => "distant_visible_entity";
+            public override string RemoteTableName => "distant_visible_entity";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

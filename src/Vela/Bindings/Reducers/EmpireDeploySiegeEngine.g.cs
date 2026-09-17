@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EmpireDeploySiegeEngine(SpacetimeDB.Types.EmpireStartSiegeRequest request)
         {
-            conn.InternalCallReducer(new Reducer.EmpireDeploySiegeEngine(request), this.SetCallReducerFlags.EmpireDeploySiegeEngineFlags);
+            conn.InternalCallReducer(new Reducer.EmpireDeploySiegeEngine(request));
         }
 
         public bool InvokeEmpireDeploySiegeEngine(ReducerEventContext ctx, Reducer.EmpireDeploySiegeEngine args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "empire_deploy_siege_engine";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EmpireDeploySiegeEngineFlags;
-        public void EmpireDeploySiegeEngine(CallReducerFlags flags) => EmpireDeploySiegeEngineFlags = flags;
     }
 }

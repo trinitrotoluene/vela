@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportBiomeDesc(System.Collections.Generic.List<SpacetimeDB.Types.BiomeDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportBiomeDesc(records), this.SetCallReducerFlags.ImportBiomeDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportBiomeDesc(records));
         }
 
         public bool InvokeImportBiomeDesc(ReducerEventContext ctx, Reducer.ImportBiomeDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_biome_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportBiomeDescFlags;
-        public void ImportBiomeDesc(CallReducerFlags flags) => ImportBiomeDescFlags = flags;
     }
 }

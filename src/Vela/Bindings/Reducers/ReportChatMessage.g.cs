@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ReportChatMessage(SpacetimeDB.Types.ReportPlayerChatMessage request)
         {
-            conn.InternalCallReducer(new Reducer.ReportChatMessage(request), this.SetCallReducerFlags.ReportChatMessageFlags);
+            conn.InternalCallReducer(new Reducer.ReportChatMessage(request));
         }
 
         public bool InvokeReportChatMessage(ReducerEventContext ctx, Reducer.ReportChatMessage args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "report_chat_message";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ReportChatMessageFlags;
-        public void ReportChatMessage(CallReducerFlags flags) => ReportChatMessageFlags = flags;
     }
 }

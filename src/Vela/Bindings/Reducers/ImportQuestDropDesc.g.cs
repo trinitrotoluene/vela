@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportQuestDropDesc(System.Collections.Generic.List<SpacetimeDB.Types.QuestDropDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportQuestDropDesc(records), this.SetCallReducerFlags.ImportQuestDropDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportQuestDropDesc(records));
         }
 
         public bool InvokeImportQuestDropDesc(ReducerEventContext ctx, Reducer.ImportQuestDropDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_quest_drop_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportQuestDropDescFlags;
-        public void ImportQuestDropDesc(CallReducerFlags flags) => ImportQuestDropDescFlags = flags;
     }
 }

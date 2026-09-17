@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ResetOnboarding()
         {
-            conn.InternalCallReducer(new Reducer.ResetOnboarding(), this.SetCallReducerFlags.ResetOnboardingFlags);
+            conn.InternalCallReducer(new Reducer.ResetOnboarding());
         }
 
         public bool InvokeResetOnboarding(ReducerEventContext ctx, Reducer.ResetOnboarding args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "reset_onboarding";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ResetOnboardingFlags;
-        public void ResetOnboarding(CallReducerFlags flags) => ResetOnboardingFlags = flags;
     }
 }

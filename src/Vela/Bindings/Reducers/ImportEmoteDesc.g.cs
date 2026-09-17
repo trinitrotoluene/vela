@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportEmoteDesc(System.Collections.Generic.List<SpacetimeDB.Types.EmoteDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportEmoteDesc(records), this.SetCallReducerFlags.ImportEmoteDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportEmoteDesc(records));
         }
 
         public bool InvokeImportEmoteDesc(ReducerEventContext ctx, Reducer.ImportEmoteDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_emote_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportEmoteDescFlags;
-        public void ImportEmoteDesc(CallReducerFlags flags) => ImportEmoteDescFlags = flags;
     }
 }

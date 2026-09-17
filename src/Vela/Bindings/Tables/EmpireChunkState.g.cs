@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class EmpireChunkStateHandle : RemoteTableHandle<EventContext, EmpireChunkState>
         {
-            protected override string RemoteTableName => "empire_chunk_state";
+            public override string RemoteTableName => "empire_chunk_state";
 
             public sealed class ChunkIndexUniqueIndex : UniqueIndexBase<ulong>
             {

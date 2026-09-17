@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ClaimTreasuryDeposit(SpacetimeDB.Types.PlayerClaimDepositToTreasuryRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ClaimTreasuryDeposit(request), this.SetCallReducerFlags.ClaimTreasuryDepositFlags);
+            conn.InternalCallReducer(new Reducer.ClaimTreasuryDeposit(request));
         }
 
         public bool InvokeClaimTreasuryDeposit(ReducerEventContext ctx, Reducer.ClaimTreasuryDeposit args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "claim_treasury_deposit";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ClaimTreasuryDepositFlags;
-        public void ClaimTreasuryDeposit(CallReducerFlags flags) => ClaimTreasuryDepositFlags = flags;
     }
 }

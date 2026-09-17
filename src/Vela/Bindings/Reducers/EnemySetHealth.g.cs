@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EnemySetHealth(SpacetimeDB.Types.EnemySetHealthRequest request)
         {
-            conn.InternalCallReducer(new Reducer.EnemySetHealth(request), this.SetCallReducerFlags.EnemySetHealthFlags);
+            conn.InternalCallReducer(new Reducer.EnemySetHealth(request));
         }
 
         public bool InvokeEnemySetHealth(ReducerEventContext ctx, Reducer.EnemySetHealth args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "enemy_set_health";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EnemySetHealthFlags;
-        public void EnemySetHealth(CallReducerFlags flags) => EnemySetHealthFlags = flags;
     }
 }

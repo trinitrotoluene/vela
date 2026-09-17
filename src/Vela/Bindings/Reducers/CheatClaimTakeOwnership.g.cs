@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatClaimTakeOwnership(ulong claimEntityId)
         {
-            conn.InternalCallReducer(new Reducer.CheatClaimTakeOwnership(claimEntityId), this.SetCallReducerFlags.CheatClaimTakeOwnershipFlags);
+            conn.InternalCallReducer(new Reducer.CheatClaimTakeOwnership(claimEntityId));
         }
 
         public bool InvokeCheatClaimTakeOwnership(ReducerEventContext ctx, Reducer.CheatClaimTakeOwnership args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_claim_take_ownership";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatClaimTakeOwnershipFlags;
-        public void CheatClaimTakeOwnership(CallReducerFlags flags) => CheatClaimTakeOwnershipFlags = flags;
     }
 }

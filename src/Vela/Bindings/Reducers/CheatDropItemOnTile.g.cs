@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatDropItemOnTile(SpacetimeDB.Types.SmallHexTileMessage coord, int itemId, int quantity, bool isCargo, ulong ownerEntityId)
         {
-            conn.InternalCallReducer(new Reducer.CheatDropItemOnTile(coord, itemId, quantity, isCargo, ownerEntityId), this.SetCallReducerFlags.CheatDropItemOnTileFlags);
+            conn.InternalCallReducer(new Reducer.CheatDropItemOnTile(coord, itemId, quantity, isCargo, ownerEntityId));
         }
 
         public bool InvokeCheatDropItemOnTile(ReducerEventContext ctx, Reducer.CheatDropItemOnTile args)
@@ -85,11 +85,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_drop_item_on_tile";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatDropItemOnTileFlags;
-        public void CheatDropItemOnTile(CallReducerFlags flags) => CheatDropItemOnTileFlags = flags;
     }
 }

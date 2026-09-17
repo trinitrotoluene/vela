@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void SkipOnboarding()
         {
-            conn.InternalCallReducer(new Reducer.SkipOnboarding(), this.SetCallReducerFlags.SkipOnboardingFlags);
+            conn.InternalCallReducer(new Reducer.SkipOnboarding());
         }
 
         public bool InvokeSkipOnboarding(ReducerEventContext ctx, Reducer.SkipOnboarding args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "skip_onboarding";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags SkipOnboardingFlags;
-        public void SkipOnboarding(CallReducerFlags flags) => SkipOnboardingFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminDeleteAllItemsOfType(string playerUsername, int itemId, bool isCargo)
         {
-            conn.InternalCallReducer(new Reducer.AdminDeleteAllItemsOfType(playerUsername, itemId, isCargo), this.SetCallReducerFlags.AdminDeleteAllItemsOfTypeFlags);
+            conn.InternalCallReducer(new Reducer.AdminDeleteAllItemsOfType(playerUsername, itemId, isCargo));
         }
 
         public bool InvokeAdminDeleteAllItemsOfType(ReducerEventContext ctx, Reducer.AdminDeleteAllItemsOfType args)
@@ -75,11 +75,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_delete_all_items_of_type";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminDeleteAllItemsOfTypeFlags;
-        public void AdminDeleteAllItemsOfType(CallReducerFlags flags) => AdminDeleteAllItemsOfTypeFlags = flags;
     }
 }

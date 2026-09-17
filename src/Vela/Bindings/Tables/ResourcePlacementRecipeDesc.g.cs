@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ResourcePlacementRecipeDescHandle : RemoteTableHandle<EventContext, ResourcePlacementRecipeDesc>
         {
-            protected override string RemoteTableName => "resource_placement_recipe_desc";
+            public override string RemoteTableName => "resource_placement_recipe_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {

@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class DeployableStateV2Handle : RemoteTableHandle<EventContext, DeployableStateV2>
         {
-            protected override string RemoteTableName => "deployable_state_v2";
+            public override string RemoteTableName => "deployable_state_v2";
 
             public sealed class ClaimEntityIdIndex : BTreeIndexBase<ulong>
             {

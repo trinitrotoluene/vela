@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class PermissionStateHandle : RemoteTableHandle<EventContext, PermissionState>
         {
-            protected override string RemoteTableName => "permission_state";
+            public override string RemoteTableName => "permission_state";
 
             public sealed class AllowedEntityIdIndex : BTreeIndexBase<ulong>
             {

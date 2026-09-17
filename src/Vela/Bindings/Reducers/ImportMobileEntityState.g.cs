@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportMobileEntityState(System.Collections.Generic.List<SpacetimeDB.Types.MobileEntityState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportMobileEntityState(records), this.SetCallReducerFlags.ImportMobileEntityStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportMobileEntityState(records));
         }
 
         public bool InvokeImportMobileEntityState(ReducerEventContext ctx, Reducer.ImportMobileEntityState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_mobile_entity_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportMobileEntityStateFlags;
-        public void ImportMobileEntityState(CallReducerFlags flags) => ImportMobileEntityStateFlags = flags;
     }
 }

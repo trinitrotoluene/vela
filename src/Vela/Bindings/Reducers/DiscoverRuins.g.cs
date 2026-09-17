@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DiscoverRuins(SpacetimeDB.Types.OffsetCoordinatesSmallMessage coordinates)
         {
-            conn.InternalCallReducer(new Reducer.DiscoverRuins(coordinates), this.SetCallReducerFlags.DiscoverRuinsFlags);
+            conn.InternalCallReducer(new Reducer.DiscoverRuins(coordinates));
         }
 
         public bool InvokeDiscoverRuins(ReducerEventContext ctx, Reducer.DiscoverRuins args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "discover_ruins";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DiscoverRuinsFlags;
-        public void DiscoverRuins(CallReducerFlags flags) => DiscoverRuinsFlags = flags;
     }
 }

@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class EquipmentDescHandle : RemoteTableHandle<EventContext, EquipmentDesc>
         {
-            protected override string RemoteTableName => "equipment_desc";
+            public override string RemoteTableName => "equipment_desc";
 
             public sealed class ItemIdUniqueIndex : UniqueIndexBase<int>
             {
@@ -52,26 +52,32 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<EquipmentDesc, int> ItemId { get; }
         public global::SpacetimeDB.Col<EquipmentDesc, System.Collections.Generic.List<EquipmentSlotType>> Slots { get; }
         public global::SpacetimeDB.Col<EquipmentDesc, EquipmentVisualType> VisualType { get; }
-        public global::SpacetimeDB.NullableCol<EquipmentDesc, LevelRequirement> LevelRequirement { get; }
-        public global::SpacetimeDB.NullableCol<EquipmentDesc, ClothingVisual> ClothingVisual { get; }
-        public global::SpacetimeDB.NullableCol<EquipmentDesc, HandEquipmentVisual> HandEquipmentVisual { get; }
+        public global::SpacetimeDB.Col<EquipmentDesc, LevelRequirement> LevelRequirement { get; }
+        public global::SpacetimeDB.Col<EquipmentDesc, ClothingVisual> ClothingVisual { get; }
+        public global::SpacetimeDB.Col<EquipmentDesc, HandEquipmentVisual> HandEquipmentVisual { get; }
         public global::SpacetimeDB.Col<EquipmentDesc, System.Collections.Generic.List<CsvStatEntry>> Stats { get; }
         public global::SpacetimeDB.Col<EquipmentDesc, System.Collections.Generic.List<int>> RequiredAchievements { get; }
         public global::SpacetimeDB.Col<EquipmentDesc, System.Collections.Generic.List<int>> RequiredKnowledges { get; }
         public global::SpacetimeDB.Col<EquipmentDesc, bool> ShowInProgression { get; }
+        public global::SpacetimeDB.Col<EquipmentDesc, int> EquipmentBuffId { get; }
+        public global::SpacetimeDB.Col<EquipmentDesc, float> EquipmentBuffChancePerHit { get; }
+        public global::SpacetimeDB.Col<EquipmentDesc, int> EquipmentBuffSkillId { get; }
 
         public EquipmentDescCols(string tableName)
         {
             ItemId = new global::SpacetimeDB.Col<EquipmentDesc, int>(tableName, "item_id");
             Slots = new global::SpacetimeDB.Col<EquipmentDesc, System.Collections.Generic.List<EquipmentSlotType>>(tableName, "slots");
             VisualType = new global::SpacetimeDB.Col<EquipmentDesc, EquipmentVisualType>(tableName, "visual_type");
-            LevelRequirement = new global::SpacetimeDB.NullableCol<EquipmentDesc, LevelRequirement>(tableName, "level_requirement");
-            ClothingVisual = new global::SpacetimeDB.NullableCol<EquipmentDesc, ClothingVisual>(tableName, "clothing_visual");
-            HandEquipmentVisual = new global::SpacetimeDB.NullableCol<EquipmentDesc, HandEquipmentVisual>(tableName, "hand_equipment_visual");
+            LevelRequirement = new global::SpacetimeDB.Col<EquipmentDesc, LevelRequirement>(tableName, "level_requirement");
+            ClothingVisual = new global::SpacetimeDB.Col<EquipmentDesc, ClothingVisual>(tableName, "clothing_visual");
+            HandEquipmentVisual = new global::SpacetimeDB.Col<EquipmentDesc, HandEquipmentVisual>(tableName, "hand_equipment_visual");
             Stats = new global::SpacetimeDB.Col<EquipmentDesc, System.Collections.Generic.List<CsvStatEntry>>(tableName, "stats");
             RequiredAchievements = new global::SpacetimeDB.Col<EquipmentDesc, System.Collections.Generic.List<int>>(tableName, "required_achievements");
             RequiredKnowledges = new global::SpacetimeDB.Col<EquipmentDesc, System.Collections.Generic.List<int>>(tableName, "required_knowledges");
             ShowInProgression = new global::SpacetimeDB.Col<EquipmentDesc, bool>(tableName, "show_in_progression");
+            EquipmentBuffId = new global::SpacetimeDB.Col<EquipmentDesc, int>(tableName, "equipment_buff_id");
+            EquipmentBuffChancePerHit = new global::SpacetimeDB.Col<EquipmentDesc, float>(tableName, "equipment_buff_chance_per_hit");
+            EquipmentBuffSkillId = new global::SpacetimeDB.Col<EquipmentDesc, int>(tableName, "equipment_buff_skill_id");
         }
     }
 

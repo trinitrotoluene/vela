@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ClaimWithdrawFromTreasury(SpacetimeDB.Types.PlayerClaimWithdrawFromTreasuryRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ClaimWithdrawFromTreasury(request), this.SetCallReducerFlags.ClaimWithdrawFromTreasuryFlags);
+            conn.InternalCallReducer(new Reducer.ClaimWithdrawFromTreasury(request));
         }
 
         public bool InvokeClaimWithdrawFromTreasury(ReducerEventContext ctx, Reducer.ClaimWithdrawFromTreasury args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "claim_withdraw_from_treasury";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ClaimWithdrawFromTreasuryFlags;
-        public void ClaimWithdrawFromTreasury(CallReducerFlags flags) => ClaimWithdrawFromTreasuryFlags = flags;
     }
 }

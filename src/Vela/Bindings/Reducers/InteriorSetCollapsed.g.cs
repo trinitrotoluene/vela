@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void InteriorSetCollapsed(ulong dimensionNetworkEntityId, bool isCollapsed)
         {
-            conn.InternalCallReducer(new Reducer.InteriorSetCollapsed(dimensionNetworkEntityId, isCollapsed), this.SetCallReducerFlags.InteriorSetCollapsedFlags);
+            conn.InternalCallReducer(new Reducer.InteriorSetCollapsed(dimensionNetworkEntityId, isCollapsed));
         }
 
         public bool InvokeInteriorSetCollapsed(ReducerEventContext ctx, Reducer.InteriorSetCollapsed args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "interior_set_collapsed";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags InteriorSetCollapsedFlags;
-        public void InteriorSetCollapsed(CallReducerFlags flags) => InteriorSetCollapsedFlags = flags;
     }
 }

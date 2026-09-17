@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminUpdateResourceLightSourceStates()
         {
-            conn.InternalCallReducer(new Reducer.AdminUpdateResourceLightSourceStates(), this.SetCallReducerFlags.AdminUpdateResourceLightSourceStatesFlags);
+            conn.InternalCallReducer(new Reducer.AdminUpdateResourceLightSourceStates());
         }
 
         public bool InvokeAdminUpdateResourceLightSourceStates(ReducerEventContext ctx, Reducer.AdminUpdateResourceLightSourceStates args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "admin_update_resource_light_source_states";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminUpdateResourceLightSourceStatesFlags;
-        public void AdminUpdateResourceLightSourceStates(CallReducerFlags flags) => AdminUpdateResourceLightSourceStatesFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DeployableDismount(SpacetimeDB.Types.OffsetCoordinatesFloat coordinates, SpacetimeDB.Types.OffsetCoordinatesFloat deployableCoordinates)
         {
-            conn.InternalCallReducer(new Reducer.DeployableDismount(coordinates, deployableCoordinates), this.SetCallReducerFlags.DeployableDismountFlags);
+            conn.InternalCallReducer(new Reducer.DeployableDismount(coordinates, deployableCoordinates));
         }
 
         public bool InvokeDeployableDismount(ReducerEventContext ctx, Reducer.DeployableDismount args)
@@ -71,11 +71,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "deployable_dismount";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DeployableDismountFlags;
-        public void DeployableDismount(CallReducerFlags flags) => DeployableDismountFlags = flags;
     }
 }

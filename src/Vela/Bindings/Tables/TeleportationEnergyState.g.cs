@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class TeleportationEnergyStateHandle : RemoteTableHandle<EventContext, TeleportationEnergyState>
         {
-            protected override string RemoteTableName => "teleportation_energy_state";
+            public override string RemoteTableName => "teleportation_energy_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

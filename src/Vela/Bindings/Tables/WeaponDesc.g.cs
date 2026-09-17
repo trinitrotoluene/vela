@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class WeaponDescHandle : RemoteTableHandle<EventContext, WeaponDesc>
         {
-            protected override string RemoteTableName => "weapon_desc";
+            public override string RemoteTableName => "weapon_desc";
 
             public sealed class ItemIdUniqueIndex : UniqueIndexBase<int>
             {

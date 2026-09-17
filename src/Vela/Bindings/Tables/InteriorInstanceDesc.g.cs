@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class InteriorInstanceDescHandle : RemoteTableHandle<EventContext, InteriorInstanceDesc>
         {
-            protected override string RemoteTableName => "interior_instance_desc";
+            public override string RemoteTableName => "interior_instance_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {
@@ -54,7 +54,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<InteriorInstanceDesc, float> MaxZoom { get; }
         public global::SpacetimeDB.Col<InteriorInstanceDesc, float> MinAngle { get; }
         public global::SpacetimeDB.Col<InteriorInstanceDesc, float> MaxAngle { get; }
-        public global::SpacetimeDB.NullableCol<InteriorInstanceDesc, int> IntertiorEnvironmentId { get; }
+        public global::SpacetimeDB.Col<InteriorInstanceDesc, int> IntertiorEnvironmentId { get; }
 
         public InteriorInstanceDescCols(string tableName)
         {
@@ -73,7 +73,7 @@ namespace SpacetimeDB.Types
             MaxZoom = new global::SpacetimeDB.Col<InteriorInstanceDesc, float>(tableName, "max_zoom");
             MinAngle = new global::SpacetimeDB.Col<InteriorInstanceDesc, float>(tableName, "min_angle");
             MaxAngle = new global::SpacetimeDB.Col<InteriorInstanceDesc, float>(tableName, "max_angle");
-            IntertiorEnvironmentId = new global::SpacetimeDB.NullableCol<InteriorInstanceDesc, int>(tableName, "intertior_environment_id");
+            IntertiorEnvironmentId = new global::SpacetimeDB.Col<InteriorInstanceDesc, int>(tableName, "intertior_environment_id");
         }
     }
 

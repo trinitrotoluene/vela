@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportFoodDesc(System.Collections.Generic.List<SpacetimeDB.Types.FoodDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportFoodDesc(records), this.SetCallReducerFlags.ImportFoodDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportFoodDesc(records));
         }
 
         public bool InvokeImportFoodDesc(ReducerEventContext ctx, Reducer.ImportFoodDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_food_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportFoodDescFlags;
-        public void ImportFoodDesc(CallReducerFlags flags) => ImportFoodDescFlags = flags;
     }
 }

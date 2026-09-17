@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ConvertCollectibleToDeed(SpacetimeDB.Types.PlayerConvertCollectibleToDeedRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ConvertCollectibleToDeed(request), this.SetCallReducerFlags.ConvertCollectibleToDeedFlags);
+            conn.InternalCallReducer(new Reducer.ConvertCollectibleToDeed(request));
         }
 
         public bool InvokeConvertCollectibleToDeed(ReducerEventContext ctx, Reducer.ConvertCollectibleToDeed args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "convert_collectible_to_deed";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ConvertCollectibleToDeedFlags;
-        public void ConvertCollectibleToDeed(CallReducerFlags flags) => ConvertCollectibleToDeedFlags = flags;
     }
 }

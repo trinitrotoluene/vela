@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportBuffDesc(System.Collections.Generic.List<SpacetimeDB.Types.BuffDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportBuffDesc(records), this.SetCallReducerFlags.ImportBuffDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportBuffDesc(records));
         }
 
         public bool InvokeImportBuffDesc(ReducerEventContext ctx, Reducer.ImportBuffDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_buff_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportBuffDescFlags;
-        public void ImportBuffDesc(CallReducerFlags flags) => ImportBuffDescFlags = flags;
     }
 }

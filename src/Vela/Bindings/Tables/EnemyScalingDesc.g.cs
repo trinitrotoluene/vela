@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class EnemyScalingDescHandle : RemoteTableHandle<EventContext, EnemyScalingDesc>
         {
-            protected override string RemoteTableName => "enemy_scaling_desc";
+            public override string RemoteTableName => "enemy_scaling_desc";
 
             public sealed class EnemyTypeIdIndex : BTreeIndexBase<int>
             {

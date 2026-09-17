@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class DroppedInventoryStateHandle : RemoteTableHandle<EventContext, DroppedInventoryState>
         {
-            protected override string RemoteTableName => "dropped_inventory_state";
+            public override string RemoteTableName => "dropped_inventory_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

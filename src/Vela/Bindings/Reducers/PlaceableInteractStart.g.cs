@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlaceableInteractStart(SpacetimeDB.Types.PlayerPlaceableInteractRequest request)
         {
-            conn.InternalCallReducer(new Reducer.PlaceableInteractStart(request), this.SetCallReducerFlags.PlaceableInteractStartFlags);
+            conn.InternalCallReducer(new Reducer.PlaceableInteractStart(request));
         }
 
         public bool InvokePlaceableInteractStart(ReducerEventContext ctx, Reducer.PlaceableInteractStart args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "placeable_interact_start";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlaceableInteractStartFlags;
-        public void PlaceableInteractStart(CallReducerFlags flags) => PlaceableInteractStartFlags = flags;
     }
 }

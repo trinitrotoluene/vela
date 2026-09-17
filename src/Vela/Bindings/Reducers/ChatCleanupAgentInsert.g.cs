@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ChatCleanupAgentInsert()
         {
-            conn.InternalCallReducer(new Reducer.ChatCleanupAgentInsert(), this.SetCallReducerFlags.ChatCleanupAgentInsertFlags);
+            conn.InternalCallReducer(new Reducer.ChatCleanupAgentInsert());
         }
 
         public bool InvokeChatCleanupAgentInsert(ReducerEventContext ctx, Reducer.ChatCleanupAgentInsert args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "chat_cleanup_agent_insert";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ChatCleanupAgentInsertFlags;
-        public void ChatCleanupAgentInsert(CallReducerFlags flags) => ChatCleanupAgentInsertFlags = flags;
     }
 }

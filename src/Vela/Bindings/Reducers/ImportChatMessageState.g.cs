@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportChatMessageState(System.Collections.Generic.List<SpacetimeDB.Types.ChatMessageState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportChatMessageState(records), this.SetCallReducerFlags.ImportChatMessageStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportChatMessageState(records));
         }
 
         public bool InvokeImportChatMessageState(ReducerEventContext ctx, Reducer.ImportChatMessageState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_chat_message_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportChatMessageStateFlags;
-        public void ImportChatMessageState(CallReducerFlags flags) => ImportChatMessageStateFlags = flags;
     }
 }

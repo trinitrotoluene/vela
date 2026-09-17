@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EnemySetHealthBatch(System.Collections.Generic.List<SpacetimeDB.Types.EnemySetHealthRequest> requests)
         {
-            conn.InternalCallReducer(new Reducer.EnemySetHealthBatch(requests), this.SetCallReducerFlags.EnemySetHealthBatchFlags);
+            conn.InternalCallReducer(new Reducer.EnemySetHealthBatch(requests));
         }
 
         public bool InvokeEnemySetHealthBatch(ReducerEventContext ctx, Reducer.EnemySetHealthBatch args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "enemy_set_health_batch";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EnemySetHealthBatchFlags;
-        public void EnemySetHealthBatch(CallReducerFlags flags) => EnemySetHealthBatchFlags = flags;
     }
 }

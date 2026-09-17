@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AcquireKnowledgeFromEntities(SpacetimeDB.Types.PlayerAcquireKnowledgeFromEntitiesRequest request)
         {
-            conn.InternalCallReducer(new Reducer.AcquireKnowledgeFromEntities(request), this.SetCallReducerFlags.AcquireKnowledgeFromEntitiesFlags);
+            conn.InternalCallReducer(new Reducer.AcquireKnowledgeFromEntities(request));
         }
 
         public bool InvokeAcquireKnowledgeFromEntities(ReducerEventContext ctx, Reducer.AcquireKnowledgeFromEntities args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "acquire_knowledge_from_entities";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AcquireKnowledgeFromEntitiesFlags;
-        public void AcquireKnowledgeFromEntities(CallReducerFlags flags) => AcquireKnowledgeFromEntitiesFlags = flags;
     }
 }

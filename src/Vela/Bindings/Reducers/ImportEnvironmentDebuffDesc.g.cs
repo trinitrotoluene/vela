@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportEnvironmentDebuffDesc(System.Collections.Generic.List<SpacetimeDB.Types.EnvironmentDebuffDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportEnvironmentDebuffDesc(records), this.SetCallReducerFlags.ImportEnvironmentDebuffDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportEnvironmentDebuffDesc(records));
         }
 
         public bool InvokeImportEnvironmentDebuffDesc(ReducerEventContext ctx, Reducer.ImportEnvironmentDebuffDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_environment_debuff_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportEnvironmentDebuffDescFlags;
-        public void ImportEnvironmentDebuffDesc(CallReducerFlags flags) => ImportEnvironmentDebuffDescFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ClaimLeave(SpacetimeDB.Types.PlayerClaimLeaveRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ClaimLeave(request), this.SetCallReducerFlags.ClaimLeaveFlags);
+            conn.InternalCallReducer(new Reducer.ClaimLeave(request));
         }
 
         public bool InvokeClaimLeave(ReducerEventContext ctx, Reducer.ClaimLeave args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "claim_leave";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ClaimLeaveFlags;
-        public void ClaimLeave(CallReducerFlags flags) => ClaimLeaveFlags = flags;
     }
 }

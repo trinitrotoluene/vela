@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminResourcesDeleteVerySlow(int resourceId)
         {
-            conn.InternalCallReducer(new Reducer.AdminResourcesDeleteVerySlow(resourceId), this.SetCallReducerFlags.AdminResourcesDeleteVerySlowFlags);
+            conn.InternalCallReducer(new Reducer.AdminResourcesDeleteVerySlow(resourceId));
         }
 
         public bool InvokeAdminResourcesDeleteVerySlow(ReducerEventContext ctx, Reducer.AdminResourcesDeleteVerySlow args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_resources_delete_very_slow";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminResourcesDeleteVerySlowFlags;
-        public void AdminResourcesDeleteVerySlow(CallReducerFlags flags) => AdminResourcesDeleteVerySlowFlags = flags;
     }
 }

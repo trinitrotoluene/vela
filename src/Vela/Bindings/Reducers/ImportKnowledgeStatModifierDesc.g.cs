@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportKnowledgeStatModifierDesc(System.Collections.Generic.List<SpacetimeDB.Types.KnowledgeStatModifierDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportKnowledgeStatModifierDesc(records), this.SetCallReducerFlags.ImportKnowledgeStatModifierDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportKnowledgeStatModifierDesc(records));
         }
 
         public bool InvokeImportKnowledgeStatModifierDesc(ReducerEventContext ctx, Reducer.ImportKnowledgeStatModifierDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_knowledge_stat_modifier_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportKnowledgeStatModifierDescFlags;
-        public void ImportKnowledgeStatModifierDesc(CallReducerFlags flags) => ImportKnowledgeStatModifierDescFlags = flags;
     }
 }

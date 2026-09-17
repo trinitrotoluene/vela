@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportExplorationChunksState(System.Collections.Generic.List<SpacetimeDB.Types.ExplorationChunksStateV2> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportExplorationChunksState(records), this.SetCallReducerFlags.ImportExplorationChunksStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportExplorationChunksState(records));
         }
 
         public bool InvokeImportExplorationChunksState(ReducerEventContext ctx, Reducer.ImportExplorationChunksState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_exploration_chunks_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportExplorationChunksStateFlags;
-        public void ImportExplorationChunksState(CallReducerFlags flags) => ImportExplorationChunksStateFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void BuildingSetNickname(SpacetimeDB.Types.PlayerBuildingSetNicknameRequest request)
         {
-            conn.InternalCallReducer(new Reducer.BuildingSetNickname(request), this.SetCallReducerFlags.BuildingSetNicknameFlags);
+            conn.InternalCallReducer(new Reducer.BuildingSetNickname(request));
         }
 
         public bool InvokeBuildingSetNickname(ReducerEventContext ctx, Reducer.BuildingSetNickname args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "building_set_nickname";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags BuildingSetNicknameFlags;
-        public void BuildingSetNickname(CallReducerFlags flags) => BuildingSetNicknameFlags = flags;
     }
 }

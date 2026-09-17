@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatSetAiDebugState(SpacetimeDB.Types.CheatSetDebugAiStateRequest request)
         {
-            conn.InternalCallReducer(new Reducer.CheatSetAiDebugState(request), this.SetCallReducerFlags.CheatSetAiDebugStateFlags);
+            conn.InternalCallReducer(new Reducer.CheatSetAiDebugState(request));
         }
 
         public bool InvokeCheatSetAiDebugState(ReducerEventContext ctx, Reducer.CheatSetAiDebugState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_set_ai_debug_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatSetAiDebugStateFlags;
-        public void CheatSetAiDebugState(CallReducerFlags flags) => CheatSetAiDebugStateFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportDeployableAppearanceOverrideDesc(System.Collections.Generic.List<SpacetimeDB.Types.DeployableAppearanceOverrideDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportDeployableAppearanceOverrideDesc(records), this.SetCallReducerFlags.ImportDeployableAppearanceOverrideDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportDeployableAppearanceOverrideDesc(records));
         }
 
         public bool InvokeImportDeployableAppearanceOverrideDesc(ReducerEventContext ctx, Reducer.ImportDeployableAppearanceOverrideDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_deployable_appearance_override_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportDeployableAppearanceOverrideDescFlags;
-        public void ImportDeployableAppearanceOverrideDesc(CallReducerFlags flags) => ImportDeployableAppearanceOverrideDescFlags = flags;
     }
 }

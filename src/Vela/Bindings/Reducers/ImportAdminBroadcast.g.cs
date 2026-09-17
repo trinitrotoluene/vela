@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportAdminBroadcast(System.Collections.Generic.List<SpacetimeDB.Types.AdminBroadcast> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportAdminBroadcast(records), this.SetCallReducerFlags.ImportAdminBroadcastFlags);
+            conn.InternalCallReducer(new Reducer.ImportAdminBroadcast(records));
         }
 
         public bool InvokeImportAdminBroadcast(ReducerEventContext ctx, Reducer.ImportAdminBroadcast args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_admin_broadcast";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportAdminBroadcastFlags;
-        public void ImportAdminBroadcast(CallReducerFlags flags) => ImportAdminBroadcastFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CraftInitiateStart(SpacetimeDB.Types.PlayerCraftInitiateRequest request)
         {
-            conn.InternalCallReducer(new Reducer.CraftInitiateStart(request), this.SetCallReducerFlags.CraftInitiateStartFlags);
+            conn.InternalCallReducer(new Reducer.CraftInitiateStart(request));
         }
 
         public bool InvokeCraftInitiateStart(ReducerEventContext ctx, Reducer.CraftInitiateStart args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "craft_initiate_start";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CraftInitiateStartFlags;
-        public void CraftInitiateStart(CallReducerFlags flags) => CraftInitiateStartFlags = flags;
     }
 }

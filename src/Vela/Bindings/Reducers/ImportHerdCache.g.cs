@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportHerdCache(System.Collections.Generic.List<SpacetimeDB.Types.HerdState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportHerdCache(records), this.SetCallReducerFlags.ImportHerdCacheFlags);
+            conn.InternalCallReducer(new Reducer.ImportHerdCache(records));
         }
 
         public bool InvokeImportHerdCache(ReducerEventContext ctx, Reducer.ImportHerdCache args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_herd_cache";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportHerdCacheFlags;
-        public void ImportHerdCache(CallReducerFlags flags) => ImportHerdCacheFlags = flags;
     }
 }

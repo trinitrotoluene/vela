@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EmpireWithdrawItem(int itemId, SpacetimeDB.Types.ItemType itemType, uint amount)
         {
-            conn.InternalCallReducer(new Reducer.EmpireWithdrawItem(itemId, itemType, amount), this.SetCallReducerFlags.EmpireWithdrawItemFlags);
+            conn.InternalCallReducer(new Reducer.EmpireWithdrawItem(itemId, itemType, amount));
         }
 
         public bool InvokeEmpireWithdrawItem(ReducerEventContext ctx, Reducer.EmpireWithdrawItem args)
@@ -74,11 +74,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "empire_withdraw_item";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EmpireWithdrawItemFlags;
-        public void EmpireWithdrawItem(CallReducerFlags flags) => EmpireWithdrawItemFlags = flags;
     }
 }

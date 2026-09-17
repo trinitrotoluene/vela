@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void MigrationSetAchievementParams(bool allowDestructive, bool grantIfAlreadyOwned)
         {
-            conn.InternalCallReducer(new Reducer.MigrationSetAchievementParams(allowDestructive, grantIfAlreadyOwned), this.SetCallReducerFlags.MigrationSetAchievementParamsFlags);
+            conn.InternalCallReducer(new Reducer.MigrationSetAchievementParams(allowDestructive, grantIfAlreadyOwned));
         }
 
         public bool InvokeMigrationSetAchievementParams(ReducerEventContext ctx, Reducer.MigrationSetAchievementParams args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "migration_set_achievement_params";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags MigrationSetAchievementParamsFlags;
-        public void MigrationSetAchievementParams(CallReducerFlags flags) => MigrationSetAchievementParamsFlags = flags;
     }
 }

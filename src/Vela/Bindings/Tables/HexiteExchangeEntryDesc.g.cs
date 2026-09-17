@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class HexiteExchangeEntryDescHandle : RemoteTableHandle<EventContext, HexiteExchangeEntryDesc>
         {
-            protected override string RemoteTableName => "hexite_exchange_entry_desc";
+            public override string RemoteTableName => "hexite_exchange_entry_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {

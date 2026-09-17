@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class TheGreatPlaceholderTableHandle : RemoteTableHandle<EventContext, TheGreatPlaceHolderTable>
         {
-            protected override string RemoteTableName => "the_great_placeholder_table";
+            public override string RemoteTableName => "the_great_placeholder_table";
 
             public sealed class PlaceholderIdUniqueIndex : UniqueIndexBase<ulong>
             {

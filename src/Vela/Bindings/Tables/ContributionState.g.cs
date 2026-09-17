@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ContributionStateHandle : RemoteTableHandle<EventContext, ContributionState>
         {
-            protected override string RemoteTableName => "contribution_state";
+            public override string RemoteTableName => "contribution_state";
 
             public sealed class EnemyEntityIdIndex : BTreeIndexBase<ulong>
             {

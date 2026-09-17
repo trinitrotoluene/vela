@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerQueueJoin()
         {
-            conn.InternalCallReducer(new Reducer.PlayerQueueJoin(), this.SetCallReducerFlags.PlayerQueueJoinFlags);
+            conn.InternalCallReducer(new Reducer.PlayerQueueJoin());
         }
 
         public bool InvokePlayerQueueJoin(ReducerEventContext ctx, Reducer.PlayerQueueJoin args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "player_queue_join";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerQueueJoinFlags;
-        public void PlayerQueueJoin(CallReducerFlags flags) => PlayerQueueJoinFlags = flags;
     }
 }

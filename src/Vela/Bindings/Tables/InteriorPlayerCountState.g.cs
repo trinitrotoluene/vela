@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class InteriorPlayerCountStateHandle : RemoteTableHandle<EventContext, InteriorPlayerCountState>
         {
-            protected override string RemoteTableName => "interior_player_count_state";
+            public override string RemoteTableName => "interior_player_count_state";
 
             public sealed class DimensionNetworkEntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

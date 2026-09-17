@@ -33,6 +33,12 @@ namespace SpacetimeDB.Types
         public System.Collections.Generic.List<int> RequiredKnowledges;
         [DataMember(Name = "show_in_progression")]
         public bool ShowInProgression;
+        [DataMember(Name = "equipment_buff_id")]
+        public int EquipmentBuffId;
+        [DataMember(Name = "equipment_buff_chance_per_hit")]
+        public float EquipmentBuffChancePerHit;
+        [DataMember(Name = "equipment_buff_skill_id")]
+        public int EquipmentBuffSkillId;
 
         public EquipmentDesc(
             int ItemId,
@@ -44,7 +50,10 @@ namespace SpacetimeDB.Types
             System.Collections.Generic.List<CsvStatEntry> Stats,
             System.Collections.Generic.List<int> RequiredAchievements,
             System.Collections.Generic.List<int> RequiredKnowledges,
-            bool ShowInProgression
+            bool ShowInProgression,
+            int EquipmentBuffId,
+            float EquipmentBuffChancePerHit,
+            int EquipmentBuffSkillId
         )
         {
             this.ItemId = ItemId;
@@ -57,6 +66,9 @@ namespace SpacetimeDB.Types
             this.RequiredAchievements = RequiredAchievements;
             this.RequiredKnowledges = RequiredKnowledges;
             this.ShowInProgression = ShowInProgression;
+            this.EquipmentBuffId = EquipmentBuffId;
+            this.EquipmentBuffChancePerHit = EquipmentBuffChancePerHit;
+            this.EquipmentBuffSkillId = EquipmentBuffSkillId;
         }
 
         public EquipmentDesc()

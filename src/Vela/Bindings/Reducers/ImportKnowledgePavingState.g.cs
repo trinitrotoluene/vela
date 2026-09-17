@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportKnowledgePavingState(System.Collections.Generic.List<SpacetimeDB.Types.KnowledgePavingState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportKnowledgePavingState(records), this.SetCallReducerFlags.ImportKnowledgePavingStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportKnowledgePavingState(records));
         }
 
         public bool InvokeImportKnowledgePavingState(ReducerEventContext ctx, Reducer.ImportKnowledgePavingState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_knowledge_paving_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportKnowledgePavingStateFlags;
-        public void ImportKnowledgePavingState(CallReducerFlags flags) => ImportKnowledgePavingStateFlags = flags;
     }
 }

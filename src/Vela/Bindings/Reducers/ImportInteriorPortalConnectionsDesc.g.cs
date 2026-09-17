@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportInteriorPortalConnectionsDesc(System.Collections.Generic.List<SpacetimeDB.Types.InteriorPortalConnectionsDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportInteriorPortalConnectionsDesc(records), this.SetCallReducerFlags.ImportInteriorPortalConnectionsDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportInteriorPortalConnectionsDesc(records));
         }
 
         public bool InvokeImportInteriorPortalConnectionsDesc(ReducerEventContext ctx, Reducer.ImportInteriorPortalConnectionsDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_interior_portal_connections_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportInteriorPortalConnectionsDescFlags;
-        public void ImportInteriorPortalConnectionsDesc(CallReducerFlags flags) => ImportInteriorPortalConnectionsDescFlags = flags;
     }
 }

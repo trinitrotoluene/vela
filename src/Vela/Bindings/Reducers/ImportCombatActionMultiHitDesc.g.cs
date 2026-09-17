@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportCombatActionMultiHitDesc(System.Collections.Generic.List<SpacetimeDB.Types.CombatActionMultiHitDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportCombatActionMultiHitDesc(records), this.SetCallReducerFlags.ImportCombatActionMultiHitDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportCombatActionMultiHitDesc(records));
         }
 
         public bool InvokeImportCombatActionMultiHitDesc(ReducerEventContext ctx, Reducer.ImportCombatActionMultiHitDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_combat_action_multi_hit_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportCombatActionMultiHitDescFlags;
-        public void ImportCombatActionMultiHitDesc(CallReducerFlags flags) => ImportCombatActionMultiHitDescFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerVoteAnswer(SpacetimeDB.Types.PlayerVoteAnswerRequest request)
         {
-            conn.InternalCallReducer(new Reducer.PlayerVoteAnswer(request), this.SetCallReducerFlags.PlayerVoteAnswerFlags);
+            conn.InternalCallReducer(new Reducer.PlayerVoteAnswer(request));
         }
 
         public bool InvokePlayerVoteAnswer(ReducerEventContext ctx, Reducer.PlayerVoteAnswer args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "player_vote_answer";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerVoteAnswerFlags;
-        public void PlayerVoteAnswer(CallReducerFlags flags) => PlayerVoteAnswerFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DeployableStoreFromCollectibleId(int collectibleId)
         {
-            conn.InternalCallReducer(new Reducer.DeployableStoreFromCollectibleId(collectibleId), this.SetCallReducerFlags.DeployableStoreFromCollectibleIdFlags);
+            conn.InternalCallReducer(new Reducer.DeployableStoreFromCollectibleId(collectibleId));
         }
 
         public bool InvokeDeployableStoreFromCollectibleId(ReducerEventContext ctx, Reducer.DeployableStoreFromCollectibleId args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "deployable_store_from_collectible_id";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DeployableStoreFromCollectibleIdFlags;
-        public void DeployableStoreFromCollectibleId(CallReducerFlags flags) => DeployableStoreFromCollectibleIdFlags = flags;
     }
 }

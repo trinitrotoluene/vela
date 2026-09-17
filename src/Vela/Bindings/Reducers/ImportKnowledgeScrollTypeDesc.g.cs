@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportKnowledgeScrollTypeDesc(System.Collections.Generic.List<SpacetimeDB.Types.KnowledgeScrollTypeDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportKnowledgeScrollTypeDesc(records), this.SetCallReducerFlags.ImportKnowledgeScrollTypeDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportKnowledgeScrollTypeDesc(records));
         }
 
         public bool InvokeImportKnowledgeScrollTypeDesc(ReducerEventContext ctx, Reducer.ImportKnowledgeScrollTypeDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_knowledge_scroll_type_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportKnowledgeScrollTypeDescFlags;
-        public void ImportKnowledgeScrollTypeDesc(CallReducerFlags flags) => ImportKnowledgeScrollTypeDescFlags = flags;
     }
 }

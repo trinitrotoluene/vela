@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatRemoveEntityResource(ulong targetEntityId)
         {
-            conn.InternalCallReducer(new Reducer.CheatRemoveEntityResource(targetEntityId), this.SetCallReducerFlags.CheatRemoveEntityResourceFlags);
+            conn.InternalCallReducer(new Reducer.CheatRemoveEntityResource(targetEntityId));
         }
 
         public bool InvokeCheatRemoveEntityResource(ReducerEventContext ctx, Reducer.CheatRemoveEntityResource args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_remove_entity_resource";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatRemoveEntityResourceFlags;
-        public void CheatRemoveEntityResource(CallReducerFlags flags) => CheatRemoveEntityResourceFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminRenameBuildingCoord(SpacetimeDB.Types.OffsetCoordinatesSmallMessage coord, string newName)
         {
-            conn.InternalCallReducer(new Reducer.AdminRenameBuildingCoord(coord, newName), this.SetCallReducerFlags.AdminRenameBuildingCoordFlags);
+            conn.InternalCallReducer(new Reducer.AdminRenameBuildingCoord(coord, newName));
         }
 
         public bool InvokeAdminRenameBuildingCoord(ReducerEventContext ctx, Reducer.AdminRenameBuildingCoord args)
@@ -71,11 +71,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_rename_building_coord";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminRenameBuildingCoordFlags;
-        public void AdminRenameBuildingCoord(CallReducerFlags flags) => AdminRenameBuildingCoordFlags = flags;
     }
 }

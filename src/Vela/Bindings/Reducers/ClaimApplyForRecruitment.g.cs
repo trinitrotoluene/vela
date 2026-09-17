@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ClaimApplyForRecruitment(SpacetimeDB.Types.PlayerClaimApplyForRecruitmentRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ClaimApplyForRecruitment(request), this.SetCallReducerFlags.ClaimApplyForRecruitmentFlags);
+            conn.InternalCallReducer(new Reducer.ClaimApplyForRecruitment(request));
         }
 
         public bool InvokeClaimApplyForRecruitment(ReducerEventContext ctx, Reducer.ClaimApplyForRecruitment args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "claim_apply_for_recruitment";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ClaimApplyForRecruitmentFlags;
-        public void ClaimApplyForRecruitment(CallReducerFlags flags) => ClaimApplyForRecruitmentFlags = flags;
     }
 }

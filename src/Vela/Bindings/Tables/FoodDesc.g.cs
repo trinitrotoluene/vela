@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class FoodDescHandle : RemoteTableHandle<EventContext, FoodDesc>
         {
-            protected override string RemoteTableName => "food_desc";
+            public override string RemoteTableName => "food_desc";
 
             public sealed class ItemIdUniqueIndex : UniqueIndexBase<int>
             {
@@ -48,6 +48,8 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<FoodDesc, float> TeleportationEnergy { get; }
         public global::SpacetimeDB.Col<FoodDesc, bool> ConsumableWhileInCombat { get; }
         public global::SpacetimeDB.Col<FoodDesc, System.Collections.Generic.List<BuffEffect>> Buffs { get; }
+        public global::SpacetimeDB.Col<FoodDesc, bool> AutoConsume { get; }
+        public global::SpacetimeDB.Col<FoodDesc, System.Collections.Generic.List<ItemStack>> OutputItemStacks { get; }
 
         public FoodDescCols(string tableName)
         {
@@ -60,6 +62,8 @@ namespace SpacetimeDB.Types
             TeleportationEnergy = new global::SpacetimeDB.Col<FoodDesc, float>(tableName, "teleportation_energy");
             ConsumableWhileInCombat = new global::SpacetimeDB.Col<FoodDesc, bool>(tableName, "consumable_while_in_combat");
             Buffs = new global::SpacetimeDB.Col<FoodDesc, System.Collections.Generic.List<BuffEffect>>(tableName, "buffs");
+            AutoConsume = new global::SpacetimeDB.Col<FoodDesc, bool>(tableName, "auto_consume");
+            OutputItemStacks = new global::SpacetimeDB.Col<FoodDesc, System.Collections.Generic.List<ItemStack>>(tableName, "output_item_stacks");
         }
     }
 

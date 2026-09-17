@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void EmpireDonateItem(SpacetimeDB.Types.EmpireDonateItemRequest request)
         {
-            conn.InternalCallReducer(new Reducer.EmpireDonateItem(request), this.SetCallReducerFlags.EmpireDonateItemFlags);
+            conn.InternalCallReducer(new Reducer.EmpireDonateItem(request));
         }
 
         public bool InvokeEmpireDonateItem(ReducerEventContext ctx, Reducer.EmpireDonateItem args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "empire_donate_item";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags EmpireDonateItemFlags;
-        public void EmpireDonateItem(CallReducerFlags flags) => EmpireDonateItemFlags = flags;
     }
 }

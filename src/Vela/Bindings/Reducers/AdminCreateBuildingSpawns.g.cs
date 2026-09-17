@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminCreateBuildingSpawns(int buildingDescriptionId, bool commit)
         {
-            conn.InternalCallReducer(new Reducer.AdminCreateBuildingSpawns(buildingDescriptionId, commit), this.SetCallReducerFlags.AdminCreateBuildingSpawnsFlags);
+            conn.InternalCallReducer(new Reducer.AdminCreateBuildingSpawns(buildingDescriptionId, commit));
         }
 
         public bool InvokeAdminCreateBuildingSpawns(ReducerEventContext ctx, Reducer.AdminCreateBuildingSpawns args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_create_building_spawns";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminCreateBuildingSpawnsFlags;
-        public void AdminCreateBuildingSpawns(CallReducerFlags flags) => AdminCreateBuildingSpawnsFlags = flags;
     }
 }

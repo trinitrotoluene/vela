@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DiscoverPavement(int pavingId)
         {
-            conn.InternalCallReducer(new Reducer.DiscoverPavement(pavingId), this.SetCallReducerFlags.DiscoverPavementFlags);
+            conn.InternalCallReducer(new Reducer.DiscoverPavement(pavingId));
         }
 
         public bool InvokeDiscoverPavement(ReducerEventContext ctx, Reducer.DiscoverPavement args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "discover_pavement";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DiscoverPavementFlags;
-        public void DiscoverPavement(CallReducerFlags flags) => DiscoverPavementFlags = flags;
     }
 }

@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class AlertDescHandle : RemoteTableHandle<EventContext, AlertDesc>
         {
-            protected override string RemoteTableName => "alert_desc";
+            public override string RemoteTableName => "alert_desc";
 
             public sealed class AlertTypeUniqueIndex : UniqueIndexBase<int>
             {

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminRestoreAllBuildingsHealth()
         {
-            conn.InternalCallReducer(new Reducer.AdminRestoreAllBuildingsHealth(), this.SetCallReducerFlags.AdminRestoreAllBuildingsHealthFlags);
+            conn.InternalCallReducer(new Reducer.AdminRestoreAllBuildingsHealth());
         }
 
         public bool InvokeAdminRestoreAllBuildingsHealth(ReducerEventContext ctx, Reducer.AdminRestoreAllBuildingsHealth args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "admin_restore_all_buildings_health";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminRestoreAllBuildingsHealthFlags;
-        public void AdminRestoreAllBuildingsHealth(CallReducerFlags flags) => AdminRestoreAllBuildingsHealthFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageChestRarityDesc(System.Collections.Generic.List<SpacetimeDB.Types.ChestRarityDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageChestRarityDesc(records), this.SetCallReducerFlags.StageChestRarityDescFlags);
+            conn.InternalCallReducer(new Reducer.StageChestRarityDesc(records));
         }
 
         public bool InvokeStageChestRarityDesc(ReducerEventContext ctx, Reducer.StageChestRarityDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_chest_rarity_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageChestRarityDescFlags;
-        public void StageChestRarityDesc(CallReducerFlags flags) => StageChestRarityDescFlags = flags;
     }
 }

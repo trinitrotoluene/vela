@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminRenameDeployable(string deployableName, string newName)
         {
-            conn.InternalCallReducer(new Reducer.AdminRenameDeployable(deployableName, newName), this.SetCallReducerFlags.AdminRenameDeployableFlags);
+            conn.InternalCallReducer(new Reducer.AdminRenameDeployable(deployableName, newName));
         }
 
         public bool InvokeAdminRenameDeployable(ReducerEventContext ctx, Reducer.AdminRenameDeployable args)
@@ -71,11 +71,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_rename_deployable";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminRenameDeployableFlags;
-        public void AdminRenameDeployable(CallReducerFlags flags) => AdminRenameDeployableFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PlayerHousingRequestAccess(SpacetimeDB.Types.PlayerHousingRequestAccessRequest request)
         {
-            conn.InternalCallReducer(new Reducer.PlayerHousingRequestAccess(request), this.SetCallReducerFlags.PlayerHousingRequestAccessFlags);
+            conn.InternalCallReducer(new Reducer.PlayerHousingRequestAccess(request));
         }
 
         public bool InvokePlayerHousingRequestAccess(ReducerEventContext ctx, Reducer.PlayerHousingRequestAccess args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "player_housing_request_access";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PlayerHousingRequestAccessFlags;
-        public void PlayerHousingRequestAccess(CallReducerFlags flags) => PlayerHousingRequestAccessFlags = flags;
     }
 }

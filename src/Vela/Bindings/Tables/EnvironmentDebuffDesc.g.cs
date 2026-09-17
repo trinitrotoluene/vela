@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class EnvironmentDebuffDescHandle : RemoteTableHandle<EventContext, EnvironmentDebuffDesc>
         {
-            protected override string RemoteTableName => "environment_debuff_desc";
+            public override string RemoteTableName => "environment_debuff_desc";
 
             public sealed class BuffIdUniqueIndex : UniqueIndexBase<int>
             {

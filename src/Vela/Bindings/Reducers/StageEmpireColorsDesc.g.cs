@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageEmpireColorsDesc(System.Collections.Generic.List<SpacetimeDB.Types.EmpireColorDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageEmpireColorsDesc(records), this.SetCallReducerFlags.StageEmpireColorsDescFlags);
+            conn.InternalCallReducer(new Reducer.StageEmpireColorsDesc(records));
         }
 
         public bool InvokeStageEmpireColorsDesc(ReducerEventContext ctx, Reducer.StageEmpireColorsDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_empire_colors_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageEmpireColorsDescFlags;
-        public void StageEmpireColorsDesc(CallReducerFlags flags) => StageEmpireColorsDescFlags = flags;
     }
 }

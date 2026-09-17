@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportWorldRegionNameState(System.Collections.Generic.List<SpacetimeDB.Types.WorldRegionNameState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportWorldRegionNameState(records), this.SetCallReducerFlags.ImportWorldRegionNameStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportWorldRegionNameState(records));
         }
 
         public bool InvokeImportWorldRegionNameState(ReducerEventContext ctx, Reducer.ImportWorldRegionNameState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_world_region_name_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportWorldRegionNameStateFlags;
-        public void ImportWorldRegionNameState(CallReducerFlags flags) => ImportWorldRegionNameStateFlags = flags;
     }
 }

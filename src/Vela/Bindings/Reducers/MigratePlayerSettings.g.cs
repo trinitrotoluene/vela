@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void MigratePlayerSettings()
         {
-            conn.InternalCallReducer(new Reducer.MigratePlayerSettings(), this.SetCallReducerFlags.MigratePlayerSettingsFlags);
+            conn.InternalCallReducer(new Reducer.MigratePlayerSettings());
         }
 
         public bool InvokeMigratePlayerSettings(ReducerEventContext ctx, Reducer.MigratePlayerSettings args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "migrate_player_settings";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags MigratePlayerSettingsFlags;
-        public void MigratePlayerSettings(CallReducerFlags flags) => MigratePlayerSettingsFlags = flags;
     }
 }

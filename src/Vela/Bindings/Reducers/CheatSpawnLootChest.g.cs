@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatSpawnLootChest(SpacetimeDB.Types.CheatSpawnLootChestRequest request)
         {
-            conn.InternalCallReducer(new Reducer.CheatSpawnLootChest(request), this.SetCallReducerFlags.CheatSpawnLootChestFlags);
+            conn.InternalCallReducer(new Reducer.CheatSpawnLootChest(request));
         }
 
         public bool InvokeCheatSpawnLootChest(ReducerEventContext ctx, Reducer.CheatSpawnLootChest args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_spawn_loot_chest";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatSpawnLootChestFlags;
-        public void CheatSpawnLootChest(CallReducerFlags flags) => CheatSpawnLootChestFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ReportEntity(SpacetimeDB.Types.ReportEntityMessage request)
         {
-            conn.InternalCallReducer(new Reducer.ReportEntity(request), this.SetCallReducerFlags.ReportEntityFlags);
+            conn.InternalCallReducer(new Reducer.ReportEntity(request));
         }
 
         public bool InvokeReportEntity(ReducerEventContext ctx, Reducer.ReportEntity args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "report_entity";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ReportEntityFlags;
-        public void ReportEntity(CallReducerFlags flags) => ReportEntityFlags = flags;
     }
 }

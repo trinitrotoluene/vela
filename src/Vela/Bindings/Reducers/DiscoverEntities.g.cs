@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DiscoverEntities(SpacetimeDB.Types.PlayerDiscoverEntitiesRequest request)
         {
-            conn.InternalCallReducer(new Reducer.DiscoverEntities(request), this.SetCallReducerFlags.DiscoverEntitiesFlags);
+            conn.InternalCallReducer(new Reducer.DiscoverEntities(request));
         }
 
         public bool InvokeDiscoverEntities(ReducerEventContext ctx, Reducer.DiscoverEntities args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "discover_entities";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DiscoverEntitiesFlags;
-        public void DiscoverEntities(CallReducerFlags flags) => DiscoverEntitiesFlags = flags;
     }
 }

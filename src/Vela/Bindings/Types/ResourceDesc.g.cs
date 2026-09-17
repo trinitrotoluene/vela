@@ -63,6 +63,22 @@ namespace SpacetimeDB.Types
         public int OnDestroyYieldResourceMaxRadius;
         [DataMember(Name = "light_radius")]
         public int LightRadius;
+        [DataMember(Name = "spawns_on_land")]
+        public bool SpawnsOnLand;
+        [DataMember(Name = "land_elevation_min")]
+        public int LandElevationMin;
+        [DataMember(Name = "land_elevation_max")]
+        public int LandElevationMax;
+        [DataMember(Name = "spawns_in_water")]
+        public bool SpawnsInWater;
+        [DataMember(Name = "water_depth_min")]
+        public int WaterDepthMin;
+        [DataMember(Name = "water_depth_max")]
+        public int WaterDepthMax;
+        [DataMember(Name = "max_elevation_delta")]
+        public int MaxElevationDelta;
+        [DataMember(Name = "on_destroy_building_outcomes")]
+        public System.Collections.Generic.List<ResourceDestroyBuildingOutcome>? OnDestroyBuildingOutcomes;
 
         public ResourceDesc(
             int Id,
@@ -89,7 +105,15 @@ namespace SpacetimeDB.Types
             float OnDestroyYieldResourceChance,
             int OnDestroyYieldResourceMinRadius,
             int OnDestroyYieldResourceMaxRadius,
-            int LightRadius
+            int LightRadius,
+            bool SpawnsOnLand,
+            int LandElevationMin,
+            int LandElevationMax,
+            bool SpawnsInWater,
+            int WaterDepthMin,
+            int WaterDepthMax,
+            int MaxElevationDelta,
+            System.Collections.Generic.List<ResourceDestroyBuildingOutcome>? OnDestroyBuildingOutcomes
         )
         {
             this.Id = Id;
@@ -117,6 +141,14 @@ namespace SpacetimeDB.Types
             this.OnDestroyYieldResourceMinRadius = OnDestroyYieldResourceMinRadius;
             this.OnDestroyYieldResourceMaxRadius = OnDestroyYieldResourceMaxRadius;
             this.LightRadius = LightRadius;
+            this.SpawnsOnLand = SpawnsOnLand;
+            this.LandElevationMin = LandElevationMin;
+            this.LandElevationMax = LandElevationMax;
+            this.SpawnsInWater = SpawnsInWater;
+            this.WaterDepthMin = WaterDepthMin;
+            this.WaterDepthMax = WaterDepthMax;
+            this.MaxElevationDelta = MaxElevationDelta;
+            this.OnDestroyBuildingOutcomes = OnDestroyBuildingOutcomes;
         }
 
         public ResourceDesc()

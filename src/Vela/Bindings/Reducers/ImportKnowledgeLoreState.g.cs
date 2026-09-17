@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportKnowledgeLoreState(System.Collections.Generic.List<SpacetimeDB.Types.KnowledgeLoreState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportKnowledgeLoreState(records), this.SetCallReducerFlags.ImportKnowledgeLoreStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportKnowledgeLoreState(records));
         }
 
         public bool InvokeImportKnowledgeLoreState(ReducerEventContext ctx, Reducer.ImportKnowledgeLoreState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_knowledge_lore_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportKnowledgeLoreStateFlags;
-        public void ImportKnowledgeLoreState(CallReducerFlags flags) => ImportKnowledgeLoreStateFlags = flags;
     }
 }

@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class CombatActionDescHandle : RemoteTableHandle<EventContext, CombatActionDesc>
         {
-            protected override string RemoteTableName => "combat_action_desc";
+            public override string RemoteTableName => "combat_action_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {
@@ -68,7 +68,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<CombatActionDesc, int> WeaponDurabilityLost { get; }
         public global::SpacetimeDB.Col<CombatActionDesc, System.Collections.Generic.List<BuffEffect>> SelfBuffs { get; }
         public global::SpacetimeDB.Col<CombatActionDesc, System.Collections.Generic.List<BuffEffect>> TargetBuffs { get; }
-        public global::SpacetimeDB.NullableCol<CombatActionDesc, LevelRequirement> LevelRequirement { get; }
+        public global::SpacetimeDB.Col<CombatActionDesc, LevelRequirement> LevelRequirement { get; }
         public global::SpacetimeDB.Col<CombatActionDesc, string> IconAssetName { get; }
         public global::SpacetimeDB.Col<CombatActionDesc, int> PlayerAnimationId { get; }
         public global::SpacetimeDB.Col<CombatActionDesc, string> NpcAnimationName { get; }
@@ -104,7 +104,7 @@ namespace SpacetimeDB.Types
             WeaponDurabilityLost = new global::SpacetimeDB.Col<CombatActionDesc, int>(tableName, "weapon_durability_lost");
             SelfBuffs = new global::SpacetimeDB.Col<CombatActionDesc, System.Collections.Generic.List<BuffEffect>>(tableName, "self_buffs");
             TargetBuffs = new global::SpacetimeDB.Col<CombatActionDesc, System.Collections.Generic.List<BuffEffect>>(tableName, "target_buffs");
-            LevelRequirement = new global::SpacetimeDB.NullableCol<CombatActionDesc, LevelRequirement>(tableName, "level_requirement");
+            LevelRequirement = new global::SpacetimeDB.Col<CombatActionDesc, LevelRequirement>(tableName, "level_requirement");
             IconAssetName = new global::SpacetimeDB.Col<CombatActionDesc, string>(tableName, "icon_asset_name");
             PlayerAnimationId = new global::SpacetimeDB.Col<CombatActionDesc, int>(tableName, "player_animation_id");
             NpcAnimationName = new global::SpacetimeDB.Col<CombatActionDesc, string>(tableName, "npc_animation_name");

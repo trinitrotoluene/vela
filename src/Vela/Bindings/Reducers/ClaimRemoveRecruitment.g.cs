@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ClaimRemoveRecruitment(SpacetimeDB.Types.PlayerClaimRemoveRecruitmentRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ClaimRemoveRecruitment(request), this.SetCallReducerFlags.ClaimRemoveRecruitmentFlags);
+            conn.InternalCallReducer(new Reducer.ClaimRemoveRecruitment(request));
         }
 
         public bool InvokeClaimRemoveRecruitment(ReducerEventContext ctx, Reducer.ClaimRemoveRecruitment args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "claim_remove_recruitment";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ClaimRemoveRecruitmentFlags;
-        public void ClaimRemoveRecruitment(CallReducerFlags flags) => ClaimRemoveRecruitmentFlags = flags;
     }
 }

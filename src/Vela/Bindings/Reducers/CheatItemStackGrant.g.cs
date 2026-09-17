@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CheatItemStackGrant(ulong playerEntityId, int itemId, int quantity, bool isCargo)
         {
-            conn.InternalCallReducer(new Reducer.CheatItemStackGrant(playerEntityId, itemId, quantity, isCargo), this.SetCallReducerFlags.CheatItemStackGrantFlags);
+            conn.InternalCallReducer(new Reducer.CheatItemStackGrant(playerEntityId, itemId, quantity, isCargo));
         }
 
         public bool InvokeCheatItemStackGrant(ReducerEventContext ctx, Reducer.CheatItemStackGrant args)
@@ -79,11 +79,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "cheat_item_stack_grant";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CheatItemStackGrantFlags;
-        public void CheatItemStackGrant(CallReducerFlags flags) => CheatItemStackGrantFlags = flags;
     }
 }

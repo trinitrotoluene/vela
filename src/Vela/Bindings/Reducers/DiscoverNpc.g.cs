@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DiscoverNpc(int npcId)
         {
-            conn.InternalCallReducer(new Reducer.DiscoverNpc(npcId), this.SetCallReducerFlags.DiscoverNpcFlags);
+            conn.InternalCallReducer(new Reducer.DiscoverNpc(npcId));
         }
 
         public bool InvokeDiscoverNpc(ReducerEventContext ctx, Reducer.DiscoverNpc args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "discover_npc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DiscoverNpcFlags;
-        public void DiscoverNpc(CallReducerFlags flags) => DiscoverNpcFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportTravelerTaskKnowledgeRequirementDesc(System.Collections.Generic.List<SpacetimeDB.Types.TravelerTaskKnowledgeRequirementDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportTravelerTaskKnowledgeRequirementDesc(records), this.SetCallReducerFlags.ImportTravelerTaskKnowledgeRequirementDescFlags);
+            conn.InternalCallReducer(new Reducer.ImportTravelerTaskKnowledgeRequirementDesc(records));
         }
 
         public bool InvokeImportTravelerTaskKnowledgeRequirementDesc(ReducerEventContext ctx, Reducer.ImportTravelerTaskKnowledgeRequirementDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_traveler_task_knowledge_requirement_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportTravelerTaskKnowledgeRequirementDescFlags;
-        public void ImportTravelerTaskKnowledgeRequirementDesc(CallReducerFlags flags) => ImportTravelerTaskKnowledgeRequirementDescFlags = flags;
     }
 }

@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class ClimbRequirementDescHandle : RemoteTableHandle<EventContext, ClimbRequirementDesc>
         {
-            protected override string RemoteTableName => "climb_requirement_desc";
+            public override string RemoteTableName => "climb_requirement_desc";
 
             public sealed class IdUniqueIndex : UniqueIndexBase<int>
             {

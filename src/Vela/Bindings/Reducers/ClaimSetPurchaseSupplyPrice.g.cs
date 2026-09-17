@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ClaimSetPurchaseSupplyPrice(SpacetimeDB.Types.ClaimSetPurchaseSupplyPriceRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ClaimSetPurchaseSupplyPrice(request), this.SetCallReducerFlags.ClaimSetPurchaseSupplyPriceFlags);
+            conn.InternalCallReducer(new Reducer.ClaimSetPurchaseSupplyPrice(request));
         }
 
         public bool InvokeClaimSetPurchaseSupplyPrice(ReducerEventContext ctx, Reducer.ClaimSetPurchaseSupplyPrice args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "claim_set_purchase_supply_price";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ClaimSetPurchaseSupplyPriceFlags;
-        public void ClaimSetPurchaseSupplyPrice(CallReducerFlags flags) => ClaimSetPurchaseSupplyPriceFlags = flags;
     }
 }

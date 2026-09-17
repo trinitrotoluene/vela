@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void GenerateWorld(SpacetimeDB.Types.WorldGenWorldDefinition worldDefinition)
         {
-            conn.InternalCallReducer(new Reducer.GenerateWorld(worldDefinition), this.SetCallReducerFlags.GenerateWorldFlags);
+            conn.InternalCallReducer(new Reducer.GenerateWorld(worldDefinition));
         }
 
         public bool InvokeGenerateWorld(ReducerEventContext ctx, Reducer.GenerateWorld args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "generate_world";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags GenerateWorldFlags;
-        public void GenerateWorld(CallReducerFlags flags) => GenerateWorldFlags = flags;
     }
 }

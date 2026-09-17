@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void BuildingDeconstructStart(SpacetimeDB.Types.PlayerBuildingDeconstructRequest request)
         {
-            conn.InternalCallReducer(new Reducer.BuildingDeconstructStart(request), this.SetCallReducerFlags.BuildingDeconstructStartFlags);
+            conn.InternalCallReducer(new Reducer.BuildingDeconstructStart(request));
         }
 
         public bool InvokeBuildingDeconstructStart(ReducerEventContext ctx, Reducer.BuildingDeconstructStart args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "building_deconstruct_start";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags BuildingDeconstructStartFlags;
-        public void BuildingDeconstructStart(CallReducerFlags flags) => BuildingDeconstructStartFlags = flags;
     }
 }

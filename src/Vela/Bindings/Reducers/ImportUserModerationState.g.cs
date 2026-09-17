@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportUserModerationState(System.Collections.Generic.List<SpacetimeDB.Types.UserModerationState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportUserModerationState(records), this.SetCallReducerFlags.ImportUserModerationStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportUserModerationState(records));
         }
 
         public bool InvokeImportUserModerationState(ReducerEventContext ctx, Reducer.ImportUserModerationState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_user_moderation_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportUserModerationStateFlags;
-        public void ImportUserModerationState(CallReducerFlags flags) => ImportUserModerationStateFlags = flags;
     }
 }

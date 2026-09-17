@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CraftSetPublic(ulong progressiveActionEntityId, bool isPublic)
         {
-            conn.InternalCallReducer(new Reducer.CraftSetPublic(progressiveActionEntityId, isPublic), this.SetCallReducerFlags.CraftSetPublicFlags);
+            conn.InternalCallReducer(new Reducer.CraftSetPublic(progressiveActionEntityId, isPublic));
         }
 
         public bool InvokeCraftSetPublic(ReducerEventContext ctx, Reducer.CraftSetPublic args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "craft_set_public";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CraftSetPublicFlags;
-        public void CraftSetPublic(CallReducerFlags flags) => CraftSetPublicFlags = flags;
     }
 }

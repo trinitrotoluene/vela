@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void CompleteOnboardingQuest(ushort id)
         {
-            conn.InternalCallReducer(new Reducer.CompleteOnboardingQuest(id), this.SetCallReducerFlags.CompleteOnboardingQuestFlags);
+            conn.InternalCallReducer(new Reducer.CompleteOnboardingQuest(id));
         }
 
         public bool InvokeCompleteOnboardingQuest(ReducerEventContext ctx, Reducer.CompleteOnboardingQuest args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "complete_onboarding_quest";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags CompleteOnboardingQuestFlags;
-        public void CompleteOnboardingQuest(CallReducerFlags flags) => CompleteOnboardingQuestFlags = flags;
     }
 }

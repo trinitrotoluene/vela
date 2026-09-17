@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void AdminSignOutString(string identity)
         {
-            conn.InternalCallReducer(new Reducer.AdminSignOutString(identity), this.SetCallReducerFlags.AdminSignOutStringFlags);
+            conn.InternalCallReducer(new Reducer.AdminSignOutString(identity));
         }
 
         public bool InvokeAdminSignOutString(ReducerEventContext ctx, Reducer.AdminSignOutString args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "admin_sign_out_string";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags AdminSignOutStringFlags;
-        public void AdminSignOutString(CallReducerFlags flags) => AdminSignOutStringFlags = flags;
     }
 }

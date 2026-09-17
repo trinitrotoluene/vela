@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ImportGrowthState(System.Collections.Generic.List<SpacetimeDB.Types.GrowthState> records)
         {
-            conn.InternalCallReducer(new Reducer.ImportGrowthState(records), this.SetCallReducerFlags.ImportGrowthStateFlags);
+            conn.InternalCallReducer(new Reducer.ImportGrowthState(records));
         }
 
         public bool InvokeImportGrowthState(ReducerEventContext ctx, Reducer.ImportGrowthState args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "import_growth_state";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ImportGrowthStateFlags;
-        public void ImportGrowthState(CallReducerFlags flags) => ImportGrowthStateFlags = flags;
     }
 }

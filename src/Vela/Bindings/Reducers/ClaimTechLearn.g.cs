@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void ClaimTechLearn(SpacetimeDB.Types.PlayerClaimTechLearnRequest request)
         {
-            conn.InternalCallReducer(new Reducer.ClaimTechLearn(request), this.SetCallReducerFlags.ClaimTechLearnFlags);
+            conn.InternalCallReducer(new Reducer.ClaimTechLearn(request));
         }
 
         public bool InvokeClaimTechLearn(ReducerEventContext ctx, Reducer.ClaimTechLearn args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "claim_tech_learn";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ClaimTechLearnFlags;
-        public void ClaimTechLearn(CallReducerFlags flags) => ClaimTechLearnFlags = flags;
     }
 }

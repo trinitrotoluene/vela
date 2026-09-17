@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class TradeOrderStateHandle : RemoteTableHandle<EventContext, TradeOrderState>
         {
-            protected override string RemoteTableName => "trade_order_state";
+            public override string RemoteTableName => "trade_order_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {
@@ -56,7 +56,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<TradeOrderState, System.Collections.Generic.List<int>> OfferCargoId { get; }
         public global::SpacetimeDB.Col<TradeOrderState, System.Collections.Generic.List<ItemStack>> RequiredItems { get; }
         public global::SpacetimeDB.Col<TradeOrderState, System.Collections.Generic.List<int>> RequiredCargoId { get; }
-        public global::SpacetimeDB.NullableCol<TradeOrderState, int> TravelerTradeOrderId { get; }
+        public global::SpacetimeDB.Col<TradeOrderState, int> TravelerTradeOrderId { get; }
 
         public TradeOrderStateCols(string tableName)
         {
@@ -67,7 +67,7 @@ namespace SpacetimeDB.Types
             OfferCargoId = new global::SpacetimeDB.Col<TradeOrderState, System.Collections.Generic.List<int>>(tableName, "offer_cargo_id");
             RequiredItems = new global::SpacetimeDB.Col<TradeOrderState, System.Collections.Generic.List<ItemStack>>(tableName, "required_items");
             RequiredCargoId = new global::SpacetimeDB.Col<TradeOrderState, System.Collections.Generic.List<int>>(tableName, "required_cargo_id");
-            TravelerTradeOrderId = new global::SpacetimeDB.NullableCol<TradeOrderState, int>(tableName, "traveler_trade_order_id");
+            TravelerTradeOrderId = new global::SpacetimeDB.Col<TradeOrderState, int>(tableName, "traveler_trade_order_id");
         }
     }
 

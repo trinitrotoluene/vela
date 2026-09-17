@@ -15,7 +15,7 @@ namespace SpacetimeDB.Types
     {
         public sealed class GrowthStateHandle : RemoteTableHandle<EventContext, GrowthState>
         {
-            protected override string RemoteTableName => "growth_state";
+            public override string RemoteTableName => "growth_state";
 
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {

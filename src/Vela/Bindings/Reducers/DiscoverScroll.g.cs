@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void DiscoverScroll(int scrollId)
         {
-            conn.InternalCallReducer(new Reducer.DiscoverScroll(scrollId), this.SetCallReducerFlags.DiscoverScrollFlags);
+            conn.InternalCallReducer(new Reducer.DiscoverScroll(scrollId));
         }
 
         public bool InvokeDiscoverScroll(ReducerEventContext ctx, Reducer.DiscoverScroll args)
@@ -62,11 +62,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "discover_scroll";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags DiscoverScrollFlags;
-        public void DiscoverScroll(CallReducerFlags flags) => DiscoverScrollFlags = flags;
     }
 }

@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageCombatActionMultiHitDesc(System.Collections.Generic.List<SpacetimeDB.Types.CombatActionMultiHitDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageCombatActionMultiHitDesc(records), this.SetCallReducerFlags.StageCombatActionMultiHitDescFlags);
+            conn.InternalCallReducer(new Reducer.StageCombatActionMultiHitDesc(records));
         }
 
         public bool InvokeStageCombatActionMultiHitDesc(ReducerEventContext ctx, Reducer.StageCombatActionMultiHitDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_combat_action_multi_hit_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageCombatActionMultiHitDescFlags;
-        public void StageCombatActionMultiHitDesc(CallReducerFlags flags) => StageCombatActionMultiHitDescFlags = flags;
     }
 }

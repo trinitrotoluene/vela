@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageEnemyAiParamsDesc(System.Collections.Generic.List<SpacetimeDB.Types.EnemyAiParamsDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageEnemyAiParamsDesc(records), this.SetCallReducerFlags.StageEnemyAiParamsDescFlags);
+            conn.InternalCallReducer(new Reducer.StageEnemyAiParamsDesc(records));
         }
 
         public bool InvokeStageEnemyAiParamsDesc(ReducerEventContext ctx, Reducer.StageEnemyAiParamsDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_enemy_ai_params_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageEnemyAiParamsDescFlags;
-        public void StageEnemyAiParamsDesc(CallReducerFlags flags) => StageEnemyAiParamsDescFlags = flags;
     }
 }

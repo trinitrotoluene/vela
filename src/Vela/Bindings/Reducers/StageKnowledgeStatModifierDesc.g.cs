@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void StageKnowledgeStatModifierDesc(System.Collections.Generic.List<SpacetimeDB.Types.KnowledgeStatModifierDesc> records)
         {
-            conn.InternalCallReducer(new Reducer.StageKnowledgeStatModifierDesc(records), this.SetCallReducerFlags.StageKnowledgeStatModifierDescFlags);
+            conn.InternalCallReducer(new Reducer.StageKnowledgeStatModifierDesc(records));
         }
 
         public bool InvokeStageKnowledgeStatModifierDesc(ReducerEventContext ctx, Reducer.StageKnowledgeStatModifierDesc args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "stage_knowledge_stat_modifier_desc";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags StageKnowledgeStatModifierDescFlags;
-        public void StageKnowledgeStatModifierDesc(CallReducerFlags flags) => StageKnowledgeStatModifierDescFlags = flags;
     }
 }

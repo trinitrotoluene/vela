@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void PermissionEdit(SpacetimeDB.Types.PlayerPermissionEditRequest request)
         {
-            conn.InternalCallReducer(new Reducer.PermissionEdit(request), this.SetCallReducerFlags.PermissionEditFlags);
+            conn.InternalCallReducer(new Reducer.PermissionEdit(request));
         }
 
         public bool InvokePermissionEdit(ReducerEventContext ctx, Reducer.PermissionEdit args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "permission_edit";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags PermissionEditFlags;
-        public void PermissionEdit(CallReducerFlags flags) => PermissionEditFlags = flags;
     }
 }

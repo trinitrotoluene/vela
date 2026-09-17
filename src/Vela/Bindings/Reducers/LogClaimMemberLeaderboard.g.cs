@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void LogClaimMemberLeaderboard()
         {
-            conn.InternalCallReducer(new Reducer.LogClaimMemberLeaderboard(), this.SetCallReducerFlags.LogClaimMemberLeaderboardFlags);
+            conn.InternalCallReducer(new Reducer.LogClaimMemberLeaderboard());
         }
 
         public bool InvokeLogClaimMemberLeaderboard(ReducerEventContext ctx, Reducer.LogClaimMemberLeaderboard args)
@@ -49,11 +49,5 @@ namespace SpacetimeDB.Types
         {
             string IReducerArgs.ReducerName => "log_claim_member_leaderboard";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags LogClaimMemberLeaderboardFlags;
-        public void LogClaimMemberLeaderboard(CallReducerFlags flags) => LogClaimMemberLeaderboardFlags = flags;
     }
 }

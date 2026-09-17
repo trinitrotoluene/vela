@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void Prospect(int prospectingId, ulong timestamp)
         {
-            conn.InternalCallReducer(new Reducer.Prospect(prospectingId, timestamp), this.SetCallReducerFlags.ProspectFlags);
+            conn.InternalCallReducer(new Reducer.Prospect(prospectingId, timestamp));
         }
 
         public bool InvokeProspect(ReducerEventContext ctx, Reducer.Prospect args)
@@ -69,11 +69,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "prospect";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags ProspectFlags;
-        public void Prospect(CallReducerFlags flags) => ProspectFlags = flags;
     }
 }

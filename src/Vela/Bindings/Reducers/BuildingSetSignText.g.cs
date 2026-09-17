@@ -17,7 +17,7 @@ namespace SpacetimeDB.Types
 
         public void BuildingSetSignText(SpacetimeDB.Types.BuildingSetSignTextRequest request)
         {
-            conn.InternalCallReducer(new Reducer.BuildingSetSignText(request), this.SetCallReducerFlags.BuildingSetSignTextFlags);
+            conn.InternalCallReducer(new Reducer.BuildingSetSignText(request));
         }
 
         public bool InvokeBuildingSetSignText(ReducerEventContext ctx, Reducer.BuildingSetSignText args)
@@ -63,11 +63,5 @@ namespace SpacetimeDB.Types
 
             string IReducerArgs.ReducerName => "building_set_sign_text";
         }
-    }
-
-    public sealed partial class SetReducerFlags
-    {
-        internal CallReducerFlags BuildingSetSignTextFlags;
-        public void BuildingSetSignText(CallReducerFlags flags) => BuildingSetSignTextFlags = flags;
     }
 }
