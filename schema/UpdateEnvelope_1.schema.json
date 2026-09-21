@@ -12,6 +12,9 @@
     "CallerIdentity": {
       "type": "string"
     },
+    "Reducer": {
+      "type": "string"
+    },
     "OldEntity": true,
     "NewEntity": true
   },
@@ -19,6 +22,7 @@
     "Version",
     "Module",
     "CallerIdentity",
+    "Reducer",
     "OldEntity",
     "NewEntity"
   ]

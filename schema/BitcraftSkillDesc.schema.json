@@ -1,0 +1,34 @@
+{
+  "type": "object",
+  "properties": {
+    "SkillType": {
+      "type": "integer"
+    },
+    "Name": {
+      "type": "string"
+    },
+    "Title": {
+      "type": "string"
+    },
+    "SkillCategory": {
+      "type": "string"
+    },
+    "MaxLevel": {
+      "type": "integer"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "SkillType",
+    "Name",
+    "Title",
+    "SkillCategory",
+    "MaxLevel",
+    "Id"
+  ]
+}

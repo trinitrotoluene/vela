@@ -12,12 +12,16 @@
     "Entity": true,
     "CallerIdentity": {
       "type": "string"
+    },
+    "Reducer": {
+      "type": "string"
     }
   },
   "required": [
     "Version",
     "Module",
     "Entity",
-    "CallerIdentity"
+    "CallerIdentity",
+    "Reducer"
   ]
 }

@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "properties": {
+    "Nickname": {
+      "type": "string"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "Nickname",
+    "Id"
+  ]
+}

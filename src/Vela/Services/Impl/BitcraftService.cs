@@ -222,7 +222,7 @@ public class BitcraftService : BackgroundService
 
     var conn = DbConnection.Builder()
       .WithUri(_options.Value.Uri)
-      .WithModuleName(_options.Value.Module)
+      .WithDatabaseName(_options.Value.Module)
       .WithToken(_options.Value.AuthToken)
       .WithLightMode(false)
       .OnConnect((conn, identity, token) =>

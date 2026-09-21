@@ -217,6 +217,31 @@ public class ConvergeDbWriterTests
         Assert.Equal(0, fatal.TriggerCalls);
     }
 
+    [Fact]
+    public async Task Emit_WritesToTheSourceEventEntity_AndFlushesOnNextTick()
+    {
+        var sink = new FakeWriteSink();
+        var writer = CreateWriter(sink, new FakeFatalRestart());
+
+        // Whatever id the caller left on the event, the writer stamps the per-source event entity
+        // (source 0 for the test constructor), so the converged state stays a single row.
+        await writer.EmitAsync(new ConvergeMarketTradeEvent { EntityId = EntityId.FromULong(123) });
+        await writer.EmitAsync(default(ConvergeBarterStallInventoryEvent));
+
+        Assert.Equal(
+            new[]
+            {
+                ("assert", typeof(ConvergeMarketTradeEvent)),
+                ("assert", typeof(ConvergeBarterStallInventoryEvent)),
+            },
+            sink.Ops.Select(o => (o.Kind, o.Type)).ToArray());
+        var expectedId = EntityId.FromULong(0).ToArray();
+        Assert.All(sink.Ops, op => Assert.Equal(expectedId, op.EntityId));
+
+        await writer.FlushPendingAsync(CancellationToken.None);
+        Assert.Equal(1, sink.FlushCount);
+    }
+
     private sealed class FakeWriteSink : IConvergenceWriteSink
     {
         public List<RecordedOp> Ops { get; } = new();
@@ -227,13 +252,13 @@ public class ConvergeDbWriterTests
 
         public ValueTask AssertAsync<T>(T entity, EntityMetadata? metadata) where T : struct, IConvergenceEntity<T>
         {
-            Ops.Add(new RecordedOp("assert", typeof(T), metadata));
+            Ops.Add(new RecordedOp("assert", typeof(T), metadata, entity.EntityId.ToArray()));
             return ValueTask.CompletedTask;
         }
 
         public ValueTask RetractAsync<T>(ReadOnlyMemory<byte> entityId, EntityMetadata? metadata) where T : struct, IConvergenceEntity<T>
         {
-            Ops.Add(new RecordedOp("retract", typeof(T), metadata));
+            Ops.Add(new RecordedOp("retract", typeof(T), metadata, entityId.ToArray()));
             return ValueTask.CompletedTask;
         }
 
@@ -258,7 +283,7 @@ public class ConvergeDbWriterTests
         }
     }
 
-    private sealed record RecordedOp(string Kind, Type Type, EntityMetadata? Metadata);
+    private sealed record RecordedOp(string Kind, Type Type, EntityMetadata? Metadata, byte[] EntityId);
 
     private sealed class FakeFatalRestart : IFatalRestart
     {

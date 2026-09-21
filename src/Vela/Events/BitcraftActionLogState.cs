@@ -26,12 +26,14 @@ public abstract record BitcraftActionLogStateAction(
 
 public record DepositItemStateAction(
   string ItemId,
-  int Quantity
+  int Quantity,
+  BitcraftItemType ItemType
 ) : BitcraftActionLogStateAction();
 
 public record WithdrawItemStateAction(
   string ItemId,
-  int Quantity
+  int Quantity,
+  BitcraftItemType ItemType
 ) : BitcraftActionLogStateAction();
 
 public record UnknownItemStateAction() : BitcraftActionLogStateAction();

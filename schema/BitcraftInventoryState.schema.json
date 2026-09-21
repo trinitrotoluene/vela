@@ -1,6 +1,15 @@
 {
   "type": "object",
   "properties": {
+    "OwnerEntityId": {
+      "type": "string"
+    },
+    "PlayerOwnerEntityId": {
+      "type": "string"
+    },
+    "InventoryIndex": {
+      "type": "integer"
+    },
     "Pockets": {
       "type": "array",
       "items": {
@@ -17,11 +26,18 @@
               "integer",
               "null"
             ]
+          },
+          "ItemType": {
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "required": [
           "ItemId",
-          "Quantity"
+          "Quantity",
+          "ItemType"
         ]
       }
     },
@@ -33,6 +49,9 @@
     }
   },
   "required": [
+    "OwnerEntityId",
+    "PlayerOwnerEntityId",
+    "InventoryIndex",
     "Pockets",
     "Id"
   ]

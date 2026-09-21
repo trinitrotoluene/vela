@@ -32,6 +32,11 @@ namespace Vela.Migrations
                         .HasColumnType("text")
                         .HasColumnName("description");
 
+                    b.Property<string>("Functions")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("functions");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text")
@@ -41,6 +46,28 @@ namespace Vela.Migrations
                         .HasName("pk_bitcraft_building_desc");
 
                     b.ToTable("bitcraft_building_desc", (string)null);
+                });
+
+            modelBuilder.Entity("Vela.Events.BitcraftBuildingTypeDesc", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("category");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_bitcraft_building_type_desc");
+
+                    b.ToTable("bitcraft_building_type_desc", (string)null);
                 });
 
             modelBuilder.Entity("Vela.Events.BitcraftCargoItem", b =>
@@ -117,6 +144,77 @@ namespace Vela.Migrations
                     b.ToTable("bitcraft_claim_tech_desc", (string)null);
                 });
 
+            modelBuilder.Entity("Vela.Events.BitcraftExtractionRecipe", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("AllowUseHands")
+                        .HasColumnType("boolean")
+                        .HasColumnName("allow_use_hands");
+
+                    b.Property<string>("BlockingKnowledges")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("blocking_knowledges");
+
+                    b.Property<int>("CargoId")
+                        .HasColumnType("integer")
+                        .HasColumnName("cargo_id");
+
+                    b.Property<string>("ConsumedItemStacks")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("consumed_item_stacks");
+
+                    b.Property<string>("ExtractedItemStacks")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("extracted_item_stacks");
+
+                    b.Property<string>("LevelRequirements")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("level_requirements");
+
+                    b.Property<int>("Range")
+                        .HasColumnType("integer")
+                        .HasColumnName("range");
+
+                    b.Property<string>("RequiredKnowledges")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("required_knowledges");
+
+                    b.Property<int>("ResourceId")
+                        .HasColumnType("integer")
+                        .HasColumnName("resource_id");
+
+                    b.Property<float>("StaminaRequirement")
+                        .HasColumnType("real")
+                        .HasColumnName("stamina_requirement");
+
+                    b.Property<float>("TimeRequirement")
+                        .HasColumnType("real")
+                        .HasColumnName("time_requirement");
+
+                    b.Property<string>("ToolRequirements")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("tool_requirements");
+
+                    b.Property<string>("VerbPhrase")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("verb_phrase");
+
+                    b.HasKey("Id")
+                        .HasName("pk_bitcraft_extraction_recipe");
+
+                    b.ToTable("bitcraft_extraction_recipe", (string)null);
+                });
+
             modelBuilder.Entity("Vela.Events.BitcraftItem", b =>
                 {
                     b.Property<string>("Id")
@@ -145,6 +243,11 @@ namespace Vela.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("rarity");
+
+                    b.Property<string>("Tag")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("tag");
 
                     b.Property<int>("Tier")
                         .HasColumnType("integer")
@@ -254,6 +357,11 @@ namespace Vela.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("actions_required");
 
+                    b.Property<string>("BlockingKnowledges")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("blocking_knowledges");
+
                     b.Property<string>("BuildingRequirement")
                         .HasColumnType("jsonb")
                         .HasColumnName("building_requirement");
@@ -282,6 +390,23 @@ namespace Vela.Migrations
                         .HasColumnType("jsonb")
                         .HasColumnName("produced_item_stacks");
 
+                    b.Property<int>("RequiredClaimTechId")
+                        .HasColumnType("integer")
+                        .HasColumnName("required_claim_tech_id");
+
+                    b.Property<string>("RequiredKnowledges")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("required_knowledges");
+
+                    b.Property<float>("StaminaRequirement")
+                        .HasColumnType("real")
+                        .HasColumnName("stamina_requirement");
+
+                    b.Property<float>("TimeRequirement")
+                        .HasColumnType("real")
+                        .HasColumnName("time_requirement");
+
                     b.Property<string>("ToolRequirements")
                         .IsRequired()
                         .HasColumnType("jsonb")
@@ -291,6 +416,160 @@ namespace Vela.Migrations
                         .HasName("pk_bitcraft_recipe");
 
                     b.ToTable("bitcraft_recipe", (string)null);
+                });
+
+            modelBuilder.Entity("Vela.Events.BitcraftResourceDesc", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<bool>("HasCompendiumEntry")
+                        .HasColumnType("boolean")
+                        .HasColumnName("has_compendium_entry");
+
+                    b.Property<int>("MaxHealth")
+                        .HasColumnType("integer")
+                        .HasColumnName("max_health");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<string>("OnDestroyYield")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("on_destroy_yield");
+
+                    b.Property<int>("OnDestroyYieldResourceId")
+                        .HasColumnType("integer")
+                        .HasColumnName("on_destroy_yield_resource_id");
+
+                    b.Property<string>("Rarity")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("rarity");
+
+                    b.Property<string>("Tag")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("tag");
+
+                    b.Property<int>("Tier")
+                        .HasColumnType("integer")
+                        .HasColumnName("tier");
+
+                    b.HasKey("Id")
+                        .HasName("pk_bitcraft_resource_desc");
+
+                    b.ToTable("bitcraft_resource_desc", (string)null);
+                });
+
+            modelBuilder.Entity("Vela.Events.BitcraftSecondaryKnowledgeDesc", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_bitcraft_secondary_knowledge_desc");
+
+                    b.ToTable("bitcraft_secondary_knowledge_desc", (string)null);
+                });
+
+            modelBuilder.Entity("Vela.Events.BitcraftSkillDesc", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text")
+                        .HasColumnName("id");
+
+                    b.Property<int>("MaxLevel")
+                        .HasColumnType("integer")
+                        .HasColumnName("max_level");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<string>("SkillCategory")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("skill_category");
+
+                    b.Property<int>("SkillType")
+                        .HasColumnType("integer")
+                        .HasColumnName("skill_type");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("title");
+
+                    b.HasKey("Id")
+                        .HasName("pk_bitcraft_skill_desc");
+
+                    b.ToTable("bitcraft_skill_desc", (string)null);
+                });
+
+            modelBuilder.Entity("Vela.Events.BitcraftToolDesc", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text")
+                        .HasColumnName("id");
+
+                    b.Property<int>("ItemId")
+                        .HasColumnType("integer")
+                        .HasColumnName("item_id");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("integer")
+                        .HasColumnName("level");
+
+                    b.Property<int>("Power")
+                        .HasColumnType("integer")
+                        .HasColumnName("power");
+
+                    b.Property<int>("ToolType")
+                        .HasColumnType("integer")
+                        .HasColumnName("tool_type");
+
+                    b.HasKey("Id")
+                        .HasName("pk_bitcraft_tool_desc");
+
+                    b.ToTable("bitcraft_tool_desc", (string)null);
+                });
+
+            modelBuilder.Entity("Vela.Events.BitcraftToolTypeDesc", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<int>("SkillId")
+                        .HasColumnType("integer")
+                        .HasColumnName("skill_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_bitcraft_tool_type_desc");
+
+                    b.ToTable("bitcraft_tool_type_desc", (string)null);
                 });
 #pragma warning restore 612, 618
         }

@@ -4,6 +4,13 @@ namespace Vela.Events
   public record BitcraftBuildingDesc(
     string Id,
     string Name,
-    string Description
+    string Description,
+    BitcraftBuildingFunction[] Functions
   ) : BitcraftEventBase(Id);
+
+  // FunctionType is a building_type_desc id - matched against a recipe's BuildingRequirement.
+  public record BitcraftBuildingFunction(
+    int FunctionType,
+    int Level
+  );
 }

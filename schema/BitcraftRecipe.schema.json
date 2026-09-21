@@ -50,11 +50,15 @@
           },
           "Level": {
             "type": "integer"
+          },
+          "Power": {
+            "type": "integer"
           }
         },
         "required": [
           "ToolType",
-          "Level"
+          "Level",
+          "Power"
         ]
       }
     },
@@ -68,11 +72,18 @@
           },
           "Quantity": {
             "type": "integer"
+          },
+          "ItemType": {
+            "enum": [
+              "item",
+              "cargo"
+            ]
           }
         },
         "required": [
           "ItemId",
-          "Quantity"
+          "Quantity",
+          "ItemType"
         ]
       }
     },
@@ -87,6 +98,27 @@
     },
     "ActionsRequired": {
       "type": "integer"
+    },
+    "TimeRequirement": {
+      "type": "number"
+    },
+    "StaminaRequirement": {
+      "type": "number"
+    },
+    "RequiredClaimTechId": {
+      "type": "integer"
+    },
+    "RequiredKnowledges": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "BlockingKnowledges": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
     },
     "Id": {
       "type": "string"
@@ -104,7 +136,11 @@
     "ProducedItemStacks",
     "IsPassive",
     "ActionsRequired",
+    "TimeRequirement",
+    "StaminaRequirement",
+    "RequiredClaimTechId",
+    "RequiredKnowledges",
+    "BlockingKnowledges",
     "Id"
-  ],
-  "x-global-entity": true
+  ]
 }

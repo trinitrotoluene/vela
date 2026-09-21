@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "properties": {
+    "ItemId": {
+      "type": "integer"
+    },
+    "ToolType": {
+      "type": "integer"
+    },
+    "Level": {
+      "type": "integer"
+    },
+    "Power": {
+      "type": "integer"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "ItemId",
+    "ToolType",
+    "Level",
+    "Power",
+    "Id"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "type": "object",
+  "properties": {
+    "OwnerId": {
+      "type": "string"
+    },
+    "ClaimId": {
+      "type": "string"
+    },
+    "ItemStack": {
+      "type": "object",
+      "properties": {
+        "ItemId": {
+          "type": "integer"
+        },
+        "Quantity": {
+          "type": "integer"
+        },
+        "IsCargo": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "ItemId",
+        "Quantity",
+        "IsCargo"
+      ]
+    },
+    "Timestamp": {
+      "type": "string"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "OwnerId",
+    "ClaimId",
+    "ItemStack",
+    "Timestamp",
+    "Id"
+  ]
+}

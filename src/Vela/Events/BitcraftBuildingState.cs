@@ -3,6 +3,7 @@ namespace Vela.Events
   [ConvergeDb]
   public record BitcraftBuildingState(
     string Id,
-    string ClaimEntityId
+    string ClaimEntityId,
+    int BuildingDescriptionId
   ) : BitcraftEventBase(Id);
 }

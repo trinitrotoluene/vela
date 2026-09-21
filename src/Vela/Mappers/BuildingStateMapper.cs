@@ -9,7 +9,8 @@ namespace Vela.Mappers
       BuildingState entity
     ) => new(
         Id: entity.EntityId.ToString(),
-        ClaimEntityId: entity.ClaimEntityId.ToString()
+        ClaimEntityId: entity.ClaimEntityId.ToString(),
+        BuildingDescriptionId: entity.BuildingDescriptionId
       );
   }
 }

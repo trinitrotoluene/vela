@@ -31,11 +31,18 @@
             },
             "Quantity": {
               "type": "integer"
+            },
+            "ItemType": {
+              "enum": [
+                "item",
+                "cargo"
+              ]
             }
           },
           "required": [
             "ItemId",
-            "Quantity"
+            "Quantity",
+            "ItemType"
           ]
         },
         {
@@ -48,11 +55,18 @@
             },
             "Quantity": {
               "type": "integer"
+            },
+            "ItemType": {
+              "enum": [
+                "item",
+                "cargo"
+              ]
             }
           },
           "required": [
             "ItemId",
-            "Quantity"
+            "Quantity",
+            "ItemType"
           ]
         },
         {

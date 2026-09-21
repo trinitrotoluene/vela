@@ -10,7 +10,11 @@ namespace Vela.Mappers
     ) => new(
         Id: entity.Id.ToString(),
         Name: entity.Name,
-        Description: entity.Description
+        Description: entity.Description,
+        Functions: [.. entity.Functions.Select(x => new BitcraftBuildingFunction(
+          FunctionType: x.FunctionType,
+          Level: x.Level
+        ))]
       );
   }
 }

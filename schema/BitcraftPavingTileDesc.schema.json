@@ -1,0 +1,64 @@
+{
+  "type": "object",
+  "properties": {
+    "Name": {
+      "type": "string"
+    },
+    "Description": {
+      "type": "string"
+    },
+    "Tier": {
+      "type": "integer"
+    },
+    "PavingDuration": {
+      "type": "number"
+    },
+    "PrefabAddress": {
+      "type": "string"
+    },
+    "IconAddress": {
+      "type": "string"
+    },
+    "InputCargoId": {
+      "type": "integer"
+    },
+    "InputCargoDiscoveryScore": {
+      "type": "integer"
+    },
+    "FullDiscoveryScore": {
+      "type": "integer"
+    },
+    "RequiredKnowledges": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "DiscoveryTriggers": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "Name",
+    "Description",
+    "Tier",
+    "PavingDuration",
+    "PrefabAddress",
+    "IconAddress",
+    "InputCargoId",
+    "InputCargoDiscoveryScore",
+    "FullDiscoveryScore",
+    "RequiredKnowledges",
+    "DiscoveryTriggers",
+    "Id"
+  ]
+}

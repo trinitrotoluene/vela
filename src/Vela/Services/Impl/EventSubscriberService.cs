@@ -23,9 +23,10 @@ public class EventSubscriberService : IEventSubscriber
   private readonly IDescriptorDbWriter _descriptorWriter;
   private readonly List<object> _eventMappings;
   private readonly IOptions<BitcraftServiceOptions> _options;
-  private readonly Dictionary<Type, Func<BitcraftEventBase, string, EntityMetadata?, Task>> _assertDispatchers;
-  private readonly Dictionary<Type, Func<BitcraftEventBase, string, EntityMetadata?, Task>> _retractDispatchers;
+  private readonly Dictionary<Type, Func<BitcraftEventBase, string, Task>> _assertDispatchers;
+  private readonly Dictionary<Type, Func<BitcraftEventBase, string, Task>> _retractDispatchers;
   private readonly Dictionary<Type, Func<ConvergenceBatch, BitcraftEventBase, string, Task>> _batchAssertDispatchers;
+  private readonly Dictionary<Type, Func<BitcraftEventBase, string, Task>> _emitDispatchers;
 
   // Streaming snapshot state.
   // Dynamic (ConvergeDB) rows are written directly into a rolled-over ConvergenceBatch under
@@ -69,6 +70,7 @@ public class EventSubscriberService : IEventSubscriber
     _assertDispatchers = BuildAssertDispatchers();
     _retractDispatchers = BuildRetractDispatchers();
     _batchAssertDispatchers = BuildBatchAssertDispatchers();
+    _emitDispatchers = BuildEmitDispatchers();
 
     ValidateConvergeDbDispatcherCoverage();
   }
@@ -86,92 +88,105 @@ public class EventSubscriberService : IEventSubscriber
         missing.Add($"{type.Name} missing: {string.Join(", ", gaps)}");
     }
 
+    foreach (var type in BitcraftEventBase.ConvergeDbEventTypes)
+    {
+      if (!_emitDispatchers.ContainsKey(type))
+        missing.Add($"{type.Name} missing: emit");
+      if (_assertDispatchers.ContainsKey(type) || _retractDispatchers.ContainsKey(type) || _batchAssertDispatchers.ContainsKey(type))
+        missing.Add($"{type.Name} is [ConvergeDbEvent] but wired into the state dispatcher maps");
+    }
+
     if (missing.Count > 0)
       throw new InvalidOperationException(
-        "EventSubscriberService dispatcher coverage gap - every [ConvergeDb] type must be wired into all three dispatcher maps:\n  "
+        "EventSubscriberService dispatcher coverage gap - every [ConvergeDb] type must be wired into the assert, retract and batch-assert maps, "
+        + "and every [ConvergeDbEvent] type into the emit map only:\n  "
         + string.Join("\n  ", missing));
   }
 
-  private Dictionary<Type, Func<BitcraftEventBase, string, EntityMetadata?, Task>> BuildAssertDispatchers()
+  private Dictionary<Type, Func<BitcraftEventBase, string, Task>> BuildAssertDispatchers()
   {
-    return new Dictionary<Type, Func<BitcraftEventBase, string, EntityMetadata?, Task>>
+    return new Dictionary<Type, Func<BitcraftEventBase, string, Task>>
     {
-      [typeof(BitcraftBuildingState)] = async (e, m, md) =>
-        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftBuildingState)e, m), md),
-      [typeof(BitcraftClaimState)] = async (e, m, md) =>
-        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftClaimState)e, m), md),
-      [typeof(BitcraftClaimLocalState)] = async (e, m, md) =>
-        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftClaimLocalState)e, m), md),
-      [typeof(BitcraftClaimTechState)] = async (e, m, md) =>
-        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftClaimTechState)e, m), md),
-      [typeof(BitcraftEmpireState)] = async (e, m, md) =>
-        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftEmpireState)e, m), md),
-      [typeof(BitcraftEmpireNodeState)] = async (e, m, md) =>
-        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftEmpireNodeState)e, m), md),
-      [typeof(BitcraftEmpireNodeSiegeState)] = async (e, m, md) =>
-        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftEmpireNodeSiegeState)e, m), md),
-      [typeof(BitcraftUserState)] = async (e, m, md) =>
-        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftUserState)e, m), md),
-      [typeof(BitcraftUsernameState)] = async (e, m, md) =>
-        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftUsernameState)e, m), md),
-      [typeof(BitcraftLocationState)] = async (e, m, md) =>
-        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftLocationState)e, m), md),
-      [typeof(BitcraftProgressiveAction)] = async (e, m, md) =>
-        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftProgressiveAction)e, m), md),
-      [typeof(BitcraftPublicProgressiveAction)] = async (e, m, md) =>
-        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftPublicProgressiveAction)e, m), md),
-      [typeof(BitcraftChatMessage)] = async (e, m, md) =>
-        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftChatMessage)e, m), md),
-      [typeof(BitcraftActionLogState)] = async (e, m, md) =>
-        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftActionLogState)e, m), md),
-      [typeof(BitcraftAuctionListingState)] = async (e, m, md) =>
-        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftAuctionListingState)e, m), md),
-      [typeof(BitcraftClosedListingState)] = async (e, m, md) =>
-        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftClosedListingState)e, m), md),
-      [typeof(BitcraftInventoryState)] = async (e, m, md) =>
-        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftInventoryState)e, m), md),
+      [typeof(BitcraftBuildingState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftBuildingState)e, m)),
+      [typeof(BitcraftBuildingNicknameState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftBuildingNicknameState)e, m)),
+      [typeof(BitcraftClaimState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftClaimState)e, m)),
+      [typeof(BitcraftClaimLocalState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftClaimLocalState)e, m)),
+      [typeof(BitcraftClaimTechState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftClaimTechState)e, m)),
+      [typeof(BitcraftEmpireState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftEmpireState)e, m)),
+      [typeof(BitcraftEmpireNodeState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftEmpireNodeState)e, m)),
+      [typeof(BitcraftEmpireNodeSiegeState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftEmpireNodeSiegeState)e, m)),
+      [typeof(BitcraftUserState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftUserState)e, m)),
+      [typeof(BitcraftUsernameState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftUsernameState)e, m)),
+      [typeof(BitcraftLocationState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftLocationState)e, m)),
+      [typeof(BitcraftProgressiveAction)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftProgressiveAction)e, m)),
+      [typeof(BitcraftPublicProgressiveAction)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftPublicProgressiveAction)e, m)),
+      [typeof(BitcraftChatMessage)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftChatMessage)e, m)),
+      [typeof(BitcraftActionLogState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftActionLogState)e, m)),
+      [typeof(BitcraftAuctionListingState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftAuctionListingState)e, m)),
+      [typeof(BitcraftClosedListingState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftClosedListingState)e, m)),
+      [typeof(BitcraftInventoryState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftInventoryState)e, m)),
     };
   }
 
-  private Dictionary<Type, Func<BitcraftEventBase, string, EntityMetadata?, Task>> BuildRetractDispatchers()
+  private Dictionary<Type, Func<BitcraftEventBase, string, Task>> BuildRetractDispatchers()
   {
     // Build retract dispatchers using the same ID construction logic as the converters
-    return new Dictionary<Type, Func<BitcraftEventBase, string, EntityMetadata?, Task>>
+    return new Dictionary<Type, Func<BitcraftEventBase, string, Task>>
     {
-      [typeof(BitcraftBuildingState)] = async (e, m, md) =>
-        await _convergeWriter.RetractAsync<ConvergeBuildingState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id)), md),
-      [typeof(BitcraftClaimState)] = async (e, m, md) =>
-        await _convergeWriter.RetractAsync<ConvergeClaimState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id)), md),
-      [typeof(BitcraftClaimLocalState)] = async (e, m, md) =>
-        await _convergeWriter.RetractAsync<ConvergeClaimLocalState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id)), md),
-      [typeof(BitcraftClaimTechState)] = async (e, m, md) =>
-        await _convergeWriter.RetractAsync<ConvergeClaimTechState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id)), md),
-      [typeof(BitcraftEmpireState)] = async (e, m, md) =>
-        await _convergeWriter.RetractAsync<ConvergeEmpireState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id)), md),
-      [typeof(BitcraftEmpireNodeState)] = async (e, m, md) =>
-        await _convergeWriter.RetractAsync<ConvergeEmpireNodeState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id)), md),
-      [typeof(BitcraftEmpireNodeSiegeState)] = async (e, m, md) =>
-        await _convergeWriter.RetractAsync<ConvergeEmpireNodeSiegeState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id)), md),
-      [typeof(BitcraftUserState)] = async (e, m, md) =>
-        await _convergeWriter.RetractAsync<ConvergeUserState>((ReadOnlyMemory<byte>)Convert.FromHexString(e.Id), md),
-      [typeof(BitcraftUsernameState)] = async (e, m, md) =>
-        await _convergeWriter.RetractAsync<ConvergeUsernameState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id)), md),
-      [typeof(BitcraftLocationState)] = async (e, m, md) =>
-        await _convergeWriter.RetractAsync<ConvergeLocationState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id)), md),
-      [typeof(BitcraftProgressiveAction)] = async (e, m, md) =>
-        await _convergeWriter.RetractAsync<ConvergeProgressiveAction>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id)), md),
-      [typeof(BitcraftPublicProgressiveAction)] = async (e, m, md) =>
-        await _convergeWriter.RetractAsync<ConvergePublicProgressiveAction>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id)), md),
-      [typeof(BitcraftChatMessage)] = async (e, m, md) =>
-        await _convergeWriter.RetractAsync<ConvergeChatMessage>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id)), md),
-      [typeof(BitcraftActionLogState)] = async (e, m, md) =>
-        await _convergeWriter.RetractAsync<ConvergeActionLogState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id)), md),
-      [typeof(BitcraftAuctionListingState)] = async (e, m, md) =>
-        await _convergeWriter.RetractAsync<ConvergeAuctionListingState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id)), md),
-      [typeof(BitcraftClosedListingState)] = async (e, m, md) =>
-        await _convergeWriter.RetractAsync<ConvergeClosedListingState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id)), md),
-      [typeof(BitcraftInventoryState)] = async (e, m, md) =>
-        await _convergeWriter.RetractAsync<ConvergeInventoryState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id)), md),
+      [typeof(BitcraftBuildingState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeBuildingState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftBuildingNicknameState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeBuildingNicknameState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftClaimState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeClaimState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftClaimLocalState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeClaimLocalState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftClaimTechState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeClaimTechState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftEmpireState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeEmpireState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftEmpireNodeState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeEmpireNodeState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftEmpireNodeSiegeState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeEmpireNodeSiegeState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftUserState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeUserState>((ReadOnlyMemory<byte>)Convert.FromHexString(e.Id)),
+      [typeof(BitcraftUsernameState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeUsernameState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftLocationState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeLocationState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftProgressiveAction)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeProgressiveAction>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftPublicProgressiveAction)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergePublicProgressiveAction>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftChatMessage)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeChatMessage>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftActionLogState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeActionLogState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftAuctionListingState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeAuctionListingState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftClosedListingState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeClosedListingState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftInventoryState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeInventoryState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
     };
   }
 
@@ -181,6 +196,8 @@ public class EventSubscriberService : IEventSubscriber
     {
       [typeof(BitcraftBuildingState)] = async (batch, e, m) =>
         await batch.AssertAsync(_convergeWriter.GetKind<ConvergeBuildingState>(), ConvergeDbConverters.ToConverge((BitcraftBuildingState)e, m)),
+      [typeof(BitcraftBuildingNicknameState)] = async (batch, e, m) =>
+        await batch.AssertAsync(_convergeWriter.GetKind<ConvergeBuildingNicknameState>(), ConvergeDbConverters.ToConverge((BitcraftBuildingNicknameState)e, m)),
       [typeof(BitcraftClaimState)] = async (batch, e, m) =>
         await batch.AssertAsync(_convergeWriter.GetKind<ConvergeClaimState>(), ConvergeDbConverters.ToConverge((BitcraftClaimState)e, m)),
       [typeof(BitcraftClaimLocalState)] = async (batch, e, m) =>
@@ -213,6 +230,17 @@ public class EventSubscriberService : IEventSubscriber
         await batch.AssertAsync(_convergeWriter.GetKind<ConvergeClosedListingState>(), ConvergeDbConverters.ToConverge((BitcraftClosedListingState)e, m)),
       [typeof(BitcraftInventoryState)] = async (batch, e, m) =>
         await batch.AssertAsync(_convergeWriter.GetKind<ConvergeInventoryState>(), ConvergeDbConverters.ToConverge((BitcraftInventoryState)e, m)),
+    };
+  }
+
+  private Dictionary<Type, Func<BitcraftEventBase, string, Task>> BuildEmitDispatchers()
+  {
+    return new Dictionary<Type, Func<BitcraftEventBase, string, Task>>
+    {
+      [typeof(BitcraftMarketTradeEvent)] = async (e, m) =>
+        await _convergeWriter.EmitAsync(ConvergeDbConverters.ToConverge((BitcraftMarketTradeEvent)e, m)),
+      [typeof(BitcraftBarterStallInventoryEvent)] = async (e, m) =>
+        await _convergeWriter.EmitAsync(ConvergeDbConverters.ToConverge((BitcraftBarterStallInventoryEvent)e, m)),
     };
   }
 
@@ -266,10 +294,12 @@ public class EventSubscriberService : IEventSubscriber
 
       var mapperGenericArguments = baseType.GetGenericArguments();
       var entityType = mapperGenericArguments[0];
+      // Persistent tables derive from RemoteTableHandle<,>, event tables from RemoteEventTableHandle<,>.
       var tableProperties = fields
           .Where(x => (x.FieldType.BaseType?.IsGenericType ?? false)
-              && x.FieldType.BaseType?.GetGenericTypeDefinition() == typeof(RemoteTableHandle<,>)
-              && x.FieldType.BaseType?.GenericTypeArguments[1] == entityType);
+              && x.FieldType.BaseType.GetGenericTypeDefinition() is var handleType
+              && (handleType == typeof(RemoteTableHandle<,>) || handleType == typeof(RemoteEventTableHandle<,>))
+              && x.FieldType.BaseType.GenericTypeArguments[1] == entityType);
 
       var mappedType = mapperGenericArguments[1];
 
@@ -420,6 +450,9 @@ public class EventSubscriberService : IEventSubscriber
     var deleteEvent = tableType.GetEvent("OnDelete");
 
     var bufferKey = typeof(TOutput);
+    // Event tables only fire OnInsert. Anything delivered during SubscribeApplied is not a live
+    // event, so it is dropped rather than replayed into the event stream.
+    var isEventType = BitcraftEventBase.ConvergeDbEventTypes.Contains(bufferKey);
 
     if (insertEvent != null)
     {
@@ -433,10 +466,11 @@ public class EventSubscriberService : IEventSubscriber
           mapped.Module = module;
           if (ctx.Event is Event<Reducer>.SubscribeApplied)
           {
-            WriteStreamingRow(bufferKey, mapped, module);
+            if (!isEventType)
+              WriteStreamingRow(bufferKey, mapped, module);
             return;
           }
-          PublishEvent(ctx, mapped, delete: false);
+          PublishEvent(mapped, delete: false);
         }
         catch (Exception ex)
         {
@@ -463,7 +497,7 @@ public class EventSubscriberService : IEventSubscriber
             WriteStreamingRow(bufferKey, mapped, module);
             return;
           }
-          PublishEvent(ctx, mapped, delete: false);
+          PublishEvent(mapped, delete: false);
         }
         catch (Exception ex)
         {
@@ -485,7 +519,7 @@ public class EventSubscriberService : IEventSubscriber
           // Deletes during the SubscribeApplied window only happen via overlapping-subscription
           // multiplicity transitions; the post-batch snapshot already reflects the desired state.
           if (ctx.Event is Event<Reducer>.SubscribeApplied) return;
-          PublishEvent(ctx, mapper.Map(entity), delete: true);
+          PublishEvent(mapper.Map(entity), delete: true);
         }
         catch (Exception ex)
         {
@@ -511,7 +545,7 @@ public class EventSubscriberService : IEventSubscriber
   }
 
   private void PublishEvent<T>(
-    EventContext ctx, T payload, bool delete
+    T payload, bool delete
   ) where T : BitcraftEventBase
   {
     try
@@ -522,15 +556,6 @@ public class EventSubscriberService : IEventSubscriber
 
       _eventCounter.Add(1, new TagList { { "type", entityType.Name }, { "delete", delete } });
 
-      EntityMetadata? metadata = null;
-      if (ctx.Event is Event<Reducer>.Reducer reducerCtx)
-      {
-        metadata = new EntityMetadata(
-          ("ci", reducerCtx.ReducerEvent.CallerIdentity.ToString()),
-          ("rd", reducerCtx.ReducerEvent.Reducer.GetType().Name ?? "UNKNOWN")
-        );
-      }
-
       if (BitcraftEventBase.PostgresTypes.Contains(entityType))
       {
         // Descriptor → PostgreSQL
@@ -539,15 +564,21 @@ public class EventSubscriberService : IEventSubscriber
         else
           _descriptorWriter.EnqueueUpsert(payload);
       }
+      else if (_emitDispatchers.TryGetValue(entityType, out var emit))
+      {
+        // Event-only entity -> ConvergeDB event stream. Event tables never delete.
+        if (!delete)
+          emit(payload, module).GetAwaiter().GetResult();
+      }
       else if (delete && _retractDispatchers.TryGetValue(entityType, out var retract))
       {
         // Dynamic entity delete → ConvergeDB RETRACT
-        retract(payload, module, metadata).GetAwaiter().GetResult();
+        retract(payload, module).GetAwaiter().GetResult();
       }
       else if (!delete && _assertDispatchers.TryGetValue(entityType, out var assert))
       {
         // Dynamic entity insert/update → ConvergeDB ASSERT
-        assert(payload, module, metadata).GetAwaiter().GetResult();
+        assert(payload, module).GetAwaiter().GetResult();
       }
       else
       {

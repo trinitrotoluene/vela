@@ -31,6 +31,11 @@ public class ConvergeDbWriter : IConvergeDbWriter
     // Volatile/Interlocked so the test-and-clear is well defined regardless.
     private int _dirty;
 
+    // The single entity every event-only kind (EmitAsync) writes to for this source. Keyed by the
+    // source id so gateways never converge onto each other's event entity; the converged state is
+    // just "last event from this module" and is never read.
+    private ReadOnlyMemory<byte> _eventEntityId = EntityId.FromULong(0);
+
     public ConvergeDbWriter(
         ILogger<ConvergeDbWriter> logger,
         IOptions<BitcraftServiceOptions> bitcraftOptions,
@@ -66,6 +71,7 @@ public class ConvergeDbWriter : IConvergeDbWriter
         var opts = _options.Value;
         var module = _bitcraftOptions.Value.Module;
         var sourceId = DeriveSourceIdFromModule(module);
+        _eventEntityId = EntityId.FromULong(sourceId);
 
         _client = await ConvergenceClient.ConnectAsync(new ConvergenceOptions
         {
@@ -88,6 +94,7 @@ public class ConvergeDbWriter : IConvergeDbWriter
     private async Task RegisterAllKindsAsync(CancellationToken ct)
     {
         await RegisterKindAsync<ConvergeBuildingState>(ct);
+        await RegisterKindAsync<ConvergeBuildingNicknameState>(ct);
         await RegisterKindAsync<ConvergeClaimState>(ct);
         await RegisterKindAsync<ConvergeClaimLocalState>(ct);
         await RegisterKindAsync<ConvergeClaimTechState>(ct);
@@ -104,6 +111,8 @@ public class ConvergeDbWriter : IConvergeDbWriter
         await RegisterKindAsync<ConvergeAuctionListingState>(ct);
         await RegisterKindAsync<ConvergeClosedListingState>(ct);
         await RegisterKindAsync<ConvergeInventoryState>(ct);
+        await RegisterKindAsync<ConvergeMarketTradeEvent>(ct);
+        await RegisterKindAsync<ConvergeBarterStallInventoryEvent>(ct);
 
         _logger.LogInformation("Registered {Count} entity kinds with ConvergeDB", _kindHandles.Count);
     }
@@ -144,6 +153,13 @@ public class ConvergeDbWriter : IConvergeDbWriter
         await _sink!.RetractAsync<T>(entityId, metadata);
         Volatile.Write(ref _dirty, 1);
     }
+
+    // Event-only write: an ASSERT against this source's shared event entity. ConvergeDB records one
+    // event per op before coalescing (see AssertAsync), so every emit reaches event-stream
+    // subscribers while the converged state stays a single row. Consumers should ignore the
+    // retract event each epoch produces for that row.
+    public Task EmitAsync<T>(T evt) where T : struct, IConvergenceEntity<T>, IConvergeEvent<T>
+        => AssertAsync(evt.WithEntityId(_eventEntityId));
 
     public async Task FlushPendingAsync(CancellationToken ct)
     {

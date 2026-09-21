@@ -162,6 +162,13 @@ public class EventGatewayService : BackgroundService
         "SELECT * FROM building_desc",
         "SELECT * FROM claim_tech_desc",
         "SELECT * FROM paving_tile_desc",
+        "SELECT * FROM skill_desc",
+        "SELECT * FROM tool_type_desc",
+        "SELECT * FROM tool_desc",
+        "SELECT * FROM building_type_desc",
+        "SELECT * FROM extraction_recipe_desc",
+        "SELECT * FROM secondary_knowledge_desc",
+        "SELECT * FROM resource_desc",
         "SELECT * FROM user_state",
         "SELECT * FROM claim_local_state",
         "SELECT * FROM player_username_state",
@@ -169,6 +176,7 @@ public class EventGatewayService : BackgroundService
         "SELECT * FROM sell_order_state",
         "SELECT * FROM closed_listing_state",
         "SELECT * FROM building_state",
+        "SELECT * FROM building_nickname_state",
         "SELECT * FROM claim_tech_state",
                 @"SELECT e.* FROM empire_state e
           JOIN claim_state c
@@ -195,6 +203,11 @@ ON p.entity_id = s.entity_id
       ],
       [
         "SELECT ls.* FROM location_state ls INNER JOIN claim_state cs ON cs.owner_building_entity_id = ls.entity_id",
+      ],
+      [
+        // Event tables
+        "SELECT * FROM market_trade_event",
+        "SELECT * FROM barter_stall_inventory_event",
       ]
     ];
   }

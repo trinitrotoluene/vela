@@ -38,6 +38,5 @@
     "ItemId",
     "IsCargoItem",
     "Id"
-  ],
-  "x-global-entity": true
+  ]
 }

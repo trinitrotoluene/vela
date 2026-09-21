@@ -26,6 +26,5 @@
     "Name",
     "IsNeutral",
     "Id"
-  ],
-  "x-global-entity": true
+  ]
 }

@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "properties": {
+    "Learned": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "Researching": {
+      "type": "integer"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "Learned",
+    "Researching",
+    "Id"
+  ]
+}

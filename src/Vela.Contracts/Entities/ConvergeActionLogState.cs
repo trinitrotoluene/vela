@@ -14,6 +14,8 @@ public partial struct ConvergeActionLogState
     [Field(5)] public byte ActionType { get; set; }
     [Field(6)] public ulong ActionItemId { get; set; }
     [Field(7)] public int ActionQuantity { get; set; }
+    // Item and cargo ids overlap - this picks which table ActionItemId refers to.
+    [Field(8)] public bool ActionIsCargo { get; set; }
 
     public ReadOnlyMemory<byte> EntityId { get; init; }
 }

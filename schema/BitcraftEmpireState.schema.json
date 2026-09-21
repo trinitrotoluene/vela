@@ -18,6 +18,5 @@
     "Name",
     "ShardTreasury",
     "Id"
-  ],
-  "x-global-entity": true
+  ]
 }

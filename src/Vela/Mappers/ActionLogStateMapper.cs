@@ -18,11 +18,13 @@ namespace Vela.Mappers
         {
           ActionLogData.WithdrawItem w => new WithdrawItemStateAction(
             ItemId: w.WithdrawItem_.ItemId.ToString(),
-            Quantity: w.WithdrawItem_.Quantity
+            Quantity: w.WithdrawItem_.Quantity,
+            ItemType: (BitcraftItemType)w.WithdrawItem_.ItemType
           ),
           ActionLogData.DepositItem d => new DepositItemStateAction(
             ItemId: d.DepositItem_.ItemId.ToString(),
-            Quantity: d.DepositItem_.Quantity
+            Quantity: d.DepositItem_.Quantity,
+            ItemType: (BitcraftItemType)d.DepositItem_.ItemType
           ),
           _ => new UnknownItemStateAction()
         }

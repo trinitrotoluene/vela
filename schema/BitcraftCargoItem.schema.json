@@ -50,6 +50,5 @@
     "NotPickupable",
     "BlocksPath",
     "Id"
-  ],
-  "x-global-entity": true
+  ]
 }

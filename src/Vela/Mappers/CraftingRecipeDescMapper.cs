@@ -17,11 +17,16 @@ namespace Vela.Mappers
         Level: x.Level,
         SkillId: x.SkillId
       ))],
-        ToolRequirements: [.. entity.ToolRequirements.Select(x => new ToolRequirement(ToolType: x.ToolType, Level: x.Level))],
-        ConsumedItemStacks: [.. entity.ConsumedItemStacks.Select(x => new ItemStack(ItemId: x.ItemId.ToString(), Quantity: x.Quantity))],
-        ProducedItemStacks: [.. entity.CraftedItemStacks.Select(x => new ItemStack(ItemId: x.ItemId.ToString(), Quantity: x.Quantity))],
+        ToolRequirements: [.. entity.ToolRequirements.Select(x => new ToolRequirement(ToolType: x.ToolType, Level: x.Level, Power: x.Power))],
+        ConsumedItemStacks: [.. entity.ConsumedItemStacks.Select(x => new ItemStack(ItemId: x.ItemId.ToString(), Quantity: x.Quantity, ItemType: (BitcraftItemType)x.ItemType))],
+        ProducedItemStacks: [.. entity.CraftedItemStacks.Select(x => new ItemStack(ItemId: x.ItemId.ToString(), Quantity: x.Quantity, ItemType: (BitcraftItemType)x.ItemType))],
         IsPassive: entity.IsPassive,
-        ActionsRequired: entity.ActionsRequired
+        ActionsRequired: entity.ActionsRequired,
+        TimeRequirement: entity.TimeRequirement,
+        StaminaRequirement: entity.StaminaRequirement,
+        RequiredClaimTechId: entity.RequiredClaimTechId,
+        RequiredKnowledges: [.. entity.RequiredKnowledges],
+        BlockingKnowledges: [.. entity.BlockingKnowledges]
       );
   }
 }

@@ -18,26 +18,32 @@ namespace Vela.Events
 
     public static readonly Type[] PostgresTypes;
     public static readonly Type[] ConvergeDbTypes;
+    public static readonly Type[] ConvergeDbEventTypes;
 
     static BitcraftEventBase()
     {
       var postgres = new List<Type>();
       var convergeDb = new List<Type>();
+      var convergeDbEvent = new List<Type>();
       var violations = new List<string>();
 
       foreach (var type in SchemaTypes)
       {
-        var hasPostgres = type.GetCustomAttribute<PostgresAttribute>() != null;
-        var hasConvergeDb = type.GetCustomAttribute<ConvergeDbAttribute>() != null;
+        var markers = new List<string>();
+        if (type.GetCustomAttribute<PostgresAttribute>() != null) markers.Add("[Postgres]");
+        if (type.GetCustomAttribute<ConvergeDbAttribute>() != null) markers.Add("[ConvergeDb]");
+        if (type.GetCustomAttribute<ConvergeDbEventAttribute>() != null) markers.Add("[ConvergeDbEvent]");
 
-        if (hasPostgres && hasConvergeDb)
-          violations.Add($"{type.Name} has both [Postgres] and [ConvergeDb] - pick one");
-        else if (!hasPostgres && !hasConvergeDb)
-          violations.Add($"{type.Name} has neither [Postgres] nor [ConvergeDb] - every entity must declare its storage");
-        else if (hasPostgres)
+        if (markers.Count > 1)
+          violations.Add($"{type.Name} has {string.Join(" and ", markers)} - pick one");
+        else if (markers.Count == 0)
+          violations.Add($"{type.Name} has none of [Postgres], [ConvergeDb] or [ConvergeDbEvent] - every entity must declare its storage");
+        else if (markers[0] == "[Postgres]")
           postgres.Add(type);
-        else
+        else if (markers[0] == "[ConvergeDb]")
           convergeDb.Add(type);
+        else
+          convergeDbEvent.Add(type);
       }
 
       if (violations.Count > 0)
@@ -47,6 +53,7 @@ namespace Vela.Events
 
       PostgresTypes = [.. postgres];
       ConvergeDbTypes = [.. convergeDb];
+      ConvergeDbEventTypes = [.. convergeDbEvent];
     }
   };
 }

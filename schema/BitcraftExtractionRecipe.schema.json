@@ -1,0 +1,154 @@
+{
+  "type": "object",
+  "properties": {
+    "VerbPhrase": {
+      "type": "string"
+    },
+    "ResourceId": {
+      "type": "integer"
+    },
+    "CargoId": {
+      "type": "integer"
+    },
+    "LevelRequirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "SkillId": {
+            "type": "integer"
+          },
+          "Level": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "SkillId",
+          "Level"
+        ]
+      }
+    },
+    "ToolRequirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ToolType": {
+            "type": "integer"
+          },
+          "Level": {
+            "type": "integer"
+          },
+          "Power": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "ToolType",
+          "Level",
+          "Power"
+        ]
+      }
+    },
+    "ConsumedItemStacks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ItemId": {
+            "type": "string"
+          },
+          "Quantity": {
+            "type": "integer"
+          },
+          "ItemType": {
+            "enum": [
+              "item",
+              "cargo"
+            ]
+          }
+        },
+        "required": [
+          "ItemId",
+          "Quantity",
+          "ItemType"
+        ]
+      }
+    },
+    "ExtractedItemStacks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ItemId": {
+            "type": "string"
+          },
+          "Quantity": {
+            "type": "integer"
+          },
+          "ItemType": {
+            "enum": [
+              "item",
+              "cargo"
+            ]
+          },
+          "Probability": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "ItemId",
+          "Quantity",
+          "ItemType",
+          "Probability"
+        ]
+      }
+    },
+    "TimeRequirement": {
+      "type": "number"
+    },
+    "StaminaRequirement": {
+      "type": "number"
+    },
+    "Range": {
+      "type": "integer"
+    },
+    "AllowUseHands": {
+      "type": "boolean"
+    },
+    "RequiredKnowledges": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "BlockingKnowledges": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "VerbPhrase",
+    "ResourceId",
+    "CargoId",
+    "LevelRequirements",
+    "ToolRequirements",
+    "ConsumedItemStacks",
+    "ExtractedItemStacks",
+    "TimeRequirement",
+    "StaminaRequirement",
+    "Range",
+    "AllowUseHands",
+    "RequiredKnowledges",
+    "BlockingKnowledges",
+    "Id"
+  ]
+}

@@ -13,7 +13,8 @@ namespace Vela.Mappers
           Probability: x.Probability,
           Items: [.. x.Items.Select(y => new ItemListItem(
             ItemId: y.ItemId,
-            Quantity: y.Quantity
+            Quantity: y.Quantity,
+            ItemType: (BitcraftItemType)y.ItemType
           ))]
         ))]
         );

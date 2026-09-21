@@ -4,6 +4,9 @@
     "ClaimEntityId": {
       "type": "string"
     },
+    "BuildingDescriptionId": {
+      "type": "integer"
+    },
     "Id": {
       "type": "string"
     },
@@ -13,6 +16,7 @@
   },
   "required": [
     "ClaimEntityId",
+    "BuildingDescriptionId",
     "Id"
   ]
 }

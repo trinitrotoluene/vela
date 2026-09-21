@@ -29,6 +29,9 @@
     "Treasury": {
       "type": "integer"
     },
+    "BuildingDescriptionId": {
+      "type": "integer"
+    },
     "Id": {
       "type": "string"
     },
@@ -40,7 +43,7 @@
     "Location",
     "Supplies",
     "Treasury",
+    "BuildingDescriptionId",
     "Id"
-  ],
-  "x-global-entity": true
+  ]
 }

@@ -22,11 +22,18 @@
                 },
                 "Quantity": {
                   "type": "integer"
+                },
+                "ItemType": {
+                  "enum": [
+                    "item",
+                    "cargo"
+                  ]
                 }
               },
               "required": [
                 "ItemId",
-                "Quantity"
+                "Quantity",
+                "ItemType"
               ]
             }
           }
@@ -48,6 +55,5 @@
     "Name",
     "Possibilities",
     "Id"
-  ],
-  "x-global-entity": true
+  ]
 }

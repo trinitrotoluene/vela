@@ -10,7 +10,12 @@ namespace Vela.Events
     ItemStack[] ConsumedItemStacks,
     ItemStack[] ProducedItemStacks,
     bool IsPassive,
-    int ActionsRequired
+    int ActionsRequired,
+    float TimeRequirement,
+    float StaminaRequirement,
+    int RequiredClaimTechId,
+    int[] RequiredKnowledges,
+    int[] BlockingKnowledges
   ) : BitcraftEventBase(Id);
 
   public record BuildingRequirement(
@@ -24,11 +29,13 @@ namespace Vela.Events
 
   public record ToolRequirement(
     int ToolType,
-    int Level
+    int Level,
+    int Power
   );
 
   public record ItemStack(
     string ItemId,
-    int Quantity
+    int Quantity,
+    BitcraftItemType ItemType
   );
 }

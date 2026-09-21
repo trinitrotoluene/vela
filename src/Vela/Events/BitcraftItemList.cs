@@ -14,6 +14,7 @@ namespace Vela.Events
 
   public record ItemListItem(
     int ItemId,
-    int Quantity
+    int Quantity,
+    BitcraftItemType ItemType
   );
 }

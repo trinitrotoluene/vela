@@ -1,0 +1,54 @@
+{
+  "type": "object",
+  "properties": {
+    "ClaimId": {
+      "type": "string"
+    },
+    "IsBuyOrder": {
+      "type": "boolean"
+    },
+    "BuyerId": {
+      "type": "string"
+    },
+    "SellerId": {
+      "type": "string"
+    },
+    "ItemId": {
+      "type": "integer"
+    },
+    "IsCargo": {
+      "type": "boolean"
+    },
+    "Quantity": {
+      "type": "integer"
+    },
+    "UnitPrice": {
+      "type": "integer"
+    },
+    "ListingRemainingQuantity": {
+      "type": "integer"
+    },
+    "TimestampMicros": {
+      "type": "integer"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "ClaimId",
+    "IsBuyOrder",
+    "BuyerId",
+    "SellerId",
+    "ItemId",
+    "IsCargo",
+    "Quantity",
+    "UnitPrice",
+    "ListingRemainingQuantity",
+    "TimestampMicros",
+    "Id"
+  ]
+}

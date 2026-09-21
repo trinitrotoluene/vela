@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "properties": {
+    "Name": {
+      "type": "string"
+    },
+    "Tier": {
+      "type": "integer"
+    },
+    "TechType": {
+      "type": "string"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "Name",
+    "Tier",
+    "TechType",
+    "Id"
+  ]
+}

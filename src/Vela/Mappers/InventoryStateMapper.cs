@@ -8,7 +8,10 @@ namespace Vela.Mappers
     public override BitcraftInventoryState Map(
       InventoryState entity
     ) => new(
-        Id: entity.OwnerEntityId.ToString(),
+        Id: entity.EntityId.ToString(),
+        OwnerEntityId: entity.OwnerEntityId.ToString(),
+        PlayerOwnerEntityId: entity.PlayerOwnerEntityId.ToString(),
+        InventoryIndex: entity.InventoryIndex,
         Pockets: [.. entity.Pockets.Select(x => new BitcraftInventoryPocket(
           ItemId: x.Contents?.ItemId.ToString(),
           Quantity: x.Contents?.Quantity,

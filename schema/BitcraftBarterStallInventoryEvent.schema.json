@@ -1,0 +1,82 @@
+{
+  "type": "object",
+  "properties": {
+    "ClaimId": {
+      "type": "string"
+    },
+    "ActorId": {
+      "type": "string"
+    },
+    "Reason": {
+      "type": "string"
+    },
+    "TradeOrderId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "TradeAmount": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "AddedItems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ItemId": {
+            "type": "integer"
+          },
+          "Quantity": {
+            "type": "integer"
+          },
+          "IsCargo": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ItemId",
+          "Quantity",
+          "IsCargo"
+        ]
+      }
+    },
+    "RemovedItems": {
+      "type": "array",
+      "items": {
+        "$ref": "#/properties/AddedItems/items"
+      }
+    },
+    "TreasuryCoinsAdded": {
+      "type": "integer"
+    },
+    "TreasuryCoinsRemoved": {
+      "type": "integer"
+    },
+    "TimestampMicros": {
+      "type": "integer"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "ClaimId",
+    "ActorId",
+    "Reason",
+    "TradeOrderId",
+    "TradeAmount",
+    "AddedItems",
+    "RemovedItems",
+    "TreasuryCoinsAdded",
+    "TreasuryCoinsRemoved",
+    "TimestampMicros",
+    "Id"
+  ]
+}

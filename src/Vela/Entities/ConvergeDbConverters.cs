@@ -16,6 +16,14 @@ public static class ConvergeDbConverters
         EntityId = NumericId(e.Id),
         Module = module,
         ClaimEntityId = ulong.Parse(e.ClaimEntityId),
+        BuildingDescriptionId = e.BuildingDescriptionId,
+    };
+
+    public static ConvergeBuildingNicknameState ToConverge(BitcraftBuildingNicknameState e, string module) => new()
+    {
+        EntityId = NumericId(e.Id),
+        Module = module,
+        Nickname = e.Nickname,
     };
 
     public static ConvergeLocationState ToConverge(BitcraftLocationState e, string module) => new()
@@ -129,6 +137,12 @@ public static class ConvergeDbConverters
             WithdrawItemStateAction w => w.Quantity,
             _ => 0,
         },
+        ActionIsCargo = e.Action switch
+        {
+            DepositItemStateAction d => d.ItemType == BitcraftItemType.Cargo,
+            WithdrawItemStateAction w => w.ItemType == BitcraftItemType.Cargo,
+            _ => false,
+        },
     };
 
     public static ConvergeInventoryState ToConverge(BitcraftInventoryState e, string module) => new()
@@ -146,6 +160,9 @@ public static class ConvergeDbConverters
                 _ => 0,
             },
         }).ToArray(),
+        OwnerEntityId = ulong.Parse(e.OwnerEntityId),
+        PlayerOwnerEntityId = ulong.Parse(e.PlayerOwnerEntityId),
+        InventoryIndex = e.InventoryIndex,
     };
 
     // --- Global entities ---
@@ -208,5 +225,49 @@ public static class ConvergeDbConverters
         ItemId = e.ItemId,
         IsCargoItem = e.IsCargoItem,
     };
-}
 
+    // Event-only entities
+    // EntityId is left unset: EmitAsync stamps the per-module event entity id.
+
+    public static ConvergeMarketTradeEvent ToConverge(BitcraftMarketTradeEvent e, string module) => new()
+    {
+        Module = module,
+        ClaimId = ulong.Parse(e.ClaimId),
+        ListingId = ulong.Parse(e.Id),
+        IsBuyOrder = e.IsBuyOrder,
+        BuyerId = ulong.Parse(e.BuyerId),
+        SellerId = ulong.Parse(e.SellerId),
+        ItemId = e.ItemId,
+        IsCargo = e.IsCargo,
+        Quantity = e.Quantity,
+        UnitPrice = e.UnitPrice,
+        ListingRemainingQuantity = e.ListingRemainingQuantity,
+        TimestampMicros = e.TimestampMicros,
+    };
+
+    public static ConvergeBarterStallInventoryEvent ToConverge(BitcraftBarterStallInventoryEvent e, string module) => new()
+    {
+        Module = module,
+        ShopId = ulong.Parse(e.Id),
+        ClaimId = ulong.Parse(e.ClaimId),
+        ActorId = ulong.Parse(e.ActorId),
+        Reason = Enum.TryParse<BarterStallInventoryChangeReason>(e.Reason, out var reason)
+            ? reason
+            : BarterStallInventoryChangeReason.Unknown,
+        HasTrade = e.TradeOrderId is not null,
+        TradeOrderId = e.TradeOrderId is not null ? ulong.Parse(e.TradeOrderId) : 0,
+        TradeAmount = e.TradeAmount ?? 0,
+        AddedItems = [.. e.AddedItems.Select(ToConverge)],
+        RemovedItems = [.. e.RemovedItems.Select(ToConverge)],
+        TreasuryCoinsAdded = e.TreasuryCoinsAdded,
+        TreasuryCoinsRemoved = e.TreasuryCoinsRemoved,
+        TimestampMicros = e.TimestampMicros,
+    };
+
+    private static ConvergeItemStack ToConverge(BitcraftItemStack s) => new()
+    {
+        ItemId = s.ItemId,
+        Quantity = s.Quantity,
+        IsCargo = s.IsCargo,
+    };
+}

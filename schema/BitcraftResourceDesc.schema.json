@@ -1,0 +1,80 @@
+{
+  "type": "object",
+  "properties": {
+    "Name": {
+      "type": "string"
+    },
+    "Description": {
+      "type": "string"
+    },
+    "Tier": {
+      "type": "integer"
+    },
+    "Tag": {
+      "type": "string"
+    },
+    "Rarity": {
+      "enum": [
+        "default",
+        "common",
+        "uncommon",
+        "rare",
+        "epic",
+        "legendary",
+        "mythic"
+      ]
+    },
+    "MaxHealth": {
+      "type": "integer"
+    },
+    "OnDestroyYield": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ItemId": {
+            "type": "string"
+          },
+          "Quantity": {
+            "type": "integer"
+          },
+          "ItemType": {
+            "enum": [
+              "item",
+              "cargo"
+            ]
+          }
+        },
+        "required": [
+          "ItemId",
+          "Quantity",
+          "ItemType"
+        ]
+      }
+    },
+    "OnDestroyYieldResourceId": {
+      "type": "integer"
+    },
+    "HasCompendiumEntry": {
+      "type": "boolean"
+    },
+    "Id": {
+      "type": "string"
+    },
+    "Module": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "Name",
+    "Description",
+    "Tier",
+    "Tag",
+    "Rarity",
+    "MaxHealth",
+    "OnDestroyYield",
+    "OnDestroyYieldResourceId",
+    "HasCompendiumEntry",
+    "Id"
+  ]
+}

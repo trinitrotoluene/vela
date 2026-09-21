@@ -30,6 +30,9 @@
     "HasCompendiumEntry": {
       "type": "boolean"
     },
+    "Tag": {
+      "type": "string"
+    },
     "Id": {
       "type": "string"
     },
@@ -45,7 +48,7 @@
     "Rarity",
     "ItemListId",
     "HasCompendiumEntry",
+    "Tag",
     "Id"
-  ],
-  "x-global-entity": true
+  ]
 }
