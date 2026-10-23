@@ -45,6 +45,8 @@ namespace SpacetimeDB.Types
         public bool Respawn;
         [DataMember(Name = "collapse_trigger")]
         public bool CollapseTrigger;
+        [DataMember(Name = "interior_spawn_random_group_id")]
+        public int InteriorSpawnRandomGroupId;
 
         public InteriorSpawnDesc(
             int Id,
@@ -62,7 +64,8 @@ namespace SpacetimeDB.Types
             NpcType TravelerType,
             int TravelerRuinEntityId,
             bool Respawn,
-            bool CollapseTrigger
+            bool CollapseTrigger,
+            int InteriorSpawnRandomGroupId
         )
         {
             this.Id = Id;
@@ -81,6 +84,7 @@ namespace SpacetimeDB.Types
             this.TravelerRuinEntityId = TravelerRuinEntityId;
             this.Respawn = Respawn;
             this.CollapseTrigger = CollapseTrigger;
+            this.InteriorSpawnRandomGroupId = InteriorSpawnRandomGroupId;
         }
 
         public InteriorSpawnDesc()

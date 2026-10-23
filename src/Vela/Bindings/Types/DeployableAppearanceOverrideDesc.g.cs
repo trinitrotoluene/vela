@@ -23,13 +23,16 @@ namespace SpacetimeDB.Types
         public string ModelAddress;
         [DataMember(Name = "icon_asset_name")]
         public string IconAssetName;
+        [DataMember(Name = "affected_model_addresses")]
+        public System.Collections.Generic.List<string>? AffectedModelAddresses;
 
         public DeployableAppearanceOverrideDesc(
             int Id,
             int CollectibleId,
             string AffectedModelAddress,
             string ModelAddress,
-            string IconAssetName
+            string IconAssetName,
+            System.Collections.Generic.List<string>? AffectedModelAddresses
         )
         {
             this.Id = Id;
@@ -37,6 +40,7 @@ namespace SpacetimeDB.Types
             this.AffectedModelAddress = AffectedModelAddress;
             this.ModelAddress = ModelAddress;
             this.IconAssetName = IconAssetName;
+            this.AffectedModelAddresses = AffectedModelAddresses;
         }
 
         public DeployableAppearanceOverrideDesc()

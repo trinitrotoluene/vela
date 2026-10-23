@@ -17,5 +17,6 @@ namespace SpacetimeDB.Types
         Resource,
         Enemy,
         Paving,
+        InteriorSpawnRandomGroup,
     }
 }

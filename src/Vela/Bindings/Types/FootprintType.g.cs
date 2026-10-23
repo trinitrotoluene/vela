@@ -14,5 +14,6 @@ namespace SpacetimeDB.Types
         Walkable,
         Perimeter,
         WalkableResource,
+        Platform,
     }
 }
