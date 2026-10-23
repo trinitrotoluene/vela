@@ -50,6 +50,7 @@ namespace SpacetimeDB.Types
             AddTable(BiomeDesc = new(conn));
             AddTable(BuffDesc = new(conn));
             AddTable(BuffTypeDesc = new(conn));
+            AddTable(BuildingBuffActivateEvent = new(conn));
             AddTable(BuildingBuffDesc = new(conn));
             AddTable(BuildingClaimDesc = new(conn));
             AddTable(BuildingDeconstructStartEvent = new(conn));
@@ -80,6 +81,7 @@ namespace SpacetimeDB.Types
             AddTable(ClaimTechState = new(conn));
             AddTable(ClaimTileCost = new(conn));
             AddTable(ClaimTileState = new(conn));
+            AddTable(ClaimTreasuryEvent = new(conn));
             AddTable(ClimbRequirementDesc = new(conn));
             AddTable(ClosedListingState = new(conn));
             AddTable(ClothingDesc = new(conn));
@@ -92,6 +94,7 @@ namespace SpacetimeDB.Types
             AddTable(ConstructionRecipeDesc = new(conn));
             AddTable(ContributionLootDesc = new(conn));
             AddTable(ContributionState = new(conn));
+            AddTable(CraftCompletedEvent = new(conn));
             AddTable(CraftContinueStartEvent = new(conn));
             AddTable(CraftEvent = new(conn));
             AddTable(CraftInitiateStartEvent = new(conn));
@@ -159,6 +162,7 @@ namespace SpacetimeDB.Types
             AddTable(ExtractOutcomeStateV1 = new(conn));
             AddTable(ExtractStartEvent = new(conn));
             AddTable(ExtractionRecipeDesc = new(conn));
+            AddTable(FloatingPlatformDesc = new(conn));
             AddTable(FoodDesc = new(conn));
             AddTable(FootprintTileState = new(conn));
             AddTable(GateDesc = new(conn));
@@ -182,6 +186,8 @@ namespace SpacetimeDB.Types
             AddTable(InteriorPortalConnectionsDesc = new(conn));
             AddTable(InteriorShapeDesc = new(conn));
             AddTable(InteriorSpawnDesc = new(conn));
+            AddTable(InteriorSpawnDestroyTriggerDesc = new(conn));
+            AddTable(InteriorSpawnRandomGroupDesc = new(conn));
             AddTable(InventoryState = new(conn));
             AddTable(ItemConversionRecipeDesc = new(conn));
             AddTable(ItemConvertStartEvent = new(conn));
@@ -867,6 +873,7 @@ namespace SpacetimeDB.Types
             new QueryBuilder().From.BiomeDesc().ToSql(),
             new QueryBuilder().From.BuffDesc().ToSql(),
             new QueryBuilder().From.BuffTypeDesc().ToSql(),
+            new QueryBuilder().From.BuildingBuffActivateEvent().ToSql(),
             new QueryBuilder().From.BuildingBuffDesc().ToSql(),
             new QueryBuilder().From.BuildingClaimDesc().ToSql(),
             new QueryBuilder().From.BuildingDeconstructStartEvent().ToSql(),
@@ -897,6 +904,7 @@ namespace SpacetimeDB.Types
             new QueryBuilder().From.ClaimTechState().ToSql(),
             new QueryBuilder().From.ClaimTileCost().ToSql(),
             new QueryBuilder().From.ClaimTileState().ToSql(),
+            new QueryBuilder().From.ClaimTreasuryEvent().ToSql(),
             new QueryBuilder().From.ClimbRequirementDesc().ToSql(),
             new QueryBuilder().From.ClosedListingState().ToSql(),
             new QueryBuilder().From.ClothingDesc().ToSql(),
@@ -909,6 +917,7 @@ namespace SpacetimeDB.Types
             new QueryBuilder().From.ConstructionRecipeDesc().ToSql(),
             new QueryBuilder().From.ContributionLootDesc().ToSql(),
             new QueryBuilder().From.ContributionState().ToSql(),
+            new QueryBuilder().From.CraftCompletedEvent().ToSql(),
             new QueryBuilder().From.CraftContinueStartEvent().ToSql(),
             new QueryBuilder().From.CraftEvent().ToSql(),
             new QueryBuilder().From.CraftInitiateStartEvent().ToSql(),
@@ -976,6 +985,7 @@ namespace SpacetimeDB.Types
             new QueryBuilder().From.ExtractOutcomeStateV1().ToSql(),
             new QueryBuilder().From.ExtractStartEvent().ToSql(),
             new QueryBuilder().From.ExtractionRecipeDesc().ToSql(),
+            new QueryBuilder().From.FloatingPlatformDesc().ToSql(),
             new QueryBuilder().From.FoodDesc().ToSql(),
             new QueryBuilder().From.FootprintTileState().ToSql(),
             new QueryBuilder().From.GateDesc().ToSql(),
@@ -999,6 +1009,8 @@ namespace SpacetimeDB.Types
             new QueryBuilder().From.InteriorPortalConnectionsDesc().ToSql(),
             new QueryBuilder().From.InteriorShapeDesc().ToSql(),
             new QueryBuilder().From.InteriorSpawnDesc().ToSql(),
+            new QueryBuilder().From.InteriorSpawnDestroyTriggerDesc().ToSql(),
+            new QueryBuilder().From.InteriorSpawnRandomGroupDesc().ToSql(),
             new QueryBuilder().From.InventoryState().ToSql(),
             new QueryBuilder().From.ItemConversionRecipeDesc().ToSql(),
             new QueryBuilder().From.ItemConvertStartEvent().ToSql(),
@@ -1194,6 +1206,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Table<BiomeDesc, BiomeDescCols, BiomeDescIxCols> BiomeDesc() => new("biome_desc", new BiomeDescCols("biome_desc"), new BiomeDescIxCols("biome_desc"));
         public global::SpacetimeDB.Table<BuffDesc, BuffDescCols, BuffDescIxCols> BuffDesc() => new("buff_desc", new BuffDescCols("buff_desc"), new BuffDescIxCols("buff_desc"));
         public global::SpacetimeDB.Table<BuffTypeDesc, BuffTypeDescCols, BuffTypeDescIxCols> BuffTypeDesc() => new("buff_type_desc", new BuffTypeDescCols("buff_type_desc"), new BuffTypeDescIxCols("buff_type_desc"));
+        public global::SpacetimeDB.Table<BuildingBuffActivateEvent, BuildingBuffActivateEventCols, BuildingBuffActivateEventIxCols> BuildingBuffActivateEvent() => new("building_buff_activate_event", new BuildingBuffActivateEventCols("building_buff_activate_event"), new BuildingBuffActivateEventIxCols("building_buff_activate_event"));
         public global::SpacetimeDB.Table<BuildingBuffDesc, BuildingBuffDescCols, BuildingBuffDescIxCols> BuildingBuffDesc() => new("building_buff_desc", new BuildingBuffDescCols("building_buff_desc"), new BuildingBuffDescIxCols("building_buff_desc"));
         public global::SpacetimeDB.Table<BuildingClaimDesc, BuildingClaimDescCols, BuildingClaimDescIxCols> BuildingClaimDesc() => new("building_claim_desc", new BuildingClaimDescCols("building_claim_desc"), new BuildingClaimDescIxCols("building_claim_desc"));
         public global::SpacetimeDB.Table<BuildingDeconstructStartEvent, BuildingDeconstructStartEventCols, BuildingDeconstructStartEventIxCols> BuildingDeconstructStartEvent() => new("building_deconstruct_start_event", new BuildingDeconstructStartEventCols("building_deconstruct_start_event"), new BuildingDeconstructStartEventIxCols("building_deconstruct_start_event"));
@@ -1224,6 +1237,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Table<ClaimTechState, ClaimTechStateCols, ClaimTechStateIxCols> ClaimTechState() => new("claim_tech_state", new ClaimTechStateCols("claim_tech_state"), new ClaimTechStateIxCols("claim_tech_state"));
         public global::SpacetimeDB.Table<ClaimTileCost, ClaimTileCostCols, ClaimTileCostIxCols> ClaimTileCost() => new("claim_tile_cost", new ClaimTileCostCols("claim_tile_cost"), new ClaimTileCostIxCols("claim_tile_cost"));
         public global::SpacetimeDB.Table<ClaimTileState, ClaimTileStateCols, ClaimTileStateIxCols> ClaimTileState() => new("claim_tile_state", new ClaimTileStateCols("claim_tile_state"), new ClaimTileStateIxCols("claim_tile_state"));
+        public global::SpacetimeDB.Table<ClaimTreasuryEvent, ClaimTreasuryEventCols, ClaimTreasuryEventIxCols> ClaimTreasuryEvent() => new("claim_treasury_event", new ClaimTreasuryEventCols("claim_treasury_event"), new ClaimTreasuryEventIxCols("claim_treasury_event"));
         public global::SpacetimeDB.Table<ClimbRequirementDesc, ClimbRequirementDescCols, ClimbRequirementDescIxCols> ClimbRequirementDesc() => new("climb_requirement_desc", new ClimbRequirementDescCols("climb_requirement_desc"), new ClimbRequirementDescIxCols("climb_requirement_desc"));
         public global::SpacetimeDB.Table<ClosedListingState, ClosedListingStateCols, ClosedListingStateIxCols> ClosedListingState() => new("closed_listing_state", new ClosedListingStateCols("closed_listing_state"), new ClosedListingStateIxCols("closed_listing_state"));
         public global::SpacetimeDB.Table<ClothingDesc, ClothingDescCols, ClothingDescIxCols> ClothingDesc() => new("clothing_desc", new ClothingDescCols("clothing_desc"), new ClothingDescIxCols("clothing_desc"));
@@ -1236,6 +1250,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Table<ConstructionRecipeDesc, ConstructionRecipeDescCols, ConstructionRecipeDescIxCols> ConstructionRecipeDesc() => new("construction_recipe_desc", new ConstructionRecipeDescCols("construction_recipe_desc"), new ConstructionRecipeDescIxCols("construction_recipe_desc"));
         public global::SpacetimeDB.Table<ContributionLootDesc, ContributionLootDescCols, ContributionLootDescIxCols> ContributionLootDesc() => new("contribution_loot_desc", new ContributionLootDescCols("contribution_loot_desc"), new ContributionLootDescIxCols("contribution_loot_desc"));
         public global::SpacetimeDB.Table<ContributionState, ContributionStateCols, ContributionStateIxCols> ContributionState() => new("contribution_state", new ContributionStateCols("contribution_state"), new ContributionStateIxCols("contribution_state"));
+        public global::SpacetimeDB.Table<CraftCompletedEvent, CraftCompletedEventCols, CraftCompletedEventIxCols> CraftCompletedEvent() => new("craft_completed_event", new CraftCompletedEventCols("craft_completed_event"), new CraftCompletedEventIxCols("craft_completed_event"));
         public global::SpacetimeDB.Table<CraftContinueStartEvent, CraftContinueStartEventCols, CraftContinueStartEventIxCols> CraftContinueStartEvent() => new("craft_continue_start_event", new CraftContinueStartEventCols("craft_continue_start_event"), new CraftContinueStartEventIxCols("craft_continue_start_event"));
         public global::SpacetimeDB.Table<CraftEvent, CraftEventCols, CraftEventIxCols> CraftEvent() => new("craft_event", new CraftEventCols("craft_event"), new CraftEventIxCols("craft_event"));
         public global::SpacetimeDB.Table<CraftInitiateStartEvent, CraftInitiateStartEventCols, CraftInitiateStartEventIxCols> CraftInitiateStartEvent() => new("craft_initiate_start_event", new CraftInitiateStartEventCols("craft_initiate_start_event"), new CraftInitiateStartEventIxCols("craft_initiate_start_event"));
@@ -1303,6 +1318,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Table<ExtractOutcomeState, ExtractOutcomeStateV1Cols, ExtractOutcomeStateV1IxCols> ExtractOutcomeStateV1() => new("extract_outcome_state_v1", new ExtractOutcomeStateV1Cols("extract_outcome_state_v1"), new ExtractOutcomeStateV1IxCols("extract_outcome_state_v1"));
         public global::SpacetimeDB.Table<ExtractStartEvent, ExtractStartEventCols, ExtractStartEventIxCols> ExtractStartEvent() => new("extract_start_event", new ExtractStartEventCols("extract_start_event"), new ExtractStartEventIxCols("extract_start_event"));
         public global::SpacetimeDB.Table<ExtractionRecipeDesc, ExtractionRecipeDescCols, ExtractionRecipeDescIxCols> ExtractionRecipeDesc() => new("extraction_recipe_desc", new ExtractionRecipeDescCols("extraction_recipe_desc"), new ExtractionRecipeDescIxCols("extraction_recipe_desc"));
+        public global::SpacetimeDB.Table<FloatingPlatformDesc, FloatingPlatformDescCols, FloatingPlatformDescIxCols> FloatingPlatformDesc() => new("floating_platform_desc", new FloatingPlatformDescCols("floating_platform_desc"), new FloatingPlatformDescIxCols("floating_platform_desc"));
         public global::SpacetimeDB.Table<FoodDesc, FoodDescCols, FoodDescIxCols> FoodDesc() => new("food_desc", new FoodDescCols("food_desc"), new FoodDescIxCols("food_desc"));
         public global::SpacetimeDB.Table<FootprintTileState, FootprintTileStateCols, FootprintTileStateIxCols> FootprintTileState() => new("footprint_tile_state", new FootprintTileStateCols("footprint_tile_state"), new FootprintTileStateIxCols("footprint_tile_state"));
         public global::SpacetimeDB.Table<GateDesc, GateDescCols, GateDescIxCols> GateDesc() => new("gate_desc", new GateDescCols("gate_desc"), new GateDescIxCols("gate_desc"));
@@ -1326,6 +1342,8 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Table<InteriorPortalConnectionsDesc, InteriorPortalConnectionsDescCols, InteriorPortalConnectionsDescIxCols> InteriorPortalConnectionsDesc() => new("interior_portal_connections_desc", new InteriorPortalConnectionsDescCols("interior_portal_connections_desc"), new InteriorPortalConnectionsDescIxCols("interior_portal_connections_desc"));
         public global::SpacetimeDB.Table<InteriorShapeDesc, InteriorShapeDescCols, InteriorShapeDescIxCols> InteriorShapeDesc() => new("interior_shape_desc", new InteriorShapeDescCols("interior_shape_desc"), new InteriorShapeDescIxCols("interior_shape_desc"));
         public global::SpacetimeDB.Table<InteriorSpawnDesc, InteriorSpawnDescCols, InteriorSpawnDescIxCols> InteriorSpawnDesc() => new("interior_spawn_desc", new InteriorSpawnDescCols("interior_spawn_desc"), new InteriorSpawnDescIxCols("interior_spawn_desc"));
+        public global::SpacetimeDB.Table<InteriorSpawnDestroyTriggerDesc, InteriorSpawnDestroyTriggerDescCols, InteriorSpawnDestroyTriggerDescIxCols> InteriorSpawnDestroyTriggerDesc() => new("interior_spawn_destroy_trigger_desc", new InteriorSpawnDestroyTriggerDescCols("interior_spawn_destroy_trigger_desc"), new InteriorSpawnDestroyTriggerDescIxCols("interior_spawn_destroy_trigger_desc"));
+        public global::SpacetimeDB.Table<InteriorSpawnRandomGroupDesc, InteriorSpawnRandomGroupDescCols, InteriorSpawnRandomGroupDescIxCols> InteriorSpawnRandomGroupDesc() => new("interior_spawn_random_group_desc", new InteriorSpawnRandomGroupDescCols("interior_spawn_random_group_desc"), new InteriorSpawnRandomGroupDescIxCols("interior_spawn_random_group_desc"));
         public global::SpacetimeDB.Table<InventoryState, InventoryStateCols, InventoryStateIxCols> InventoryState() => new("inventory_state", new InventoryStateCols("inventory_state"), new InventoryStateIxCols("inventory_state"));
         public global::SpacetimeDB.Table<ItemConversionRecipeDesc, ItemConversionRecipeDescCols, ItemConversionRecipeDescIxCols> ItemConversionRecipeDesc() => new("item_conversion_recipe_desc", new ItemConversionRecipeDescCols("item_conversion_recipe_desc"), new ItemConversionRecipeDescIxCols("item_conversion_recipe_desc"));
         public global::SpacetimeDB.Table<ItemConvertStartEvent, ItemConvertStartEventCols, ItemConvertStartEventIxCols> ItemConvertStartEvent() => new("item_convert_start_event", new ItemConvertStartEventCols("item_convert_start_event"), new ItemConvertStartEventIxCols("item_convert_start_event"));
@@ -1906,6 +1924,7 @@ namespace SpacetimeDB.Types
                 Reducer.ImportExperienceState args => Reducers.InvokeImportExperienceState(eventContext, args),
                 Reducer.ImportExplorationChunksState args => Reducers.InvokeImportExplorationChunksState(eventContext, args),
                 Reducer.ImportExtractionRecipeDesc args => Reducers.InvokeImportExtractionRecipeDesc(eventContext, args),
+                Reducer.ImportFloatingPlatformDesc args => Reducers.InvokeImportFloatingPlatformDesc(eventContext, args),
                 Reducer.ImportFoodDesc args => Reducers.InvokeImportFoodDesc(eventContext, args),
                 Reducer.ImportFootprintTileState args => Reducers.InvokeImportFootprintTileState(eventContext, args),
                 Reducer.ImportGateDesc args => Reducers.InvokeImportGateDesc(eventContext, args),
@@ -1922,6 +1941,8 @@ namespace SpacetimeDB.Types
                 Reducer.ImportInteriorPortalConnectionsDesc args => Reducers.InvokeImportInteriorPortalConnectionsDesc(eventContext, args),
                 Reducer.ImportInteriorShapeDesc args => Reducers.InvokeImportInteriorShapeDesc(eventContext, args),
                 Reducer.ImportInteriorSpawnDesc args => Reducers.InvokeImportInteriorSpawnDesc(eventContext, args),
+                Reducer.ImportInteriorSpawnDestroyTriggerDesc args => Reducers.InvokeImportInteriorSpawnDestroyTriggerDesc(eventContext, args),
+                Reducer.ImportInteriorSpawnRandomGroupDesc args => Reducers.InvokeImportInteriorSpawnRandomGroupDesc(eventContext, args),
                 Reducer.ImportInventoryState args => Reducers.InvokeImportInventoryState(eventContext, args),
                 Reducer.ImportItemConversionRecipeDesc args => Reducers.InvokeImportItemConversionRecipeDesc(eventContext, args),
                 Reducer.ImportItemDesc args => Reducers.InvokeImportItemDesc(eventContext, args),
@@ -2046,6 +2067,7 @@ namespace SpacetimeDB.Types
                 Reducer.MigrateAutoAttacks args => Reducers.InvokeMigrateAutoAttacks(eventContext, args),
                 Reducer.MigrateCharacterStats args => Reducers.InvokeMigrateCharacterStats(eventContext, args),
                 Reducer.MigrateClaimTech args => Reducers.InvokeMigrateClaimTech(eventContext, args),
+                Reducer.MigrateDuplicateEquipmentSlots args => Reducers.InvokeMigrateDuplicateEquipmentSlots(eventContext, args),
                 Reducer.MigrateEquipmentSlots args => Reducers.InvokeMigrateEquipmentSlots(eventContext, args),
                 Reducer.MigrateExplorationAchievementCounts args => Reducers.InvokeMigrateExplorationAchievementCounts(eventContext, args),
                 Reducer.MigrateGrantDefaultCollectibles args => Reducers.InvokeMigrateGrantDefaultCollectibles(eventContext, args),
@@ -2116,6 +2138,7 @@ namespace SpacetimeDB.Types
                 Reducer.ProjectSiteCancel args => Reducers.InvokeProjectSiteCancel(eventContext, args),
                 Reducer.ProjectSitePlace args => Reducers.InvokeProjectSitePlace(eventContext, args),
                 Reducer.Prospect args => Reducers.InvokeProspect(eventContext, args),
+                Reducer.ProspectCancel args => Reducers.InvokeProspectCancel(eventContext, args),
                 Reducer.ProspectStart args => Reducers.InvokeProspectStart(eventContext, args),
                 Reducer.RentAddListing args => Reducers.InvokeRentAddListing(eventContext, args),
                 Reducer.RentAddTenant args => Reducers.InvokeRentAddTenant(eventContext, args),
@@ -2192,6 +2215,7 @@ namespace SpacetimeDB.Types
                 Reducer.StageEquipmentDesc args => Reducers.InvokeStageEquipmentDesc(eventContext, args),
                 Reducer.StageEquipmentPresetKnowledgeDesc args => Reducers.InvokeStageEquipmentPresetKnowledgeDesc(eventContext, args),
                 Reducer.StageExtractionRecipeDesc args => Reducers.InvokeStageExtractionRecipeDesc(eventContext, args),
+                Reducer.StageFloatingPlatformDesc args => Reducers.InvokeStageFloatingPlatformDesc(eventContext, args),
                 Reducer.StageFoodDesc args => Reducers.InvokeStageFoodDesc(eventContext, args),
                 Reducer.StageGateDesc args => Reducers.InvokeStageGateDesc(eventContext, args),
                 Reducer.StageHexiteExchangeEntryDesc args => Reducers.InvokeStageHexiteExchangeEntryDesc(eventContext, args),
@@ -2201,6 +2225,8 @@ namespace SpacetimeDB.Types
                 Reducer.StageInteriorPortalConnectionsDesc args => Reducers.InvokeStageInteriorPortalConnectionsDesc(eventContext, args),
                 Reducer.StageInteriorShapeDesc args => Reducers.InvokeStageInteriorShapeDesc(eventContext, args),
                 Reducer.StageInteriorSpawnDesc args => Reducers.InvokeStageInteriorSpawnDesc(eventContext, args),
+                Reducer.StageInteriorSpawnDestroyTriggerDesc args => Reducers.InvokeStageInteriorSpawnDestroyTriggerDesc(eventContext, args),
+                Reducer.StageInteriorSpawnRandomGroupDesc args => Reducers.InvokeStageInteriorSpawnRandomGroupDesc(eventContext, args),
                 Reducer.StageItemConversionRecipeDesc args => Reducers.InvokeStageItemConversionRecipeDesc(eventContext, args),
                 Reducer.StageItemDesc args => Reducers.InvokeStageItemDesc(eventContext, args),
                 Reducer.StageItemListDesc args => Reducers.InvokeStageItemListDesc(eventContext, args),

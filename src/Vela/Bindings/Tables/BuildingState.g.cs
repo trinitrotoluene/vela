@@ -35,6 +35,15 @@ namespace SpacetimeDB.Types
 
             public readonly ClaimEntityIdIndex ClaimEntityId;
 
+            public sealed class ConstructedByPlayerAndDescriptionIndex : BTreeIndexBase<(ulong ConstructedByPlayerEntityId, int BuildingDescriptionId)>
+            {
+                protected override (ulong ConstructedByPlayerEntityId, int BuildingDescriptionId) GetKey(BuildingState row) => (row.ConstructedByPlayerEntityId, row.BuildingDescriptionId);
+
+                public ConstructedByPlayerAndDescriptionIndex(BuildingStateHandle table) : base(table) { }
+            }
+
+            public readonly ConstructedByPlayerAndDescriptionIndex ConstructedByPlayerAndDescription;
+
             public sealed class EntityIdUniqueIndex : UniqueIndexBase<ulong>
             {
                 protected override ulong GetKey(BuildingState row) => row.EntityId;
@@ -48,6 +57,7 @@ namespace SpacetimeDB.Types
             {
                 BuildingDescriptionId = new(this);
                 ClaimEntityId = new(this);
+                ConstructedByPlayerAndDescription = new(this);
                 EntityId = new(this);
             }
 
@@ -80,12 +90,14 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.IxCol<BuildingState, ulong> EntityId { get; }
         public global::SpacetimeDB.IxCol<BuildingState, ulong> ClaimEntityId { get; }
         public global::SpacetimeDB.IxCol<BuildingState, int> BuildingDescriptionId { get; }
+        public global::SpacetimeDB.IxCol<BuildingState, ulong> ConstructedByPlayerEntityId { get; }
 
         public BuildingStateIxCols(string tableName)
         {
             EntityId = new global::SpacetimeDB.IxCol<BuildingState, ulong>(tableName, "entity_id");
             ClaimEntityId = new global::SpacetimeDB.IxCol<BuildingState, ulong>(tableName, "claim_entity_id");
             BuildingDescriptionId = new global::SpacetimeDB.IxCol<BuildingState, int>(tableName, "building_description_id");
+            ConstructedByPlayerEntityId = new global::SpacetimeDB.IxCol<BuildingState, ulong>(tableName, "constructed_by_player_entity_id");
         }
     }
 }

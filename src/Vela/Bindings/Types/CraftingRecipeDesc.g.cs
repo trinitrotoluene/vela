@@ -61,6 +61,8 @@ namespace SpacetimeDB.Types
         public bool IsPassive;
         [DataMember(Name = "show_in_progression")]
         public bool ShowInProgression;
+        [DataMember(Name = "self_buffs")]
+        public System.Collections.Generic.List<PlaceableSelfBuffChance>? SelfBuffs;
 
         public CraftingRecipeDesc(
             int Id,
@@ -86,7 +88,8 @@ namespace SpacetimeDB.Types
             bool HideWithBlockingKnowledges,
             bool AllowUseHands,
             bool IsPassive,
-            bool ShowInProgression
+            bool ShowInProgression,
+            System.Collections.Generic.List<PlaceableSelfBuffChance>? SelfBuffs
         )
         {
             this.Id = Id;
@@ -113,6 +116,7 @@ namespace SpacetimeDB.Types
             this.AllowUseHands = AllowUseHands;
             this.IsPassive = IsPassive;
             this.ShowInProgression = ShowInProgression;
+            this.SelfBuffs = SelfBuffs;
         }
 
         public CraftingRecipeDesc()
