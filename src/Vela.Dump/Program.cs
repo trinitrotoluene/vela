@@ -31,6 +31,7 @@ builder.Services.AddSingleton(new JsonSerializerOptions(JsonSerializerOptions.De
 builder.Services.AddSingleton<IDbConnectionAccessor, DbConnectionAccessor>();
 builder.Services.AddSingleton<IMetricHelpers, MetricHelpers>();
 builder.Services.AddSingleton<JsonDumpSubscriber>();
+builder.Services.AddSingleton<IConvergeDbWriter, NullConvergeDbWriter>();
 
 builder.Services.AddOptions<BitcraftServiceOptions>()
     .Bind(builder.Configuration.GetSection("Bitcraft"))
