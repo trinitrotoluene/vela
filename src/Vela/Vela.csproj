@@ -50,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Convergence.Client" Version="0.16.0" />
+    <PackageReference Include="Convergence.Client" Version="0.17.0" />
     <ProjectReference Include="..\Vela.Contracts\Vela.Contracts.csproj" />
   </ItemGroup>
 

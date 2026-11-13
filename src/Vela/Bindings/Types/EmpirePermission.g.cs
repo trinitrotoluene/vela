@@ -20,5 +20,6 @@ namespace SpacetimeDB.Types
         Count,
         HarvestEmpireResources,
         WithdrawEmpireCurrency,
+        ManageBlacklist,
     }
 }

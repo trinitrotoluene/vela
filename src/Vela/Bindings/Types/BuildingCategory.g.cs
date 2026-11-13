@@ -35,5 +35,7 @@ namespace SpacetimeDB.Types
         RecoveryChest,
         PlayerHousing,
         PremiumBuilding,
+        OneWayWaystone,
+        RegionalBank,
     }
 }
