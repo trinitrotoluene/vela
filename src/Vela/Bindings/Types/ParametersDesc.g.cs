@@ -205,6 +205,18 @@ namespace SpacetimeDB.Types
         public System.Collections.Generic.List<TravelerWeeklyTaskCredits>? TravelerTaskWeeklyCredits;
         [DataMember(Name = "traveler_task_reroll_credit_cost")]
         public int TravelerTaskRerollCreditCost;
+        [DataMember(Name = "min_distance_to_neutral_claims")]
+        public int MinDistanceToNeutralClaims;
+        [DataMember(Name = "claim_totem_spacing")]
+        public int ClaimTotemSpacing;
+        [DataMember(Name = "empire_watchtower_upkeep_per_chunk")]
+        public double EmpireWatchtowerUpkeepPerChunk;
+        [DataMember(Name = "empire_watchtower_upkeep_per_total_chunks")]
+        public double EmpireWatchtowerUpkeepPerTotalChunks;
+        [DataMember(Name = "empire_siege_delay_ticks")]
+        public int EmpireSiegeDelayTicks;
+        [DataMember(Name = "floating_platform_region_edge_margin_chunks")]
+        public int FloatingPlatformRegionEdgeMarginChunks;
 
         public ParametersDesc(
             int Version,
@@ -302,7 +314,13 @@ namespace SpacetimeDB.Types
             uint ProspectingHerdImmunitySecs,
             float RpWalkSpeed,
             System.Collections.Generic.List<TravelerWeeklyTaskCredits>? TravelerTaskWeeklyCredits,
-            int TravelerTaskRerollCreditCost
+            int TravelerTaskRerollCreditCost,
+            int MinDistanceToNeutralClaims,
+            int ClaimTotemSpacing,
+            double EmpireWatchtowerUpkeepPerChunk,
+            double EmpireWatchtowerUpkeepPerTotalChunks,
+            int EmpireSiegeDelayTicks,
+            int FloatingPlatformRegionEdgeMarginChunks
         )
         {
             this.Version = Version;
@@ -401,6 +419,12 @@ namespace SpacetimeDB.Types
             this.RpWalkSpeed = RpWalkSpeed;
             this.TravelerTaskWeeklyCredits = TravelerTaskWeeklyCredits;
             this.TravelerTaskRerollCreditCost = TravelerTaskRerollCreditCost;
+            this.MinDistanceToNeutralClaims = MinDistanceToNeutralClaims;
+            this.ClaimTotemSpacing = ClaimTotemSpacing;
+            this.EmpireWatchtowerUpkeepPerChunk = EmpireWatchtowerUpkeepPerChunk;
+            this.EmpireWatchtowerUpkeepPerTotalChunks = EmpireWatchtowerUpkeepPerTotalChunks;
+            this.EmpireSiegeDelayTicks = EmpireSiegeDelayTicks;
+            this.FloatingPlatformRegionEdgeMarginChunks = FloatingPlatformRegionEdgeMarginChunks;
         }
 
         public ParametersDesc()

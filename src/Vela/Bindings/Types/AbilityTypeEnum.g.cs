@@ -23,5 +23,6 @@ namespace SpacetimeDB.Types
         DeployableToggle,
         Emote,
         EquipPreset,
+        PlaceablePlace,
     }
 }

@@ -31,6 +31,8 @@ namespace SpacetimeDB.Types
         public bool Unstartable;
         [DataMember(Name = "is_secret")]
         public bool IsSecret;
+        [DataMember(Name = "recommended_priority")]
+        public uint RecommendedPriority;
 
         public QuestChainDesc(
             int Id,
@@ -41,7 +43,8 @@ namespace SpacetimeDB.Types
             System.Collections.Generic.List<QuestReward> Rewards,
             System.Collections.Generic.List<QuestReward> ImplicitRewards,
             bool Unstartable,
-            bool IsSecret
+            bool IsSecret,
+            uint RecommendedPriority
         )
         {
             this.Id = Id;
@@ -53,6 +56,7 @@ namespace SpacetimeDB.Types
             this.ImplicitRewards = ImplicitRewards;
             this.Unstartable = Unstartable;
             this.IsSecret = IsSecret;
+            this.RecommendedPriority = RecommendedPriority;
         }
 
         public QuestChainDesc()
