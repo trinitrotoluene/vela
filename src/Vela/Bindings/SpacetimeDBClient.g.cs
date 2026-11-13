@@ -165,6 +165,7 @@ namespace SpacetimeDB.Types
             AddTable(FloatingPlatformDesc = new(conn));
             AddTable(FoodDesc = new(conn));
             AddTable(FootprintTileState = new(conn));
+            AddTable(FurnitureEmoteDesc = new(conn));
             AddTable(GateDesc = new(conn));
             AddTable(GlobalSearchState = new(conn));
             AddTable(Globals = new(conn));
@@ -300,6 +301,7 @@ namespace SpacetimeDB.Types
             AddTable(RegionExplorationInfo = new(conn));
             AddTable(RegionPopulationInfo = new(conn));
             AddTable(RegionSignInParameters = new(conn));
+            AddTable(RegionalBankState = new(conn));
             AddTable(RentState = new(conn));
             AddTable(ReservedNameDesc = new(conn));
             AddTable(ResourceClumpDesc = new(conn));
@@ -988,6 +990,7 @@ namespace SpacetimeDB.Types
             new QueryBuilder().From.FloatingPlatformDesc().ToSql(),
             new QueryBuilder().From.FoodDesc().ToSql(),
             new QueryBuilder().From.FootprintTileState().ToSql(),
+            new QueryBuilder().From.FurnitureEmoteDesc().ToSql(),
             new QueryBuilder().From.GateDesc().ToSql(),
             new QueryBuilder().From.GlobalSearchState().ToSql(),
             new QueryBuilder().From.Globals().ToSql(),
@@ -1123,6 +1126,7 @@ namespace SpacetimeDB.Types
             new QueryBuilder().From.RegionExplorationInfo().ToSql(),
             new QueryBuilder().From.RegionPopulationInfo().ToSql(),
             new QueryBuilder().From.RegionSignInParameters().ToSql(),
+            new QueryBuilder().From.RegionalBankState().ToSql(),
             new QueryBuilder().From.RentState().ToSql(),
             new QueryBuilder().From.ReservedNameDesc().ToSql(),
             new QueryBuilder().From.ResourceClumpDesc().ToSql(),
@@ -1321,6 +1325,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Table<FloatingPlatformDesc, FloatingPlatformDescCols, FloatingPlatformDescIxCols> FloatingPlatformDesc() => new("floating_platform_desc", new FloatingPlatformDescCols("floating_platform_desc"), new FloatingPlatformDescIxCols("floating_platform_desc"));
         public global::SpacetimeDB.Table<FoodDesc, FoodDescCols, FoodDescIxCols> FoodDesc() => new("food_desc", new FoodDescCols("food_desc"), new FoodDescIxCols("food_desc"));
         public global::SpacetimeDB.Table<FootprintTileState, FootprintTileStateCols, FootprintTileStateIxCols> FootprintTileState() => new("footprint_tile_state", new FootprintTileStateCols("footprint_tile_state"), new FootprintTileStateIxCols("footprint_tile_state"));
+        public global::SpacetimeDB.Table<FurnitureEmoteDesc, FurnitureEmoteDescCols, FurnitureEmoteDescIxCols> FurnitureEmoteDesc() => new("furniture_emote_desc", new FurnitureEmoteDescCols("furniture_emote_desc"), new FurnitureEmoteDescIxCols("furniture_emote_desc"));
         public global::SpacetimeDB.Table<GateDesc, GateDescCols, GateDescIxCols> GateDesc() => new("gate_desc", new GateDescCols("gate_desc"), new GateDescIxCols("gate_desc"));
         public global::SpacetimeDB.Table<GlobalSearchState, GlobalSearchStateCols, GlobalSearchStateIxCols> GlobalSearchState() => new("global_search_state", new GlobalSearchStateCols("global_search_state"), new GlobalSearchStateIxCols("global_search_state"));
         public global::SpacetimeDB.Table<Globals, GlobalsCols, GlobalsIxCols> Globals() => new("globals", new GlobalsCols("globals"), new GlobalsIxCols("globals"));
@@ -1456,6 +1461,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Table<RegionExplorationInfo, RegionExplorationInfoCols, RegionExplorationInfoIxCols> RegionExplorationInfo() => new("region_exploration_info", new RegionExplorationInfoCols("region_exploration_info"), new RegionExplorationInfoIxCols("region_exploration_info"));
         public global::SpacetimeDB.Table<RegionPopulationInfo, RegionPopulationInfoCols, RegionPopulationInfoIxCols> RegionPopulationInfo() => new("region_population_info", new RegionPopulationInfoCols("region_population_info"), new RegionPopulationInfoIxCols("region_population_info"));
         public global::SpacetimeDB.Table<RegionSignInParameters, RegionSignInParametersCols, RegionSignInParametersIxCols> RegionSignInParameters() => new("region_sign_in_parameters", new RegionSignInParametersCols("region_sign_in_parameters"), new RegionSignInParametersIxCols("region_sign_in_parameters"));
+        public global::SpacetimeDB.Table<BankState, RegionalBankStateCols, RegionalBankStateIxCols> RegionalBankState() => new("regional_bank_state", new RegionalBankStateCols("regional_bank_state"), new RegionalBankStateIxCols("regional_bank_state"));
         public global::SpacetimeDB.Table<RentState, RentStateCols, RentStateIxCols> RentState() => new("rent_state", new RentStateCols("rent_state"), new RentStateIxCols("rent_state"));
         public global::SpacetimeDB.Table<ReservedNameDesc, ReservedNameDescCols, ReservedNameDescIxCols> ReservedNameDesc() => new("reserved_name_desc", new ReservedNameDescCols("reserved_name_desc"), new ReservedNameDescIxCols("reserved_name_desc"));
         public global::SpacetimeDB.Table<ResourceClumpDesc, ResourceClumpDescCols, ResourceClumpDescIxCols> ResourceClumpDesc() => new("resource_clump_desc", new ResourceClumpDescCols("resource_clump_desc"), new ResourceClumpDescIxCols("resource_clump_desc"));
@@ -1667,6 +1673,7 @@ namespace SpacetimeDB.Types
                 Reducer.AdminRestorePlayerState args => Reducers.InvokeAdminRestorePlayerState(eventContext, args),
                 Reducer.AdminSetRegionControlState args => Reducers.InvokeAdminSetRegionControlState(eventContext, args),
                 Reducer.AdminSetResourceWorldTarget args => Reducers.InvokeAdminSetResourceWorldTarget(eventContext, args),
+                Reducer.AdminSetResourcesToMaxHealth args => Reducers.InvokeAdminSetResourcesToMaxHealth(eventContext, args),
                 Reducer.AdminSetSignText args => Reducers.InvokeAdminSetSignText(eventContext, args),
                 Reducer.AdminSetSignTextCoord args => Reducers.InvokeAdminSetSignTextCoord(eventContext, args),
                 Reducer.AdminSetSignTextEntity args => Reducers.InvokeAdminSetSignTextEntity(eventContext, args),
@@ -1927,6 +1934,7 @@ namespace SpacetimeDB.Types
                 Reducer.ImportFloatingPlatformDesc args => Reducers.InvokeImportFloatingPlatformDesc(eventContext, args),
                 Reducer.ImportFoodDesc args => Reducers.InvokeImportFoodDesc(eventContext, args),
                 Reducer.ImportFootprintTileState args => Reducers.InvokeImportFootprintTileState(eventContext, args),
+                Reducer.ImportFurnitureEmoteDesc args => Reducers.InvokeImportFurnitureEmoteDesc(eventContext, args),
                 Reducer.ImportGateDesc args => Reducers.InvokeImportGateDesc(eventContext, args),
                 Reducer.ImportGlobals args => Reducers.InvokeImportGlobals(eventContext, args),
                 Reducer.ImportGrowthState args => Reducers.InvokeImportGrowthState(eventContext, args),
@@ -2067,6 +2075,7 @@ namespace SpacetimeDB.Types
                 Reducer.MigrateAutoAttacks args => Reducers.InvokeMigrateAutoAttacks(eventContext, args),
                 Reducer.MigrateCharacterStats args => Reducers.InvokeMigrateCharacterStats(eventContext, args),
                 Reducer.MigrateClaimTech args => Reducers.InvokeMigrateClaimTech(eventContext, args),
+                Reducer.MigrateClaimTechHomesteadUnlocks args => Reducers.InvokeMigrateClaimTechHomesteadUnlocks(eventContext, args),
                 Reducer.MigrateDuplicateEquipmentSlots args => Reducers.InvokeMigrateDuplicateEquipmentSlots(eventContext, args),
                 Reducer.MigrateEquipmentSlots args => Reducers.InvokeMigrateEquipmentSlots(eventContext, args),
                 Reducer.MigrateExplorationAchievementCounts args => Reducers.InvokeMigrateExplorationAchievementCounts(eventContext, args),
@@ -2074,6 +2083,7 @@ namespace SpacetimeDB.Types
                 Reducer.MigrateMissingEquipmentSlotTypes args => Reducers.InvokeMigrateMissingEquipmentSlotTypes(eventContext, args),
                 Reducer.MigrateOnboarding args => Reducers.InvokeMigrateOnboarding(eventContext, args),
                 Reducer.MigratePlayerSettings args => Reducers.InvokeMigratePlayerSettings(eventContext, args),
+                Reducer.MigrateRegionalBanks args => Reducers.InvokeMigrateRegionalBanks(eventContext, args),
                 Reducer.MigrateSkillLevelKnowledge args => Reducers.InvokeMigrateSkillLevelKnowledge(eventContext, args),
                 Reducer.MigrationSetAchievementParams args => Reducers.InvokeMigrationSetAchievementParams(eventContext, args),
                 Reducer.MigrationSetBuildingDescParams args => Reducers.InvokeMigrationSetBuildingDescParams(eventContext, args),
@@ -2217,6 +2227,7 @@ namespace SpacetimeDB.Types
                 Reducer.StageExtractionRecipeDesc args => Reducers.InvokeStageExtractionRecipeDesc(eventContext, args),
                 Reducer.StageFloatingPlatformDesc args => Reducers.InvokeStageFloatingPlatformDesc(eventContext, args),
                 Reducer.StageFoodDesc args => Reducers.InvokeStageFoodDesc(eventContext, args),
+                Reducer.StageFurnitureEmoteDesc args => Reducers.InvokeStageFurnitureEmoteDesc(eventContext, args),
                 Reducer.StageGateDesc args => Reducers.InvokeStageGateDesc(eventContext, args),
                 Reducer.StageHexiteExchangeEntryDesc args => Reducers.InvokeStageHexiteExchangeEntryDesc(eventContext, args),
                 Reducer.StageInteriorEnvironmentDesc args => Reducers.InvokeStageInteriorEnvironmentDesc(eventContext, args),

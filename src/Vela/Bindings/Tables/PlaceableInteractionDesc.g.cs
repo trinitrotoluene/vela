@@ -70,6 +70,8 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<PlaceableInteractionDesc, float> OnDestroySpawnedPlaceableChance { get; }
         public global::SpacetimeDB.Col<PlaceableInteractionDesc, System.Collections.Generic.List<PlaceableGrowthOutcomeV2>> OnDestroyOutcomes { get; }
         public global::SpacetimeDB.Col<PlaceableInteractionDesc, System.Collections.Generic.List<PlaceableSelfBuffChance>> SelfBuffs { get; }
+        public global::SpacetimeDB.Col<PlaceableInteractionDesc, int> ToolMeshIndex { get; }
+        public global::SpacetimeDB.Col<PlaceableInteractionDesc, System.Collections.Generic.List<ItemStack>> OnDestroyYield { get; }
 
         public PlaceableInteractionDescCols(string tableName)
         {
@@ -94,6 +96,8 @@ namespace SpacetimeDB.Types
             OnDestroySpawnedPlaceableChance = new global::SpacetimeDB.Col<PlaceableInteractionDesc, float>(tableName, "on_destroy_spawned_placeable_chance");
             OnDestroyOutcomes = new global::SpacetimeDB.Col<PlaceableInteractionDesc, System.Collections.Generic.List<PlaceableGrowthOutcomeV2>>(tableName, "on_destroy_outcomes");
             SelfBuffs = new global::SpacetimeDB.Col<PlaceableInteractionDesc, System.Collections.Generic.List<PlaceableSelfBuffChance>>(tableName, "self_buffs");
+            ToolMeshIndex = new global::SpacetimeDB.Col<PlaceableInteractionDesc, int>(tableName, "tool_mesh_index");
+            OnDestroyYield = new global::SpacetimeDB.Col<PlaceableInteractionDesc, System.Collections.Generic.List<ItemStack>>(tableName, "on_destroy_yield");
         }
     }
 

@@ -27,6 +27,8 @@ namespace SpacetimeDB.Types
         public bool SupportsBuildings;
         [DataMember(Name = "max_per_player")]
         public int MaxPerPlayer;
+        [DataMember(Name = "target_elevation")]
+        public short TargetElevation;
 
         public FloatingPlatformDesc(
             int BuildingId,
@@ -35,7 +37,8 @@ namespace SpacetimeDB.Types
             short MaxWaterDepth,
             System.Collections.Generic.List<Biome> AllowedBiomes,
             bool SupportsBuildings,
-            int MaxPerPlayer
+            int MaxPerPlayer,
+            short TargetElevation
         )
         {
             this.BuildingId = BuildingId;
@@ -45,6 +48,7 @@ namespace SpacetimeDB.Types
             this.AllowedBiomes = AllowedBiomes;
             this.SupportsBuildings = SupportsBuildings;
             this.MaxPerPlayer = MaxPerPlayer;
+            this.TargetElevation = TargetElevation;
         }
 
         public FloatingPlatformDesc()

@@ -48,6 +48,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<QuestChainDesc, System.Collections.Generic.List<QuestReward>> ImplicitRewards { get; }
         public global::SpacetimeDB.Col<QuestChainDesc, bool> Unstartable { get; }
         public global::SpacetimeDB.Col<QuestChainDesc, bool> IsSecret { get; }
+        public global::SpacetimeDB.Col<QuestChainDesc, uint> RecommendedPriority { get; }
 
         public QuestChainDescCols(string tableName)
         {
@@ -60,6 +61,7 @@ namespace SpacetimeDB.Types
             ImplicitRewards = new global::SpacetimeDB.Col<QuestChainDesc, System.Collections.Generic.List<QuestReward>>(tableName, "implicit_rewards");
             Unstartable = new global::SpacetimeDB.Col<QuestChainDesc, bool>(tableName, "unstartable");
             IsSecret = new global::SpacetimeDB.Col<QuestChainDesc, bool>(tableName, "is_secret");
+            RecommendedPriority = new global::SpacetimeDB.Col<QuestChainDesc, uint>(tableName, "recommended_priority");
         }
     }
 

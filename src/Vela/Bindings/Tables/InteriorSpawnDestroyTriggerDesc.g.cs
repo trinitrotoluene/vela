@@ -44,6 +44,7 @@ namespace SpacetimeDB.Types
         public global::SpacetimeDB.Col<InteriorSpawnDestroyTriggerDesc, System.Collections.Generic.List<int>> DestroyedInteriorSpawnIds { get; }
         public global::SpacetimeDB.Col<InteriorSpawnDestroyTriggerDesc, System.Collections.Generic.List<int>> TriggerInteriorSpawnIds { get; }
         public global::SpacetimeDB.Col<InteriorSpawnDestroyTriggerDesc, bool> RequireAllTriggers { get; }
+        public global::SpacetimeDB.Col<InteriorSpawnDestroyTriggerDesc, bool> TrackOnDestroySpawnedResources { get; }
 
         public InteriorSpawnDestroyTriggerDescCols(string tableName)
         {
@@ -52,6 +53,7 @@ namespace SpacetimeDB.Types
             DestroyedInteriorSpawnIds = new global::SpacetimeDB.Col<InteriorSpawnDestroyTriggerDesc, System.Collections.Generic.List<int>>(tableName, "destroyed_interior_spawn_ids");
             TriggerInteriorSpawnIds = new global::SpacetimeDB.Col<InteriorSpawnDestroyTriggerDesc, System.Collections.Generic.List<int>>(tableName, "trigger_interior_spawn_ids");
             RequireAllTriggers = new global::SpacetimeDB.Col<InteriorSpawnDestroyTriggerDesc, bool>(tableName, "require_all_triggers");
+            TrackOnDestroySpawnedResources = new global::SpacetimeDB.Col<InteriorSpawnDestroyTriggerDesc, bool>(tableName, "track_on_destroy_spawned_resources");
         }
     }
 
