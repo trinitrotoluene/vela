@@ -16,7 +16,9 @@ dotnet run --project src/Vela.Gen -- generate-json-schema --outDir ./schema-outp
 it by hand: regenerate it whenever the game's schema changes (a row that no longer decodes fails
 the whole subscription batch).
 
-The CLI version must match the client SDK in `src/SpacetimeDB.ClientSDK` (2.10.0). Generate from
+The CLI version must match the client SDK in `src/SpacetimeDB.ClientSDK` (`SDK_VERSION` in
+`scripts/setup-sdk.sh`, 2.10.0). The SDK's cacheless patch (`patches/spacetimedb-cacheless.patch`)
+changes only the SDK, not the generated code, so the bindings stay plain CLI output. Generate from
 the schema the server reports, wrapped as a V10 `RawModuleDef`:
 
 ```sh
