@@ -111,6 +111,11 @@ public class ConvergeDbWriter : IConvergeDbWriter
         await RegisterKindAsync<ConvergeAuctionListingState>(ct);
         await RegisterKindAsync<ConvergeClosedListingState>(ct);
         await RegisterKindAsync<ConvergeInventoryState>(ct);
+        await RegisterKindAsync<ConvergeBarterStallState>(ct);
+        await RegisterKindAsync<ConvergeTradeOrderState>(ct);
+        await RegisterKindAsync<ConvergeDimensionDescriptionState>(ct);
+        await RegisterKindAsync<ConvergeDimensionNetworkState>(ct);
+        await RegisterKindAsync<ConvergePlayerHousingState>(ct);
         await RegisterKindAsync<ConvergeMarketTradeEvent>(ct);
         await RegisterKindAsync<ConvergeBarterStallInventoryEvent>(ct);
 

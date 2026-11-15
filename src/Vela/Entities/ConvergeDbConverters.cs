@@ -35,6 +35,46 @@ public static class ConvergeDbConverters
         Dimension = e.Dimension,
     };
 
+    public static ConvergeBarterStallState ToConverge(BitcraftBarterStallState e, string module) => new()
+    {
+        EntityId = NumericId(e.Id),
+        Module = module,
+    };
+
+    public static ConvergeTradeOrderState ToConverge(BitcraftTradeOrderState e, string module) => new()
+    {
+        EntityId = NumericId(e.Id),
+        Module = module,
+        ShopId = ulong.Parse(e.ShopId),
+        RemainingStock = e.RemainingStock,
+        OfferItems = [.. e.OfferItems.Select(ToConverge)],
+        RequiredItems = [.. e.RequiredItems.Select(ToConverge)],
+    };
+
+    public static ConvergeDimensionDescriptionState ToConverge(BitcraftDimensionDescriptionState e, string module) => new()
+    {
+        EntityId = NumericId(e.Id),
+        Module = module,
+        DimensionNetworkId = ulong.Parse(e.DimensionNetworkId),
+        DimensionId = e.DimensionId,
+    };
+
+    public static ConvergeDimensionNetworkState ToConverge(BitcraftDimensionNetworkState e, string module) => new()
+    {
+        EntityId = NumericId(e.Id),
+        Module = module,
+        BuildingId = ulong.Parse(e.BuildingId),
+        ClaimEntityId = ulong.Parse(e.ClaimEntityId),
+    };
+
+    public static ConvergePlayerHousingState ToConverge(BitcraftPlayerHousingState e, string module) => new()
+    {
+        EntityId = NumericId(e.Id),
+        Module = module,
+        EntranceBuildingId = ulong.Parse(e.EntranceBuildingId),
+        NetworkId = ulong.Parse(e.NetworkId),
+    };
+
     public static ConvergeEmpireNodeState ToConverge(BitcraftEmpireNodeState e, string module) => new()
     {
         EntityId = NumericId(e.Id),
