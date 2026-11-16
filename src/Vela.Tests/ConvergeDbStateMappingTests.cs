@@ -75,4 +75,65 @@ public class ConvergeDbStateMappingTests
         Assert.Equal("bitcraft-live-3", converged.Module);
         Assert.Equal("Town Stall", converged.Nickname);
     }
+
+    [Fact]
+    public void BarterStall_IsKeyedByItsBuilding()
+    {
+        var converged = ConvergeDbConverters.ToConverge(
+            new BarterStallStateMapper().Map(new BarterStallState { EntityId = 42, MarketModeEnabled = false }), "bitcraft-live-3");
+
+        Assert.Equal(42UL, EntityId.ToULong(converged.EntityId));
+        Assert.Equal("bitcraft-live-3", converged.Module);
+    }
+
+    [Fact]
+    public void TradeOrder_MapsStallAndBothSidesOfTheTrade()
+    {
+        var row = new TradeOrderState
+        {
+            EntityId = 9,
+            ShopEntityId = 42,
+            RemainingStock = 3,
+            OfferItems = [new ItemStack { ItemId = 100, Quantity = 5, ItemType = ItemType.Item }],
+            OfferCargoId = [],
+            RequiredItems =
+            [
+                new ItemStack { ItemId = 1, Quantity = 20, ItemType = ItemType.Item },
+                new ItemStack { ItemId = 7, Quantity = 1, ItemType = ItemType.Cargo },
+            ],
+            RequiredCargoId = [],
+            TravelerTradeOrderId = null,
+        };
+
+        var converged = ConvergeDbConverters.ToConverge(new TradeOrderStateMapper().Map(row), "bitcraft-live-3");
+
+        Assert.Equal(9UL, EntityId.ToULong(converged.EntityId));
+        Assert.Equal(42UL, converged.ShopId);
+        Assert.Equal(3, converged.RemainingStock);
+        var offer = Assert.Single(converged.OfferItems);
+        Assert.Equal((100, 5, false), (offer.ItemId, offer.Quantity, offer.IsCargo));
+        Assert.Equal(2, converged.RequiredItems.Length);
+        Assert.Equal((7, 1, true), (converged.RequiredItems[1].ItemId, converged.RequiredItems[1].Quantity, converged.RequiredItems[1].IsCargo));
+    }
+
+    [Fact]
+    public void Interiors_MapDimensionToNetworkToBuildingOrHousing()
+    {
+        var dimension = ConvergeDbConverters.ToConverge(new DimensionDescriptionStateMapper().Map(new DimensionDescriptionState
+        {
+            EntityId = 1, DimensionNetworkEntityId = 2, DimensionId = 3, DimensionType = DimensionType.Unknown,
+        }), "bitcraft-live-3");
+        var network = ConvergeDbConverters.ToConverge(new DimensionNetworkStateMapper().Map(new DimensionNetworkState
+        {
+            EntityId = 2, BuildingId = 4, ClaimEntityId = 5,
+        }), "bitcraft-live-3");
+        var housing = ConvergeDbConverters.ToConverge(new PlayerHousingStateMapper().Map(new PlayerHousingState
+        {
+            EntityId = 6, EntranceBuildingEntityId = 7, NetworkEntityId = 2,
+        }), "bitcraft-live-3");
+
+        Assert.Equal((1UL, 2UL, 3U), (EntityId.ToULong(dimension.EntityId), dimension.DimensionNetworkId, dimension.DimensionId));
+        Assert.Equal((2UL, 4UL, 5UL), (EntityId.ToULong(network.EntityId), network.BuildingId, network.ClaimEntityId));
+        Assert.Equal((6UL, 7UL, 2UL), (EntityId.ToULong(housing.EntityId), housing.EntranceBuildingId, housing.NetworkId));
+    }
 }

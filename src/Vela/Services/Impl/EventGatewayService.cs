@@ -199,6 +199,20 @@ ON p.entity_id = s.entity_id
         "SELECT i.* FROM inventory_state i INNER JOIN building_state b ON i.owner_entity_id = b.entity_id",
       ],
       [
+        // Barter stalls: one row per stall. Their orders and locations are joined from the stall
+        // side, so the server looks each up by index (trade_order_state.shop_entity_id,
+        // location_state's primary key) instead of reading those tables whole.
+        "SELECT * FROM barter_stall_state",
+        "SELECT t.* FROM barter_stall_state b JOIN trade_order_state t ON t.shop_entity_id = b.entity_id",
+        // Interiors, to tell which building (or whose housing) a stall stands in.
+        "SELECT * FROM dimension_description_state",
+        "SELECT * FROM dimension_network_state",
+        "SELECT * FROM player_housing_state",
+      ],
+      [
+        "SELECT ls.* FROM barter_stall_state b JOIN location_state ls ON ls.entity_id = b.entity_id",
+      ],
+      [
         "SELECT ls.* FROM location_state ls INNER JOIN public_progressive_action_state ppas ON ppas.building_entity_id = ls.entity_id"
       ],
       [

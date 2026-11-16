@@ -143,6 +143,16 @@ public class EventSubscriberService : IEventSubscriber
         await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftClosedListingState)e, m)),
       [typeof(BitcraftInventoryState)] = async (e, m) =>
         await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftInventoryState)e, m)),
+      [typeof(BitcraftBarterStallState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftBarterStallState)e, m)),
+      [typeof(BitcraftTradeOrderState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftTradeOrderState)e, m)),
+      [typeof(BitcraftDimensionDescriptionState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftDimensionDescriptionState)e, m)),
+      [typeof(BitcraftDimensionNetworkState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftDimensionNetworkState)e, m)),
+      [typeof(BitcraftPlayerHousingState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftPlayerHousingState)e, m)),
     };
   }
 
@@ -187,6 +197,16 @@ public class EventSubscriberService : IEventSubscriber
         await _convergeWriter.RetractAsync<ConvergeClosedListingState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
       [typeof(BitcraftInventoryState)] = async (e, m) =>
         await _convergeWriter.RetractAsync<ConvergeInventoryState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftBarterStallState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeBarterStallState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftTradeOrderState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeTradeOrderState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftDimensionDescriptionState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeDimensionDescriptionState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftDimensionNetworkState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeDimensionNetworkState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftPlayerHousingState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergePlayerHousingState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
     };
   }
 
@@ -230,6 +250,16 @@ public class EventSubscriberService : IEventSubscriber
         await batch.AssertAsync(_convergeWriter.GetKind<ConvergeClosedListingState>(), ConvergeDbConverters.ToConverge((BitcraftClosedListingState)e, m)),
       [typeof(BitcraftInventoryState)] = async (batch, e, m) =>
         await batch.AssertAsync(_convergeWriter.GetKind<ConvergeInventoryState>(), ConvergeDbConverters.ToConverge((BitcraftInventoryState)e, m)),
+      [typeof(BitcraftBarterStallState)] = async (batch, e, m) =>
+        await batch.AssertAsync(_convergeWriter.GetKind<ConvergeBarterStallState>(), ConvergeDbConverters.ToConverge((BitcraftBarterStallState)e, m)),
+      [typeof(BitcraftTradeOrderState)] = async (batch, e, m) =>
+        await batch.AssertAsync(_convergeWriter.GetKind<ConvergeTradeOrderState>(), ConvergeDbConverters.ToConverge((BitcraftTradeOrderState)e, m)),
+      [typeof(BitcraftDimensionDescriptionState)] = async (batch, e, m) =>
+        await batch.AssertAsync(_convergeWriter.GetKind<ConvergeDimensionDescriptionState>(), ConvergeDbConverters.ToConverge((BitcraftDimensionDescriptionState)e, m)),
+      [typeof(BitcraftDimensionNetworkState)] = async (batch, e, m) =>
+        await batch.AssertAsync(_convergeWriter.GetKind<ConvergeDimensionNetworkState>(), ConvergeDbConverters.ToConverge((BitcraftDimensionNetworkState)e, m)),
+      [typeof(BitcraftPlayerHousingState)] = async (batch, e, m) =>
+        await batch.AssertAsync(_convergeWriter.GetKind<ConvergePlayerHousingState>(), ConvergeDbConverters.ToConverge((BitcraftPlayerHousingState)e, m)),
     };
   }
 
