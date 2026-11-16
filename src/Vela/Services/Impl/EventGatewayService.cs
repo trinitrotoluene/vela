@@ -204,8 +204,7 @@ ON p.entity_id = s.entity_id
         // location_state's primary key) instead of reading those tables whole.
         "SELECT * FROM barter_stall_state",
         "SELECT t.* FROM barter_stall_state b JOIN trade_order_state t ON t.shop_entity_id = b.entity_id",
-        // Interiors, to tell which building (or whose housing) a stall stands in. One row per
-        // interior network or dimension, a few thousand per region.
+        // Interiors, to tell which building (or whose housing) a stall stands in.
         "SELECT * FROM dimension_description_state",
         "SELECT * FROM dimension_network_state",
         "SELECT * FROM player_housing_state",
