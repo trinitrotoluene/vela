@@ -11,6 +11,7 @@ public sealed record FakeOptions
     public int RestartEverySeconds { get; init; }
     public double RestartDrop { get; init; } = 0.05;
     public int ReportEverySeconds { get; init; } = 30;
+    public string? Postgres { get; init; }
     public bool Help { get; init; }
 
     public const string Usage = """
@@ -24,6 +25,7 @@ public sealed record FakeOptions
           --restart-every <s>     reconnect and publish a new snapshot every s seconds, as a Vela restart does (default off)
           --restart-drop <f>      fraction of inventories, orders, listings and crafts left out of each new snapshot (default 0.05)
           --report-every <s>      log row counts every s seconds (default 30)
+          --postgres <connstr>    first migrate this Vela database and fill it with descriptors for the fake's ids (default off)
         """;
 
     public static FakeOptions Parse(string[] args)
@@ -50,6 +52,7 @@ public sealed record FakeOptions
                         : throw new ArgumentException("--restart-drop needs a fraction between 0 and 1"),
                 },
                 "--report-every" => o with { ReportEverySeconds = Math.Max(1, Int()) },
+                "--postgres" => o with { Postgres = Value() },
                 "--help" or "-h" => o with { Help = true },
                 _ => throw new ArgumentException($"Unknown option {name}"),
             };
