@@ -56,7 +56,7 @@ public static class Descriptors
             // PopulateAsync logs failures rather than throwing.
             await using var db = factory.CreateDbContext();
             string table = db.Model.FindEntityType(type)!.GetTableName()!;
-            int count = await db.Database.SqlQueryRaw<int>($"SELECT count(*)::int AS \"Value\" FROM {table}").SingleAsync(ct);
+            int count = await db.Database.SqlQueryRaw<int>("SELECT count(*)::int AS \"Value\" FROM \"" + table + "\"").SingleAsync(ct);
             if (count != rows.Length) throw new InvalidOperationException($"{type.Name}: wrote {rows.Length} rows, found {count}");
         }
         Console.WriteLine($"Seeded descriptors: {string.Join(", ", sets.Select(s => $"{s.Rows.Length} {s.Type.Name}"))}");
