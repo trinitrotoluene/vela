@@ -5,7 +5,7 @@ using Vela.Contracts.Entities;
 namespace Vela.Fake;
 
 /// <summary>
-/// One region's gateway: a connection named <c>bitcraft-live-N</c> with source id N, a made-up world whose
+/// One region's gateway: a connection named <c>idc-N</c> with source id N, a made-up world whose
 /// references resolve (claims own buildings, buildings have locations, stalls have orders), and a
 /// stream of changes to it.
 /// </summary>
@@ -60,7 +60,7 @@ public sealed class Region
     {
         _n = n;
         _o = options;
-        _module = $"bitcraft-live-{n}";
+        _module = $"idc-{n}";
         _rng = new Random(options.Seed * 1000 + n);
         _eventEntityId = EntityId.FromULong((ulong)n);
         _tables =

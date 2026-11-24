@@ -4,7 +4,7 @@ Stands in for Vela's gateways so consumers (Nexus, Botrealis, Belp, BitAuth) can
 against a ConvergeDB without the game. It publishes made-up rows in Vela's contract
 (`Vela.Contracts`), the way `ConvergeDbWriter` does:
 
-- one connection per region, named `bitcraft-live-N` with source id N;
+- one connection per region, named `idc-N` with source id N;
 - a snapshot between `EpochBegin` and `EpochEnd` on every connect, so rows left out of it are
   retracted by the server;
 - live changes after that, flushed in frames;
