@@ -31,5 +31,7 @@ void Stop(PosixSignalContext context)
     cts.Cancel();
 }
 
+if (options.Postgres is { } postgres) await Descriptors.SeedAsync(postgres, options.Seed, cts.Token);
+
 await Task.WhenAll(options.Regions.Select(n => new Region(n, options).RunAsync(cts.Token)));
 return 0;

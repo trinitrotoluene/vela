@@ -33,10 +33,17 @@ dotnet run --project src/Vela.Fake -- --regions 1,2 --rate 200 --restart-every 3
 | `--rate` | `200` | live changes per second per region |
 | `--restart-every` | off | seconds between reconnects, each publishing a fresh snapshot |
 | `--restart-drop` | `0.05` | share of inventories, orders, listings and crafts replaced by new rows in each new snapshot |
+| `--postgres` | off | a VelaDb connection string to fill with descriptors first (see below) |
 
 Production is far larger (millions of `LocationState` and `InventoryState` rows), but Vela's
 filtered subscriptions keep what reaches ConvergeDB small today; 10,000 is about that. Raise
 `--scale` to see how a consumer copes with more.
+
+Consumers that join game state against Vela's Postgres (Nexus, Botrealis) also need descriptors.
+`--postgres "Host=...;Database=VelaDb;..."` migrates that database with Vela's own migrations and
+writes, with Vela's `DescriptorDbWriter`, made-up items, cargo, building descriptions and recipes
+for every id the fake's rows refer to, including `Unpack {1}` recipes for cargo. It replaces what
+the tables held, so point it at a local database only.
 
 Every `--report-every` seconds (and on Ctrl+C) each region logs its row counts by kind. These
 should match the server's, with one catch: the admin API's `entity_count`

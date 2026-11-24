@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Vela.Contracts\Vela.Contracts.csproj" />
+    <!-- For VelaDbContext, its migrations and DescriptorDbWriter (the postgres option). -->
+    <ProjectReference Include="..\Vela\Vela.csproj" />
   </ItemGroup>
 
 </Project>
