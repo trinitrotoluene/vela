@@ -4,7 +4,7 @@ Stands in for Vela's gateways so consumers (Nexus, Botrealis, Belp, BitAuth) can
 against a ConvergeDB without the game. It publishes made-up rows in Vela's contract
 (`Vela.Contracts`), the way `ConvergeDbWriter` does:
 
-- one connection per region, named `idc-N` with source id N;
+- one connection per region, named `bitcraft-live-N` with source id N;
 - a snapshot between `EpochBegin` and `EpochEnd` on every connect, so rows left out of it are
   retracted by the server;
 - live changes after that, flushed in frames;
@@ -24,7 +24,7 @@ convergence --in-memory
 dotnet run --project src/Vela.Fake -- --regions 1,2 --rate 200 --restart-every 300
 ```
 
-`--help`, or any bad option, prints every option. The main ones:
+`--help` prints every option. The main ones:
 
 | Option | Default | |
 |---|---|---|
@@ -41,4 +41,9 @@ filtered subscriptions keep what reaches ConvergeDB small today; 10,000 is about
 Every `--report-every` seconds (and on Ctrl+C) each region logs its row counts by kind. These
 should match the server's, with one catch: the admin API's `entity_count`
 (`/api/v1/kinds`) includes deleted rows until tombstone retention (300 s) expires them. To compare
-right away, run the server with `CONVERGEDB_TOMBSTONE_RETENTION_SECS=2`.
+right away, run the server with `CONVERGEDB_TOMBSTONE_RETENTION_SECS=2`. The two event kinds aren't in the
+fake's counts; the server holds one row of each per region (the shared event entity).
+
+Not modelled: the SDK reconnects a dropped socket by itself and the fake, like Vela, carries on
+without re-publishing a snapshot. Values are made up, so nothing here matches real accounts
+(BitAuth identities), building types or listings referenced by trade events.

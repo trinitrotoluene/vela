@@ -15,6 +15,12 @@ catch (ArgumentException ex)
     return 2;
 }
 
+if (options.Help)
+{
+    Console.WriteLine(FakeOptions.Usage);
+    return 0;
+}
+
 using var cts = new CancellationTokenSource();
 using var sigint = PosixSignalRegistration.Create(PosixSignal.SIGINT, Stop);
 using var sigterm = PosixSignalRegistration.Create(PosixSignal.SIGTERM, Stop);

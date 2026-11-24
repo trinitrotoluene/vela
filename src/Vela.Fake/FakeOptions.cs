@@ -11,6 +11,7 @@ public sealed record FakeOptions
     public int RestartEverySeconds { get; init; }
     public double RestartDrop { get; init; } = 0.05;
     public int ReportEverySeconds { get; init; } = 30;
+    public bool Help { get; init; }
 
     public const string Usage = """
         Usage: Vela.Fake [options]
@@ -30,13 +31,14 @@ public sealed record FakeOptions
         var o = new FakeOptions();
         for (int i = 0; i < args.Length; i++)
         {
-            string Value() => i + 1 < args.Length ? args[++i] : throw new ArgumentException($"{args[i]} needs a value");
-            int Int() => int.TryParse(Value(), out var v) && v >= 0 ? v : throw new ArgumentException($"{args[i]} needs a whole number");
-            o = args[i] switch
+            string name = args[i];
+            string Value() => i + 1 < args.Length ? args[++i] : throw new ArgumentException($"{name} needs a value");
+            int Int() => int.TryParse(Value(), out var v) && v >= 0 ? v : throw new ArgumentException($"{name} needs a whole number");
+            o = name switch
             {
                 "--host" => o with { Host = Value() },
                 "--port" => o with { Port = Int() },
-                "--regions" => o with { Regions = Value().Split(',').Select(ParseRegion).ToArray() },
+                "--regions" => o with { Regions = ParseRegions(Value()) },
                 "--scale" => o with { Scale = Math.Max(100, Int()) },
                 "--rate" => o with { Rate = Int() },
                 "--seed" => o with { Seed = Int() },
@@ -48,10 +50,18 @@ public sealed record FakeOptions
                         : throw new ArgumentException("--restart-drop needs a fraction between 0 and 1"),
                 },
                 "--report-every" => o with { ReportEverySeconds = Math.Max(1, Int()) },
-                _ => throw new ArgumentException($"Unknown option {args[i]}"),
+                "--help" or "-h" => o with { Help = true },
+                _ => throw new ArgumentException($"Unknown option {name}"),
             };
         }
         return o;
+    }
+
+    private static int[] ParseRegions(string list)
+    {
+        var regions = list.Split(',').Select(ParseRegion).ToArray();
+        // Two connections with one source id would retract each other's rows.
+        return regions.Distinct().Count() == regions.Length ? regions : throw new ArgumentException("--regions lists a region twice");
     }
 
     private static int ParseRegion(string s) =>

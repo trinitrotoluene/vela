@@ -5,7 +5,7 @@ using Vela.Contracts.Entities;
 namespace Vela.Fake;
 
 /// <summary>
-/// One region's gateway: a connection named <c>idc-N</c> with source id N, a made-up world whose
+/// One region's gateway: a connection named <c>bitcraft-live-N</c> with source id N, a made-up world whose
 /// references resolve (claims own buildings, buildings have locations, stalls have orders), and a
 /// stream of changes to it.
 /// </summary>
@@ -53,12 +53,14 @@ public sealed class Region
     private readonly List<ulong> _stallIds = new();
 
     private long _changes;
+    // Sizes the churning tables hover around, so long runs don't drift.
+    private int _inventoryTarget, _orderTarget, _auctionTarget;
 
     public Region(int n, FakeOptions options)
     {
         _n = n;
         _o = options;
-        _module = $"idc-{n}";
+        _module = $"bitcraft-live-{n}";
         _rng = new Random(options.Seed * 1000 + n);
         _eventEntityId = EntityId.FromULong((ulong)n);
         _tables =
@@ -73,12 +75,15 @@ public sealed class Region
     public async Task RunAsync(CancellationToken ct)
     {
         Generate();
+        _inventoryTarget = _inventories.Count;
+        _orderTarget = _orders.Count;
+        _auctionTarget = _auctions.Count;
         Log($"generated {Summary()}");
-        bool first = true;
+        bool restarted = false;
         while (!ct.IsCancellationRequested)
         {
-            if (!first) DropSome();
-            first = false;
+            if (restarted) DropSome();
+            restarted = false;
             try
             {
                 await using var client = await ConvergenceClient.ConnectAsync(new ConvergenceOptions
@@ -89,16 +94,17 @@ public sealed class Region
                     SourceId = (byte)_n,
                 }, ct);
                 foreach (var table in _tables) await table.RegisterAsync(client, ct);
-                var writer = new Writer(client);
+                var writer = new Writer(client, ct);
                 await SnapshotAsync(writer, ct);
                 await ChurnAsync(writer, ct);
+                restarted = true;
             }
-            catch (Exception ex) when (!ct.IsCancellationRequested)
+            catch (Exception ex)
             {
+                if (ct.IsCancellationRequested) break;
                 Log($"connection failed, reconnecting in 2 s: {ex.Message}");
                 try { await Task.Delay(2000, ct); } catch (OperationCanceledException) { }
             }
-            catch (OperationCanceledException) { }
         }
         Log($"stopped: {Summary()}");
     }
@@ -127,7 +133,11 @@ public sealed class Region
             var now = started.Elapsed;
             owed += (now - last).TotalSeconds * _o.Rate;
             last = now;
-            for (; owed >= 1; owed--) await ChangeAsync(writer);
+            for (; owed >= 1; owed--)
+            {
+                ct.ThrowIfCancellationRequested();
+                await ChangeAsync(writer);
+            }
             await writer.FlushAsync();
 
             if (now >= nextReport)
@@ -392,17 +402,19 @@ public sealed class Region
             case < 40 when _inventories.TryPick(_rng, out key):
                 await _inventories.PutAsync(w, key, _inventories[key] with { Pockets = Pockets() });
                 break;
-            case < 46:
+            case < 52 when _inventories.Count >= _inventoryTarget && _inventories.TryPick(_rng, out key):
+                await _inventories.RemoveAsync(w, key);
+                break;
+            case < 52:
             {
                 var inv = NewInventory(out key);
                 await _inventories.PutAsync(w, key, inv);
                 break;
             }
-            case < 52 when _inventories.TryPick(_rng, out key):
-                await _inventories.RemoveAsync(w, key);
-                break;
-            case < 62 when _locations.TryPick(_rng, out key):
+            case < 62:
             {
+                // Players move; buildings stay put, so claims keep their town hall's location.
+                key = Pick(_players);
                 var at = _locations[key];
                 await _locations.PutAsync(w, key, at with { X = at.X + _rng.Next(-3, 4), Z = at.Z + _rng.Next(-3, 4) });
                 break;
@@ -413,8 +425,11 @@ public sealed class Region
                 int progress = craft.Progress + _rng.Next(10, 60);
                 if (progress >= craft.CraftCount * 100)
                 {
-                    await _crafts.RemoveAsync(w, key);
-                    await _publicCrafts.RemoveAsync(w, key);
+                    // Drop both before publishing, so a failed write can't leave one without the other.
+                    _crafts.Drop(key, out var done);
+                    _publicCrafts.Drop(key, out var doneShared);
+                    await _crafts.RetractAsync(w, done);
+                    await _publicCrafts.RetractAsync(w, doneShared);
                     NewCraft(out var next, out var shared);
                     var id = EntityId.ToULong(next.EntityId);
                     await _crafts.PutAsync(w, id, next);
@@ -475,8 +490,8 @@ public sealed class Region
 
     private async ValueTask ChangeOrderAsync(Writer w)
     {
-        int what = _rng.Next(3);
-        if (what == 0 && _stallIds.Count > 0)
+        bool trade = _rng.Next(3) == 0;
+        if (!trade && _orders.Count < _orderTarget && _stallIds.Count > 0)
         {
             var order = NewOrder(out var id);
             await _orders.PutAsync(w, id, order);
@@ -484,7 +499,7 @@ public sealed class Region
         else if (_orders.TryPick(_rng, out var key))
         {
             var order = _orders[key];
-            if (what == 1 && order.RemainingStock > 1)
+            if (trade && order.RemainingStock > 1)
                 await _orders.PutAsync(w, key, order with { RemainingStock = order.RemainingStock - 1 });
             else
                 await _orders.RemoveAsync(w, key);
@@ -493,8 +508,8 @@ public sealed class Region
 
     private async ValueTask ChangeAuctionAsync(Writer w)
     {
-        int what = _rng.Next(3);
-        if (what == 0)
+        bool trade = _rng.Next(3) == 0;
+        if (!trade && _auctions.Count < _auctionTarget)
         {
             var listing = NewAuction(out var id);
             await _auctions.PutAsync(w, id, listing);
@@ -502,14 +517,14 @@ public sealed class Region
         else if (_auctions.TryPick(_rng, out var key))
         {
             var listing = _auctions[key];
-            if (what == 1 && listing.Quantity > 1)
+            if (trade && listing.Quantity > 1)
                 await _auctions.PutAsync(w, key, listing with { Quantity = listing.Quantity - 1, StoredCoins = listing.StoredCoins + listing.Price });
             else
                 await _auctions.RemoveAsync(w, key);
         }
     }
 
-    // Vela keeps recent chat messages as rows and retracts old ones.
+    // Vela keeps chat messages as rows for a while, then retracts them.
     private async ValueTask ChatAsync(Writer w)
     {
         ulong id = NewId();

@@ -3,7 +3,7 @@ using Convergence.Client;
 namespace Vela.Fake;
 
 /// <summary>Buffers writes on one connection and flushes them in frames, as Vela's writer does.</summary>
-public sealed class Writer(ConvergenceClient client)
+public sealed class Writer(ConvergenceClient client, CancellationToken ct)
 {
     private const int FlushEvery = 512;
     private readonly ConvergenceBatch _batch = client.Batch();
@@ -25,9 +25,10 @@ public sealed class Writer(ConvergenceClient client)
 
     public async ValueTask FlushAsync()
     {
+        ct.ThrowIfCancellationRequested();
         if (_pending == 0) return;
         _pending = 0;
-        await client.FlushAsync();
+        await client.FlushAsync(ct);
     }
 }
 
@@ -98,6 +99,9 @@ public sealed class Table<T> : ITable where T : struct, IConvergenceEntity<T>
     {
         if (Drop(key, out var row)) await writer.RetractAsync(_kind!, row.EntityId);
     }
+
+    /// <summary>Retracts a row already dropped locally.</summary>
+    public ValueTask RetractAsync(Writer writer, T row) => writer.RetractAsync(_kind!, row.EntityId);
 
     /// <summary>Publishes a row without keeping it: events, which Vela never re-publishes.</summary>
     public ValueTask EmitAsync(Writer writer, T row) => writer.AssertAsync(_kind!, row);
