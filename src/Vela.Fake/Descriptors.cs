@@ -44,7 +44,7 @@ public static class Descriptors
                 $"{i}", i == BuildingDescs ? "Town Hall" : $"Building {i}", "", [new(i % 20 + 1, 1)])).ToArray()),
             (typeof(BitcraftRecipe), Enumerable.Range(1, CraftRecipes).Select(i => Recipe(
                     i, "Craft {0}", [Stack(rng, BitcraftItemType.Item, rng.Next(1, 20))], [Stack(rng, BitcraftItemType.Item, rng.Next(1, 5))]))
-                // Unpack recipes turn one cargo into items, as Botrealis' contribution totals expect.
+                // Unpack recipes turn one cargo into items.
                 .Concat(Enumerable.Range(1, UnpackRecipes).Select(c => Recipe(
                     CraftRecipes + c, "Unpack {1}", [new ItemStack($"{c}", 1, BitcraftItemType.Cargo)], [Stack(rng, BitcraftItemType.Item, 100)])))
                 .ToArray()),

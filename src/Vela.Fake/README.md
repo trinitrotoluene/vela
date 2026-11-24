@@ -1,6 +1,6 @@
 # Vela.Fake
 
-Stands in for Vela's gateways so consumers (Nexus, Botrealis, Belp, BitAuth) can be smoke-tested
+Stands in for Vela's gateways so consumers can be smoke-tested
 against a ConvergeDB without the game. It publishes made-up rows in Vela's contract
 (`Vela.Contracts`), the way `ConvergeDbWriter` does:
 
@@ -39,7 +39,7 @@ Production is far larger (millions of `LocationState` and `InventoryState` rows)
 filtered subscriptions keep what reaches ConvergeDB small today; 10,000 is about that. Raise
 `--scale` to see how a consumer copes with more.
 
-Consumers that join game state against Vela's Postgres (Nexus, Botrealis) also need descriptors.
+Consumers that join game state against Vela's Postgres also need descriptors.
 `--postgres "Host=...;Database=VelaDb;..."` migrates that database with Vela's own migrations and
 writes, with Vela's `DescriptorDbWriter`, made-up items, cargo, building descriptions and recipes
 for every id the fake's rows refer to, including `Unpack {1}` recipes for cargo. It replaces what
@@ -52,5 +52,5 @@ right away, run the server with `CONVERGEDB_TOMBSTONE_RETENTION_SECS=2`. The two
 fake's counts; the server holds one row of each per region (the shared event entity).
 
 Not modelled: the SDK reconnects a dropped socket by itself and the fake, like Vela, carries on
-without re-publishing a snapshot. Values are made up, so nothing here matches real accounts
-(BitAuth identities), building types or listings referenced by trade events.
+without re-publishing a snapshot. Values are made up, so nothing here matches real accounts,
+building types or listings referenced by trade events.
