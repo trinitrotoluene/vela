@@ -91,6 +91,12 @@ public class ConvergeDbWriter : IConvergeDbWriter
         _sink = new ConvergenceClientSink(this);
     }
 
+    // Only ever add kinds to the end of this list. Never insert, reorder or remove one.
+    // A ConvergeDB that starts without its schemas numbers kinds in the order they're
+    // registered, and subscribers look kind ids up once when they start. Changing the
+    // order gives kinds different ids after a ConvergeDB restart, and running
+    // subscribers then read the wrong kind until they restart too. To retire a kind,
+    // leave its line in place.
     private async Task RegisterAllKindsAsync(CancellationToken ct)
     {
         await RegisterKindAsync<ConvergeBuildingState>(ct);
