@@ -196,10 +196,7 @@ WHERE s.craft_count > 50",
 JOIN progressive_action_state s
 ON p.entity_id = s.entity_id
   WHERE s.craft_count > 50",
-        // Every inventory: players' (main, toolbelt, wallet), banks, chests and buildings. The old
-        // join with building_state read the whole of inventory_state anyway (it was the FROM side,
-        // with no WHERE), so this costs the server no more to evaluate, and drops the building_state
-        // lookups.
+        // Every inventory: players' (main, toolbelt, wallet), banks, chests and buildings.
         "SELECT * FROM inventory_state",
       ],
       [
