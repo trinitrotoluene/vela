@@ -16,7 +16,7 @@ namespace Vela.Mappers
       );
 
     // An inventory pocket's or equipment slot's contents; null when it is empty.
-    internal static BitcraftInventoryPocket MapPocket(ItemStack? contents) => new(
+    internal static BitcraftInventoryPocket MapPocket(SpacetimeDB.Types.ItemStack? contents) => new(
       ItemId: contents?.ItemId.ToString(),
       Quantity: contents?.Quantity,
       ItemType: contents?.ItemType.ToString()
