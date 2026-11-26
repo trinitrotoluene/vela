@@ -154,6 +154,15 @@ public class EventGatewayService : BackgroundService
   internal const string OwnerLocationsQuery =
     "SELECT l.* FROM inventory_state i JOIN location_state l ON l.entity_id = i.owner_entity_id";
 
+  // Location joins name the small table first. A join with no WHERE reads every row of its FROM
+  // table and probes the other side by index, so written the other way round these would read
+  // all of location_state (millions of rows per region) each time the subscription is applied.
+  internal const string PublicCraftLocationsQuery =
+    "SELECT ls.* FROM public_progressive_action_state ppas JOIN location_state ls ON ls.entity_id = ppas.building_entity_id";
+
+  internal const string TownHallLocationsQuery =
+    "SELECT ls.* FROM claim_state cs JOIN location_state ls ON ls.entity_id = cs.owner_building_entity_id";
+
   internal static string[][] BuildSubscriptionBatches(long nowUnixSeconds)
   {
     return [
@@ -224,10 +233,10 @@ ON p.entity_id = s.entity_id
         "SELECT ls.* FROM barter_stall_state b JOIN location_state ls ON ls.entity_id = b.entity_id",
       ],
       [
-        "SELECT ls.* FROM location_state ls INNER JOIN public_progressive_action_state ppas ON ppas.building_entity_id = ls.entity_id"
+        PublicCraftLocationsQuery,
       ],
       [
-        "SELECT ls.* FROM location_state ls INNER JOIN claim_state cs ON cs.owner_building_entity_id = ls.entity_id",
+        TownHallLocationsQuery,
       ],
       [
         // What players hold outside inventories: worn equipment (one row per player), equipment

@@ -13,4 +13,15 @@ public class SubscriptionBatchTests
         var withQuery = Assert.Single(batches, b => b.Contains(EventGatewayService.OwnerLocationsQuery));
         Assert.Contains("SELECT * FROM inventory_state", withQuery);
     }
+
+    [Fact]
+    public void LocationJoins_ReadTheSmallTableFirst()
+    {
+        // Every location_state join starts from the small table and probes location_state by its
+        // primary key. FROM location_state would read the whole table on every apply.
+        var queries = EventGatewayService.BuildSubscriptionBatches(0).SelectMany(b => b)
+            .Where(q => q.Contains("location_state")).ToList();
+        Assert.Equal(4, queries.Count);
+        Assert.All(queries, q => Assert.DoesNotContain("FROM location_state", q));
+    }
 }
