@@ -204,8 +204,9 @@ ON p.entity_id = s.entity_id
         // Where each inventory's owner stands, to place inventories that carry no player id
         // (housing chests: owner -> location -> dimension -> network -> player_housing_state).
         // Reads inventory_state and looks location_state up by primary key, never scanning it.
-        // In this batch so the epoch retracts the locations of owners that are gone. Rows shared
-        // with the other location_state joins are counted once per key by the cacheless SDK.
+        // In this batch so the epoch retracts the locations of owners that are gone. A row also
+        // returned by another location_state join is asserted once: the cacheless SDK counts
+        // subscriptions per key and fires the delete only when the last one drops it.
         .. (subscribeOwnerLocations ? [OwnerLocationsQuery] : Array.Empty<string>()),
       ],
       [
