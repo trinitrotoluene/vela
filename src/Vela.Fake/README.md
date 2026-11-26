@@ -11,8 +11,8 @@ against a ConvergeDB without the game. It publishes made-up rows in Vela's contr
 - `MarketTradeEvent` and `BarterStallInventoryEvent` asserted against the region's shared event
   entity, and chat messages asserted then retracted later.
 
-The rows hang together (inventories belong to players and buildings, buildings to claims, orders
-to stalls) but carry no game meaning. Fidelity is low on purpose: the point is volume and
+The rows hang together (inventories belong to players, buildings and deployables, buildings to
+claims, orders to stalls, equipment, presets and deployables to players) but carry no game meaning. Fidelity is low on purpose: the point is volume and
 lifecycle (bootstrap, churn, reconnects), not realistic values.
 
 ## Running

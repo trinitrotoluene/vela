@@ -136,4 +136,44 @@ public class ConvergeDbStateMappingTests
         Assert.Equal((2UL, 4UL, 5UL), (EntityId.ToULong(network.EntityId), network.BuildingId, network.ClaimEntityId));
         Assert.Equal((6UL, 7UL, 2UL), (EntityId.ToULong(housing.EntityId), housing.EntranceBuildingId, housing.NetworkId));
     }
+
+    [Fact]
+    public void Equipment_KeepsEverySlotInPlace()
+    {
+        // Slots line up with the game's, so an empty one stays as an empty pocket rather than
+        // shifting the rest.
+        List<EquipmentSlot> Slots() =>
+        [
+            new EquipmentSlot { Item = null, Primary = EquipmentSlotType.HeadClothing },
+            new EquipmentSlot { Item = new ItemStack { ItemId = 7, Quantity = 1, ItemType = ItemType.Item }, Primary = EquipmentSlotType.TorsoClothing },
+        ];
+
+        var worn = ConvergeDbConverters.ToConverge(
+            new EquipmentStateMapper().Map(new EquipmentState { EntityId = 42, EquipmentSlots = Slots() }), "bitcraft-live-3");
+        var preset = ConvergeDbConverters.ToConverge(new EquipmentPresetStateMapper().Map(new EquipmentPresetState
+        {
+            EntityId = 9, PlayerEntityId = 42, Index = 2, Active = true, EquipmentSlots = Slots(),
+        }), "bitcraft-live-3");
+
+        Assert.Equal(42UL, EntityId.ToULong(worn.EntityId));
+        Assert.Equal((9UL, 42UL, 2, true), (EntityId.ToULong(preset.EntityId), preset.PlayerEntityId, preset.Index, preset.Active));
+        foreach (var slots in new[] { worn.Slots, preset.Slots })
+        {
+            Assert.Equal(2, slots.Length);
+            Assert.Equal(0, slots[0].ItemType);
+            Assert.Equal((7UL, 1, (byte)1), (slots[1].ItemId, slots[1].Quantity, slots[1].ItemType));
+        }
+    }
+
+    [Fact]
+    public void Deployable_IsKeyedByItselfAndKeepsItsOwner()
+    {
+        // Keyed by the deployable, which is what its inventory's OwnerEntityId points at.
+        var converged = ConvergeDbConverters.ToConverge(new DeployableStateMapper().Map(new DeployableStateV2
+        {
+            EntityId = 5, OwnerId = 42, ClaimEntityId = 8, DeployableDescriptionId = 3, Nickname = "Boat", Hidden = true,
+        }), "bitcraft-live-3");
+
+        Assert.Equal((5UL, 42UL, 8UL, true), (EntityId.ToULong(converged.EntityId), converged.OwnerId, converged.ClaimEntityId, converged.Hidden));
+    }
 }

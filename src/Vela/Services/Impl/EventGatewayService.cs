@@ -230,6 +230,14 @@ ON p.entity_id = s.entity_id
         "SELECT ls.* FROM location_state ls INNER JOIN claim_state cs ON cs.owner_building_entity_id = ls.entity_id",
       ],
       [
+        // What players hold outside inventories: worn equipment (one row per player), equipment
+        // presets (a few per player) and deployables, whose inventories are owned by the
+        // deployable. Small tables that change rarely, so they are read whole.
+        "SELECT * FROM equipment_state",
+        "SELECT * FROM equipment_preset_state",
+        "SELECT * FROM deployable_state_v2",
+      ],
+      [
         // Event tables
         "SELECT * FROM market_trade_event",
         "SELECT * FROM barter_stall_inventory_event",

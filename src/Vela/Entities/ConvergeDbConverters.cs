@@ -189,20 +189,49 @@ public static class ConvergeDbConverters
     {
         EntityId = NumericId(e.Id),
         Module = module,
-        Pockets = e.Pockets.Select(p => new ConvergeInventoryPocket
-        {
-            ItemId = p.ItemId is not null ? ulong.Parse(p.ItemId) : 0,
-            Quantity = p.Quantity ?? 0,
-            ItemType = p.ItemType switch
-            {
-                "Item" => 1,
-                "Cargo" => 2,
-                _ => 0,
-            },
-        }).ToArray(),
+        Pockets = [.. e.Pockets.Select(ToConverge)],
         OwnerEntityId = ulong.Parse(e.OwnerEntityId),
         PlayerOwnerEntityId = ulong.Parse(e.PlayerOwnerEntityId),
         InventoryIndex = e.InventoryIndex,
+    };
+
+    public static ConvergeEquipmentState ToConverge(BitcraftEquipmentState e, string module) => new()
+    {
+        EntityId = NumericId(e.Id),
+        Module = module,
+        Slots = [.. e.Slots.Select(ToConverge)],
+    };
+
+    public static ConvergeEquipmentPresetState ToConverge(BitcraftEquipmentPresetState e, string module) => new()
+    {
+        EntityId = NumericId(e.Id),
+        Module = module,
+        PlayerEntityId = ulong.Parse(e.PlayerEntityId),
+        Index = e.Index,
+        Active = e.Active,
+        Slots = [.. e.Slots.Select(ToConverge)],
+    };
+
+    public static ConvergeDeployableState ToConverge(BitcraftDeployableState e, string module) => new()
+    {
+        EntityId = NumericId(e.Id),
+        Module = module,
+        OwnerId = ulong.Parse(e.OwnerId),
+        ClaimEntityId = ulong.Parse(e.ClaimEntityId),
+        Hidden = e.Hidden,
+    };
+
+    // An inventory pocket or equipment slot. Empty ones keep their place, with ItemType 0.
+    private static ConvergeInventoryPocket ToConverge(BitcraftInventoryPocket p) => new()
+    {
+        ItemId = p.ItemId is not null ? ulong.Parse(p.ItemId) : 0,
+        Quantity = p.Quantity ?? 0,
+        ItemType = p.ItemType switch
+        {
+            "Item" => 1,
+            "Cargo" => 2,
+            _ => 0,
+        },
     };
 
     // --- Global entities ---

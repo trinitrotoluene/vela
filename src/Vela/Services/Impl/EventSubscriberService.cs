@@ -153,6 +153,12 @@ public class EventSubscriberService : IEventSubscriber
         await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftDimensionNetworkState)e, m)),
       [typeof(BitcraftPlayerHousingState)] = async (e, m) =>
         await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftPlayerHousingState)e, m)),
+      [typeof(BitcraftEquipmentState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftEquipmentState)e, m)),
+      [typeof(BitcraftEquipmentPresetState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftEquipmentPresetState)e, m)),
+      [typeof(BitcraftDeployableState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftDeployableState)e, m)),
     };
   }
 
@@ -207,6 +213,12 @@ public class EventSubscriberService : IEventSubscriber
         await _convergeWriter.RetractAsync<ConvergeDimensionNetworkState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
       [typeof(BitcraftPlayerHousingState)] = async (e, m) =>
         await _convergeWriter.RetractAsync<ConvergePlayerHousingState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftEquipmentState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeEquipmentState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftEquipmentPresetState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeEquipmentPresetState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftDeployableState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeDeployableState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
     };
   }
 
@@ -260,6 +272,12 @@ public class EventSubscriberService : IEventSubscriber
         await batch.AssertAsync(_convergeWriter.GetKind<ConvergeDimensionNetworkState>(), ConvergeDbConverters.ToConverge((BitcraftDimensionNetworkState)e, m)),
       [typeof(BitcraftPlayerHousingState)] = async (batch, e, m) =>
         await batch.AssertAsync(_convergeWriter.GetKind<ConvergePlayerHousingState>(), ConvergeDbConverters.ToConverge((BitcraftPlayerHousingState)e, m)),
+      [typeof(BitcraftEquipmentState)] = async (batch, e, m) =>
+        await batch.AssertAsync(_convergeWriter.GetKind<ConvergeEquipmentState>(), ConvergeDbConverters.ToConverge((BitcraftEquipmentState)e, m)),
+      [typeof(BitcraftEquipmentPresetState)] = async (batch, e, m) =>
+        await batch.AssertAsync(_convergeWriter.GetKind<ConvergeEquipmentPresetState>(), ConvergeDbConverters.ToConverge((BitcraftEquipmentPresetState)e, m)),
+      [typeof(BitcraftDeployableState)] = async (batch, e, m) =>
+        await batch.AssertAsync(_convergeWriter.GetKind<ConvergeDeployableState>(), ConvergeDbConverters.ToConverge((BitcraftDeployableState)e, m)),
     };
   }
 
