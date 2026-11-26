@@ -219,6 +219,7 @@ public static class ConvergeDbConverters
         OwnerId = ulong.Parse(e.OwnerId),
         ClaimEntityId = ulong.Parse(e.ClaimEntityId),
         Hidden = e.Hidden,
+        DeployableDescriptionId = e.DeployableDescriptionId,
     };
 
     // An inventory pocket or equipment slot. Empty ones keep their place, with ItemType 0.

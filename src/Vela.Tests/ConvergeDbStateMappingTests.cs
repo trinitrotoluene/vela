@@ -174,6 +174,7 @@ public class ConvergeDbStateMappingTests
             EntityId = 5, OwnerId = 42, ClaimEntityId = 8, DeployableDescriptionId = 3, Nickname = "Boat", Hidden = true,
         }), "bitcraft-live-3");
 
-        Assert.Equal((5UL, 42UL, 8UL, true), (EntityId.ToULong(converged.EntityId), converged.OwnerId, converged.ClaimEntityId, converged.Hidden));
+        Assert.Equal((5UL, 42UL, 8UL, true, 3),
+            (EntityId.ToULong(converged.EntityId), converged.OwnerId, converged.ClaimEntityId, converged.Hidden, converged.DeployableDescriptionId));
     }
 }

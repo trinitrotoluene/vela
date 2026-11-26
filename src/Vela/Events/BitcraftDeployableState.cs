@@ -6,6 +6,7 @@ namespace Vela.Events
     string Id,
     string OwnerId,
     string ClaimEntityId,
-    bool Hidden
+    bool Hidden,
+    int DeployableDescriptionId
   ) : BitcraftEventBase(Id);
 }

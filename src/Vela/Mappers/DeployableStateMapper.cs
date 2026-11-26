@@ -10,7 +10,8 @@ namespace Vela.Mappers
           Id: entity.EntityId.ToString(),
           OwnerId: entity.OwnerId.ToString(),
           ClaimEntityId: entity.ClaimEntityId.ToString(),
-          Hidden: entity.Hidden
+          Hidden: entity.Hidden,
+          DeployableDescriptionId: entity.DeployableDescriptionId
         );
   }
 }

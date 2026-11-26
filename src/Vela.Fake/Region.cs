@@ -238,6 +238,7 @@ public sealed class Region
             {
                 EntityId = EntityId.FromULong(d), Module = _module, OwnerId = Pick(_players),
                 ClaimEntityId = _rng.Next(4) == 0 ? Pick(_claimIds) : 0, Hidden = _rng.Next(3) == 0,
+                DeployableDescriptionId = _rng.Next(1, 20),
             });
             ulong inv = NewId();
             _inventories.Set(inv, new ConvergeInventoryState

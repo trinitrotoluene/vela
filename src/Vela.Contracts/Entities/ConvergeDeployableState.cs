@@ -14,6 +14,9 @@ public partial struct ConvergeDeployableState
     // Taken out of the world a while after its owner signs out, and put back when they sign in.
     // It is still theirs, with its inventory.
     [Field(3)] public bool Hidden { get; set; }
+    // What kind of deployable it is (a boat, a cart): the game's deployable_desc id, so a consumer
+    // can value the deployable itself as well as its inventory.
+    [Field(4)] public int DeployableDescriptionId { get; set; }
 
     public ReadOnlyMemory<byte> EntityId { get; init; }
 }
