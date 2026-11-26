@@ -12,8 +12,9 @@ against a ConvergeDB without the game. It publishes made-up rows in Vela's contr
   entity, and chat messages asserted then retracted later.
 
 The rows hang together (inventories belong to players, buildings and deployables, buildings to
-claims, orders to stalls, equipment, presets and deployables to players) but carry no game meaning. Fidelity is low on purpose: the point is volume and
-lifecycle (bootstrap, churn, reconnects), not realistic values.
+claims, orders to stalls, equipment, presets and deployables to players) but carry no game
+meaning. Fidelity is low on purpose: the point is volume and lifecycle (bootstrap, churn,
+reconnects), not realistic values.
 
 ## Running
 
