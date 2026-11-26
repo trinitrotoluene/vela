@@ -96,7 +96,7 @@ public class EventGatewayService : BackgroundService
     _subscriber.BeginStreamingSnapshot();
 
     var nowUnixSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-    var batches = BuildSubscriptionBatches(nowUnixSeconds);
+    var batches = BuildSubscriptionBatches(nowUnixSeconds, _options.Value.SubscribeOwnerLocations);
     var remaining = batches.Length;
 
     _logger.LogInformation("Subscribing in {BatchCount} batches ({Total} queries total)",
@@ -151,7 +151,10 @@ public class EventGatewayService : BackgroundService
     }
   }
 
-  private static string[][] BuildSubscriptionBatches(long nowUnixSeconds)
+  internal const string OwnerLocationsQuery =
+    "SELECT l.* FROM inventory_state i JOIN location_state l ON l.entity_id = i.owner_entity_id";
+
+  internal static string[][] BuildSubscriptionBatches(long nowUnixSeconds, bool subscribeOwnerLocations)
   {
     return [
       [
@@ -198,6 +201,12 @@ ON p.entity_id = s.entity_id
   WHERE s.craft_count > 50",
         // Every inventory: players' (main, toolbelt, wallet), banks, chests and buildings.
         "SELECT * FROM inventory_state",
+        // Where each inventory's owner stands, to place inventories that carry no player id
+        // (housing chests: owner -> location -> dimension -> network -> player_housing_state).
+        // Reads inventory_state and looks location_state up by primary key, never scanning it.
+        // In this batch so the epoch retracts the locations of owners that are gone. Rows shared
+        // with the other location_state joins are counted once per key by the cacheless SDK.
+        .. (subscribeOwnerLocations ? [OwnerLocationsQuery] : Array.Empty<string>()),
       ],
       [
         // Barter stalls: one row per stall. Their orders and locations are joined from the stall
