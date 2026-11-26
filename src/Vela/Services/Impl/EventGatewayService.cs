@@ -96,7 +96,7 @@ public class EventGatewayService : BackgroundService
     _subscriber.BeginStreamingSnapshot();
 
     var nowUnixSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-    var batches = BuildSubscriptionBatches(nowUnixSeconds, _options.Value.SubscribeOwnerLocations);
+    var batches = BuildSubscriptionBatches(nowUnixSeconds);
     var remaining = batches.Length;
 
     _logger.LogInformation("Subscribing in {BatchCount} batches ({Total} queries total)",
@@ -154,7 +154,7 @@ public class EventGatewayService : BackgroundService
   internal const string OwnerLocationsQuery =
     "SELECT l.* FROM inventory_state i JOIN location_state l ON l.entity_id = i.owner_entity_id";
 
-  internal static string[][] BuildSubscriptionBatches(long nowUnixSeconds, bool subscribeOwnerLocations)
+  internal static string[][] BuildSubscriptionBatches(long nowUnixSeconds)
   {
     return [
       [
@@ -207,7 +207,7 @@ ON p.entity_id = s.entity_id
         // In this batch so the epoch retracts the locations of owners that are gone. A row also
         // returned by another location_state join is asserted once: the cacheless SDK counts
         // subscriptions per key and fires the delete only when the last one drops it.
-        .. (subscribeOwnerLocations ? [OwnerLocationsQuery] : Array.Empty<string>()),
+        OwnerLocationsQuery,
       ],
       [
         // Barter stalls: one row per stall. Their orders and locations are joined from the stall
