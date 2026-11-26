@@ -151,7 +151,19 @@ public class EventGatewayService : BackgroundService
     }
   }
 
-  private static string[][] BuildSubscriptionBatches(long nowUnixSeconds)
+  internal const string OwnerLocationsQuery =
+    "SELECT l.* FROM inventory_state i JOIN location_state l ON l.entity_id = i.owner_entity_id";
+
+  // Location joins name the small table first. A join with no WHERE reads every row of its FROM
+  // table and probes the other side by index, so written the other way round these would read
+  // all of location_state (millions of rows per region) each time the subscription is applied.
+  internal const string PublicCraftLocationsQuery =
+    "SELECT ls.* FROM public_progressive_action_state ppas JOIN location_state ls ON ls.entity_id = ppas.building_entity_id";
+
+  internal const string TownHallLocationsQuery =
+    "SELECT ls.* FROM claim_state cs JOIN location_state ls ON ls.entity_id = cs.owner_building_entity_id";
+
+  internal static string[][] BuildSubscriptionBatches(long nowUnixSeconds)
   {
     return [
       [
@@ -198,6 +210,13 @@ ON p.entity_id = s.entity_id
   WHERE s.craft_count > 50",
         // Every inventory: players' (main, toolbelt, wallet), banks, chests and buildings.
         "SELECT * FROM inventory_state",
+        // Where each inventory's owner stands, to place inventories that carry no player id
+        // (housing chests: owner -> location -> dimension -> network -> player_housing_state).
+        // Reads inventory_state and looks location_state up by primary key, never scanning it.
+        // In this batch so the epoch retracts the locations of owners that are gone. A row also
+        // returned by another location_state join is asserted once: the cacheless SDK counts
+        // subscriptions per key and fires the delete only when the last one drops it.
+        OwnerLocationsQuery,
       ],
       [
         // Barter stalls: one row per stall. Their orders and locations are joined from the stall
@@ -214,10 +233,18 @@ ON p.entity_id = s.entity_id
         "SELECT ls.* FROM barter_stall_state b JOIN location_state ls ON ls.entity_id = b.entity_id",
       ],
       [
-        "SELECT ls.* FROM location_state ls INNER JOIN public_progressive_action_state ppas ON ppas.building_entity_id = ls.entity_id"
+        PublicCraftLocationsQuery,
       ],
       [
-        "SELECT ls.* FROM location_state ls INNER JOIN claim_state cs ON cs.owner_building_entity_id = ls.entity_id",
+        TownHallLocationsQuery,
+      ],
+      [
+        // What players hold outside inventories: worn equipment (one row per player), equipment
+        // presets (a few per player) and deployables, whose inventories are owned by the
+        // deployable. Small tables that change rarely, so they are read whole.
+        "SELECT * FROM equipment_state",
+        "SELECT * FROM equipment_preset_state",
+        "SELECT * FROM deployable_state_v2",
       ],
       [
         // Event tables

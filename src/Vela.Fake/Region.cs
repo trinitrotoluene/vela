@@ -44,6 +44,9 @@ public sealed class Region
     private readonly Table<ConvergePlayerHousingState> _housing = new();
     private readonly Table<ConvergeMarketTradeEvent> _marketTrades = new();
     private readonly Table<ConvergeBarterStallInventoryEvent> _stallEvents = new();
+    private readonly Table<ConvergeEquipmentState> _equipment = new();
+    private readonly Table<ConvergeEquipmentPresetState> _presets = new();
+    private readonly Table<ConvergeDeployableState> _deployables = new();
     private readonly ITable[] _tables;
 
     // Players, claims and buildings are never removed, so other rows can point at them.
@@ -68,7 +71,7 @@ public sealed class Region
             _buildings, _nicknames, _claims, _claimLocals, _claimTechs, _empires, _empireNodes, _sieges,
             _users, _usernames, _locations, _crafts, _publicCrafts, _chat, _actionLog, _auctions,
             _closedListings, _inventories, _stalls, _orders, _dimensions, _networks, _housing,
-            _marketTrades, _stallEvents,
+            _marketTrades, _stallEvents, _equipment, _presets, _deployables,
         ];
     }
 
@@ -172,6 +175,17 @@ public sealed class Region
             _users.Set(p, new ConvergeUserState { EntityId = identity, Module = _module, UserEntityId = p, CanSignIn = true });
             _usernames.Set(p, new ConvergeUsernameState { EntityId = EntityId.FromULong(p), Module = _module, Username = $"player{_n}_{i}" });
             _locations.Set(p, Location(p, Coord(), Coord()));
+            _equipment.Set(p, new ConvergeEquipmentState { EntityId = EntityId.FromULong(p), Module = _module, Slots = EquipmentSlots() });
+            // Up to three presets, the first active; each holds its own gear.
+            for (int k = 0, presets = _rng.Next(4); k < presets; k++)
+            {
+                ulong preset = NewId();
+                _presets.Set(preset, new ConvergeEquipmentPresetState
+                {
+                    EntityId = EntityId.FromULong(preset), Module = _module, PlayerEntityId = p, Index = k + 1,
+                    Active = k == 0, Slots = EquipmentSlots(),
+                });
+            }
         }
 
         int claims = Math.Max(1, s / 100);
@@ -215,6 +229,24 @@ public sealed class Region
         }
 
         for (int i = 0; i < s; i++) NewInventory(out _);
+
+        // Deployables belong to players and own an inventory of their own.
+        for (int i = 0; i < s / 25; i++)
+        {
+            ulong d = NewId();
+            _deployables.Set(d, new ConvergeDeployableState
+            {
+                EntityId = EntityId.FromULong(d), Module = _module, OwnerId = Pick(_players),
+                ClaimEntityId = _rng.Next(4) == 0 ? Pick(_claimIds) : 0, Hidden = _rng.Next(3) == 0,
+                DeployableDescriptionId = _rng.Next(1, 20),
+            });
+            ulong inv = NewId();
+            _inventories.Set(inv, new ConvergeInventoryState
+            {
+                EntityId = EntityId.FromULong(inv), Module = _module, Pockets = Pockets(),
+                OwnerEntityId = d, PlayerOwnerEntityId = 0, InventoryIndex = 0,
+            });
+        }
 
         for (int i = 0; i < s / 50; i++)
         {
@@ -282,6 +314,18 @@ public sealed class Region
             pockets[i] = new ConvergeInventoryPocket { ItemId = (ulong)_rng.Next(1, 3_000), Quantity = _rng.Next(1, 500), ItemType = (byte)_rng.Next(2) };
         }
         return pockets;
+    }
+
+    // Equipment slots hold one item each, and are often empty.
+    private ConvergeInventoryPocket[] EquipmentSlots()
+    {
+        var slots = new ConvergeInventoryPocket[12];
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (_rng.Next(2) == 0) continue;
+            slots[i] = new ConvergeInventoryPocket { ItemId = (ulong)_rng.Next(1, 3_000), Quantity = 1, ItemType = 1 };
+        }
+        return slots;
     }
 
     private ConvergeInventoryState NewInventory(out ulong id)
@@ -454,9 +498,16 @@ public sealed class Region
                 await _claimLocals.PutAsync(w, c, local with { Supplies = Math.Max(0, local.Supplies + _rng.Next(-50, 51)) });
                 break;
             }
-            case < 88:
+            case < 87:
                 await ChatAsync(w);
                 break;
+            case < 88:
+            {
+                // Players change gear now and then.
+                key = Pick(_players);
+                await _equipment.PutAsync(w, key, _equipment[key] with { Slots = EquipmentSlots() });
+                break;
+            }
             case < 92:
                 await _marketTrades.EmitAsync(w, new ConvergeMarketTradeEvent
                 {

@@ -12,11 +12,14 @@ namespace Vela.Mappers
         OwnerEntityId: entity.OwnerEntityId.ToString(),
         PlayerOwnerEntityId: entity.PlayerOwnerEntityId.ToString(),
         InventoryIndex: entity.InventoryIndex,
-        Pockets: [.. entity.Pockets.Select(x => new BitcraftInventoryPocket(
-          ItemId: x.Contents?.ItemId.ToString(),
-          Quantity: x.Contents?.Quantity,
-          ItemType: x.Contents?.ItemType.ToString()
-        ))]
+        Pockets: [.. entity.Pockets.Select(x => MapPocket(x.Contents))]
       );
+
+    // An inventory pocket's or equipment slot's contents; null when it is empty.
+    internal static BitcraftInventoryPocket MapPocket(SpacetimeDB.Types.ItemStack? contents) => new(
+      ItemId: contents?.ItemId.ToString(),
+      Quantity: contents?.Quantity,
+      ItemType: contents?.ItemType.ToString()
+    );
   }
 }

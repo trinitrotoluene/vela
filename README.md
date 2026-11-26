@@ -4,6 +4,16 @@
 
 This project is an event gateway wrapping the SpacetimeDB bindings to bitcraft. It maintains a redis cache and uses pub/sub to notify subscribers of cache changes.
 
+## Gateway options
+
+Set in the `Bitcraft` section of `appsettings.json`, or as environment variables with the `VELA_`
+prefix (`VELA_Bitcraft__<Option>`).
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `Uri`, `Module`, `AuthToken` | (required) | The SpacetimeDB server and module (one game region) to subscribe to. |
+| `HeartbeatUrl` | unset | Pinged every heartbeat once the snapshot is complete. |
+
 ## Exporting schema
 
 ```sh

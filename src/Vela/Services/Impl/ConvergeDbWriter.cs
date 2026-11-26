@@ -124,6 +124,9 @@ public class ConvergeDbWriter : IConvergeDbWriter
         await RegisterKindAsync<ConvergePlayerHousingState>(ct);
         await RegisterKindAsync<ConvergeMarketTradeEvent>(ct);
         await RegisterKindAsync<ConvergeBarterStallInventoryEvent>(ct);
+        await RegisterKindAsync<ConvergeEquipmentState>(ct);
+        await RegisterKindAsync<ConvergeEquipmentPresetState>(ct);
+        await RegisterKindAsync<ConvergeDeployableState>(ct);
 
         _logger.LogInformation("Registered {Count} entity kinds with ConvergeDB", _kindHandles.Count);
     }
