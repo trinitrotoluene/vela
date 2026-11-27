@@ -12,6 +12,9 @@ public partial struct ConvergeInventoryState
     [Field(2)] public ulong OwnerEntityId { get; set; }
     [Field(3)] public ulong PlayerOwnerEntityId { get; set; }
     [Field(4)] public int InventoryIndex { get; set; }
+    // Pockets from CargoIndex on take cargo, those before it items. Rows written before this field
+    // existed read 0 here until they next change.
+    [Field(5)] public int CargoIndex { get; set; }
 
     public ReadOnlyMemory<byte> EntityId { get; init; }
 }

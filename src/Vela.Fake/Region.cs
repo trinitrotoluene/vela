@@ -241,10 +241,11 @@ public sealed class Region
                 DeployableDescriptionId = _rng.Next(1, 20),
             });
             ulong inv = NewId();
+            var pockets = Pockets();
             _inventories.Set(inv, new ConvergeInventoryState
             {
-                EntityId = EntityId.FromULong(inv), Module = _module, Pockets = Pockets(),
-                OwnerEntityId = d, PlayerOwnerEntityId = 0, InventoryIndex = 0,
+                EntityId = EntityId.FromULong(inv), Module = _module, Pockets = pockets,
+                OwnerEntityId = d, PlayerOwnerEntityId = 0, InventoryIndex = 0, CargoIndex = pockets.Length - 1,
             });
         }
 
@@ -334,10 +335,12 @@ public sealed class Region
         // Building storage, or a player's own inventory.
         bool player = _rng.Next(5) < 2;
         ulong owner = player ? Pick(_players) : Pick(_buildingIds);
+        var pockets = Pockets();
         var inv = new ConvergeInventoryState
         {
-            EntityId = EntityId.FromULong(id), Module = _module, Pockets = Pockets(),
+            EntityId = EntityId.FromULong(id), Module = _module, Pockets = pockets,
             OwnerEntityId = owner, PlayerOwnerEntityId = player ? owner : 0, InventoryIndex = _rng.Next(4),
+            CargoIndex = pockets.Length - 1,
         };
         _inventories.Set(id, inv);
         return inv;

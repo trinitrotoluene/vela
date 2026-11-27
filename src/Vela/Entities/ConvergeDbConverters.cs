@@ -193,6 +193,7 @@ public static class ConvergeDbConverters
         OwnerEntityId = ulong.Parse(e.OwnerEntityId),
         PlayerOwnerEntityId = ulong.Parse(e.PlayerOwnerEntityId),
         InventoryIndex = e.InventoryIndex,
+        CargoIndex = e.CargoIndex,
     };
 
     public static ConvergeEquipmentState ToConverge(BitcraftEquipmentState e, string module) => new()
