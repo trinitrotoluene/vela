@@ -47,6 +47,8 @@ namespace SpacetimeDB.Types
         public System.Collections.Generic.List<int>? BlockingClaimTechs;
         [DataMember(Name = "not_shown_in_ui")]
         public bool NotShownInUi;
+        [DataMember(Name = "destroy_multiplier")]
+        public float DestroyMultiplier;
 
         public ClaimTechDesc(
             int Id,
@@ -65,7 +67,8 @@ namespace SpacetimeDB.Types
             System.Collections.Generic.List<int> UnlocksTechs,
             bool CannotBeResearched,
             System.Collections.Generic.List<int>? BlockingClaimTechs,
-            bool NotShownInUi
+            bool NotShownInUi,
+            float DestroyMultiplier
         )
         {
             this.Id = Id;
@@ -85,6 +88,7 @@ namespace SpacetimeDB.Types
             this.CannotBeResearched = CannotBeResearched;
             this.BlockingClaimTechs = BlockingClaimTechs;
             this.NotShownInUi = NotShownInUi;
+            this.DestroyMultiplier = DestroyMultiplier;
         }
 
         public ClaimTechDesc()
