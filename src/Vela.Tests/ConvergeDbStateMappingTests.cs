@@ -180,4 +180,17 @@ public class ConvergeDbStateMappingTests
         Assert.Equal((5UL, 42UL, 8UL, true, 3),
             (EntityId.ToULong(converged.EntityId), converged.OwnerId, converged.ClaimEntityId, converged.Hidden, converged.DeployableDescriptionId));
     }
+
+    [Fact]
+    public void ClaimMember_KeepsClaimAndPlayerApart()
+    {
+        // Both are plain ulongs, so a swap would compile and quietly put players in the wrong claims.
+        var converged = ConvergeDbConverters.ToConverge(new ClaimMemberStateMapper().Map(new ClaimMemberState
+        {
+            EntityId = 5, ClaimEntityId = 8, PlayerEntityId = 42, UserName = "Ann", CoOwnerPermission = true,
+        }), "bitcraft-live-3");
+
+        Assert.Equal((5UL, 8UL, 42UL),
+            (EntityId.ToULong(converged.EntityId), converged.ClaimEntityId, converged.PlayerEntityId));
+    }
 }

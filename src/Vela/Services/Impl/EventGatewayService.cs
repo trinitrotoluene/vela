@@ -246,6 +246,8 @@ ON p.entity_id = s.entity_id
         "SELECT * FROM equipment_state",
         "SELECT * FROM equipment_preset_state",
         "SELECT * FROM deployable_state_v2",
+        // Who belongs to which claim: a row per member, a few per claim, so read whole.
+        "SELECT * FROM claim_member_state",
       ],
       [
         // Event tables

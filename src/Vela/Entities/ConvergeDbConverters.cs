@@ -223,6 +223,14 @@ public static class ConvergeDbConverters
         DeployableDescriptionId = e.DeployableDescriptionId,
     };
 
+    public static ConvergeClaimMemberState ToConverge(BitcraftClaimMemberState e, string module) => new()
+    {
+        EntityId = NumericId(e.Id),
+        Module = module,
+        ClaimEntityId = ulong.Parse(e.ClaimEntityId),
+        PlayerEntityId = ulong.Parse(e.PlayerEntityId),
+    };
+
     // An inventory pocket or equipment slot. Empty ones keep their place, with ItemType 0.
     private static ConvergeInventoryPocket ToConverge(BitcraftInventoryPocket p) => new()
     {
