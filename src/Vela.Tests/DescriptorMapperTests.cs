@@ -174,7 +174,8 @@ public class DescriptorMapperTests
         using var db = new VelaDbContext(options, JsonOptions);
 
         foreach (var type in new[] { typeof(BitcraftSkillDesc), typeof(BitcraftToolTypeDesc), typeof(BitcraftBuildingTypeDesc), typeof(BitcraftToolDesc),
-            typeof(BitcraftExtractionRecipe), typeof(BitcraftSecondaryKnowledgeDesc), typeof(BitcraftResourceDesc) })
+            typeof(BitcraftExtractionRecipe), typeof(BitcraftSecondaryKnowledgeDesc), typeof(BitcraftResourceDesc),
+            typeof(BitcraftDeployableDesc) })
         {
             Assert.Contains(type, BitcraftEventBase.PostgresTypes);
             Assert.NotNull(db.Model.FindEntityType(type));

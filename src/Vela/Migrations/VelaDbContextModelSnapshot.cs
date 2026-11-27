@@ -85,6 +85,11 @@ namespace Vela.Migrations
                         .HasColumnType("text")
                         .HasColumnName("description");
 
+                    b.Property<string>("IconAssetName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("icon_asset_name");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text")
@@ -142,6 +147,23 @@ namespace Vela.Migrations
                         .HasName("pk_bitcraft_claim_tech_desc");
 
                     b.ToTable("bitcraft_claim_tech_desc", (string)null);
+                });
+
+            modelBuilder.Entity("Vela.Events.BitcraftDeployableDesc", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_bitcraft_deployable_desc");
+
+                    b.ToTable("bitcraft_deployable_desc", (string)null);
                 });
 
             modelBuilder.Entity("Vela.Events.BitcraftExtractionRecipe", b =>
@@ -229,6 +251,11 @@ namespace Vela.Migrations
                     b.Property<bool>("HasCompendiumEntry")
                         .HasColumnType("boolean")
                         .HasColumnName("has_compendium_entry");
+
+                    b.Property<string>("IconAssetName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("icon_asset_name");
 
                     b.Property<int>("ItemListId")
                         .HasColumnType("integer")

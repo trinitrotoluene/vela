@@ -15,7 +15,8 @@ namespace Vela.Mappers
           Rarity: (BitcraftItemRarity)entity.Rarity,
           Tag: entity.Tag,
           NotPickupable: entity.NotPickupable,
-          BlocksPath: entity.BlocksPath
+          BlocksPath: entity.BlocksPath,
+          IconAssetName: entity.IconAssetName
           );
   }
 }

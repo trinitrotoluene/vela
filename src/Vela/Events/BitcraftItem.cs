@@ -12,7 +12,8 @@ namespace Vela.Events
     BitcraftItemRarity Rarity,
     int ItemListId,
     bool HasCompendiumEntry,
-    string Tag
+    string Tag,
+    string IconAssetName
   ) : BitcraftEventBase(Id);
 
   [Postgres]
@@ -25,7 +26,8 @@ namespace Vela.Events
     BitcraftItemRarity Rarity,
     string Tag,
     bool NotPickupable,
-    bool BlocksPath
+    bool BlocksPath,
+    string IconAssetName
   ) : BitcraftEventBase(Id);
 
   [JsonConverter(typeof(JsonStringEnumConverter))]

@@ -37,9 +37,9 @@ public static class Descriptors
         List<(Type Type, BitcraftEventBase[] Rows)> sets =
         [
             (typeof(BitcraftItem), Enumerable.Range(1, Items).Select(i => new BitcraftItem(
-                $"{i}", $"Item {i}", "", rng.Next(1, 100), i % 10 + 1, (BitcraftItemRarity)(i % 7), 0, true, "")).ToArray()),
+                $"{i}", $"Item {i}", "", rng.Next(1, 100), i % 10 + 1, (BitcraftItemRarity)(i % 7), 0, true, "", "")).ToArray()),
             (typeof(BitcraftCargoItem), Enumerable.Range(1, Items).Select(i => new BitcraftCargoItem(
-                $"{i}", $"Cargo {i}", "", rng.Next(100, 6000), i % 10 + 1, (BitcraftItemRarity)(i % 7), "", false, false)).ToArray()),
+                $"{i}", $"Cargo {i}", "", rng.Next(100, 6000), i % 10 + 1, (BitcraftItemRarity)(i % 7), "", false, false, "")).ToArray()),
             (typeof(BitcraftBuildingDesc), Enumerable.Range(1, BuildingDescs).Select(i => new BitcraftBuildingDesc(
                 $"{i}", i == BuildingDescs ? "Town Hall" : $"Building {i}", "", [new(i % 20 + 1, 1)])).ToArray()),
             (typeof(BitcraftRecipe), Enumerable.Range(1, CraftRecipes).Select(i => Recipe(
