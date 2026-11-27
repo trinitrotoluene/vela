@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -90,52 +91,63 @@ public class EventGatewayService : BackgroundService
 
     // Open the epoch + streaming snapshot BEFORE the first Subscribe so OnInsert handlers
     // can stream-write directly into the open ConvergenceBatch. The epoch closes on the last
-    // batch's OnApplied; ConvergeDB retracts anything in the prior baseline that wasn't
+    // query's OnApplied; ConvergeDB retracts anything in the prior baseline that wasn't
     // re-asserted during streaming.
     await _convergeWriter.BeginEpochAsync(cancellationToken);
     _subscriber.BeginStreamingSnapshot();
 
     var nowUnixSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-    var batches = BuildSubscriptionBatches(nowUnixSeconds);
-    var remaining = batches.Length;
+    var queries = BuildSubscriptionQueries(nowUnixSeconds);
 
-    _logger.LogInformation("Subscribing in {BatchCount} batches ({Total} queries total)",
-      batches.Length, batches.Sum(b => b.Length));
-
-    for (var i = 0; i < batches.Length; i++)
-    {
-      var batchIndex = i;
-      conn.SubscriptionBuilder()
-        .OnApplied((ctx) =>
-        {
-          _logger.LogInformation("Subscription batch {Index}/{Total} applied ({QueryCount} queries)",
-            batchIndex + 1, batches.Length, batches[batchIndex].Length);
-
-          if (Interlocked.Decrement(ref remaining) == 0)
-          {
-            // OnApplied is a synchronous SDK callback on the FrameTick thread. Hand the async
-            // finalize work off to a Task so we don't block FrameTick - and so any awaitable
-            // exceptions surface cleanly.
-            _ = Task.Run(() => FinalizeSnapshotAsync(conn, cancellationToken));
-          }
-        })
-        .OnError((err, ex) =>
-        {
-          _logger.LogError(ex, "Error applying subscription batch {Index}/{Total}",
-            batchIndex + 1, batches.Length);
-          // Drop the connection - process restart will abandon the open epoch on the server
-          // and re-seed from a fresh epoch on next startup.
-          conn.Disconnect();
-        })
-        .Subscribe(batches[batchIndex]);
-    }
+    _logger.LogInformation("Subscribing to {Total} queries, one at a time", queries.Length);
+    SubscribeNext(conn, queries, 0, cancellationToken);
   }
+
+  // One query per subscribe call, each sent when the one before it has applied. The server checks
+  // its row limit against the summed estimate of every query in a call, so queries sent together
+  // can be refused where each alone is accepted. Sending them in turn also means the last
+  // "Subscribing" line names the query at fault when the server refuses one or never answers.
+  private void SubscribeNext(DbConnection conn, string[] queries, int index, CancellationToken cancellationToken)
+  {
+    var query = SingleLine(queries[index]);
+    var started = Stopwatch.GetTimestamp();
+    _logger.LogInformation("Subscribing {Index}/{Total}: {Query}", index + 1, queries.Length, query);
+
+    conn.SubscriptionBuilder()
+      .OnApplied((ctx) =>
+      {
+        _logger.LogInformation("Subscription {Index}/{Total} applied in {ElapsedMs}ms: {Query}",
+          index + 1, queries.Length, (long)Stopwatch.GetElapsedTime(started).TotalMilliseconds, query);
+
+        if (index + 1 < queries.Length)
+        {
+          SubscribeNext(conn, queries, index + 1, cancellationToken);
+          return;
+        }
+
+        // OnApplied is a synchronous SDK callback on the FrameTick thread. Hand the async
+        // finalize work off to a Task so we don't block FrameTick - and so any awaitable
+        // exceptions surface cleanly.
+        _ = Task.Run(() => FinalizeSnapshotAsync(conn, cancellationToken));
+      })
+      .OnError((err, ex) =>
+      {
+        _logger.LogError(ex, "Subscription {Index}/{Total} refused after {ElapsedMs}ms: {Query}",
+          index + 1, queries.Length, (long)Stopwatch.GetElapsedTime(started).TotalMilliseconds, query);
+        // Drop the connection - process restart will abandon the open epoch on the server
+        // and re-seed from a fresh epoch on next startup.
+        conn.Disconnect();
+      })
+      .Subscribe([queries[index]]);
+  }
+
+  private static string SingleLine(string query) => string.Join(' ', query.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
 
   private async Task FinalizeSnapshotAsync(DbConnection conn, CancellationToken cancellationToken)
   {
     try
     {
-      _logger.LogInformation("All subscription batches applied - finalizing streaming snapshot");
+      _logger.LogInformation("All subscriptions applied - finalizing streaming snapshot");
       await _subscriber.EndStreamingSnapshotAsync();
       await _convergeWriter.EndEpochAsync(cancellationToken);
       _logger.LogInformation("Epoch complete - ConvergeDB and PostgreSQL populated");
@@ -163,97 +175,83 @@ public class EventGatewayService : BackgroundService
   internal const string TownHallLocationsQuery =
     "SELECT ls.* FROM claim_state cs JOIN location_state ls ON ls.entity_id = cs.owner_building_entity_id";
 
-  internal static string[][] BuildSubscriptionBatches(long nowUnixSeconds)
+  internal static string[] BuildSubscriptionQueries(long nowUnixSeconds)
   {
     return [
-      [
-        "SELECT * FROM item_desc",
-        "SELECT * FROM cargo_desc",
-        "SELECT * FROM crafting_recipe_desc",
-        "SELECT * FROM item_list_desc",
-        "SELECT * FROM building_desc",
-        "SELECT * FROM claim_tech_desc",
-        "SELECT * FROM paving_tile_desc",
-        "SELECT * FROM skill_desc",
-        "SELECT * FROM tool_type_desc",
-        "SELECT * FROM tool_desc",
-        "SELECT * FROM building_type_desc",
-        "SELECT * FROM extraction_recipe_desc",
-        "SELECT * FROM secondary_knowledge_desc",
-        "SELECT * FROM resource_desc",
-        "SELECT * FROM deployable_desc",
-        "SELECT * FROM user_state",
-        "SELECT * FROM claim_local_state",
-        "SELECT * FROM player_username_state",
-        "SELECT * FROM buy_order_state",
-        "SELECT * FROM sell_order_state",
-        "SELECT * FROM closed_listing_state",
-        "SELECT * FROM building_state",
-        "SELECT * FROM building_nickname_state",
-        "SELECT * FROM claim_tech_state",
-                @"SELECT e.* FROM empire_state e
-          JOIN claim_state c
-            ON e.capital_building_entity_id = c.owner_building_entity_id",
-        @"SELECT * FROM empire_node_state", // todo can this be restricted at all?
-        @"SELECT e.* FROM empire_node_siege_state e
-          JOIN building_state b
-            ON e.building_entity_id = b.entity_id",
-        @"SELECT t.* FROM claim_state t INNER JOIN claim_local_state l ON t.entity_id = l.entity_id
+      "SELECT * FROM item_desc",
+      "SELECT * FROM cargo_desc",
+      "SELECT * FROM crafting_recipe_desc",
+      "SELECT * FROM item_list_desc",
+      "SELECT * FROM building_desc",
+      "SELECT * FROM claim_tech_desc",
+      "SELECT * FROM paving_tile_desc",
+      "SELECT * FROM skill_desc",
+      "SELECT * FROM tool_type_desc",
+      "SELECT * FROM tool_desc",
+      "SELECT * FROM building_type_desc",
+      "SELECT * FROM extraction_recipe_desc",
+      "SELECT * FROM secondary_knowledge_desc",
+      "SELECT * FROM resource_desc",
+      "SELECT * FROM deployable_desc",
+      "SELECT * FROM user_state",
+      "SELECT * FROM claim_local_state",
+      "SELECT * FROM player_username_state",
+      "SELECT * FROM buy_order_state",
+      "SELECT * FROM sell_order_state",
+      "SELECT * FROM closed_listing_state",
+      "SELECT * FROM building_state",
+      "SELECT * FROM building_nickname_state",
+      "SELECT * FROM claim_tech_state",
+              @"SELECT e.* FROM empire_state e
+        JOIN claim_state c
+          ON e.capital_building_entity_id = c.owner_building_entity_id",
+      @"SELECT * FROM empire_node_state", // todo can this be restricted at all?
+      @"SELECT e.* FROM empire_node_siege_state e
+        JOIN building_state b
+          ON e.building_entity_id = b.entity_id",
+      @"SELECT t.* FROM claim_state t INNER JOIN claim_local_state l ON t.entity_id = l.entity_id
 WHERE l.building_description_id = 405 OR l.building_description_id = 292245080",
-        $"SELECT t.* FROM chat_message_state t WHERE t.channel_id >= 0 AND t.timestamp > {nowUnixSeconds}",
-        @"SELECT s.* FROM progressive_action_state s
+      $"SELECT t.* FROM chat_message_state t WHERE t.channel_id >= 0 AND t.timestamp > {nowUnixSeconds}",
+      @"SELECT s.* FROM progressive_action_state s
 INNER JOIN public_progressive_action_state p
   ON s.entity_id = p.entity_id
 WHERE s.craft_count > 50",
-        @"SELECT p.* FROM public_progressive_action_state p
+      @"SELECT p.* FROM public_progressive_action_state p
 JOIN progressive_action_state s
 ON p.entity_id = s.entity_id
   WHERE s.craft_count > 50",
-        // Every inventory: players' (main, toolbelt, wallet), banks, chests and buildings.
-        "SELECT * FROM inventory_state",
-        // Where each inventory's owner stands, to place inventories that carry no player id
-        // (housing chests: owner -> location -> dimension -> network -> player_housing_state).
-        // Reads inventory_state and looks location_state up by primary key, never scanning it.
-        // In this batch so the epoch retracts the locations of owners that are gone. A row also
-        // returned by another location_state join is asserted once: the cacheless SDK counts
-        // subscriptions per key and fires the delete only when the last one drops it.
-        OwnerLocationsQuery,
-      ],
-      [
-        // Barter stalls: one row per stall. Their orders and locations are joined from the stall
-        // side, so the server looks each up by index (trade_order_state.shop_entity_id,
-        // location_state's primary key) instead of reading those tables whole.
-        "SELECT * FROM barter_stall_state",
-        "SELECT t.* FROM barter_stall_state b JOIN trade_order_state t ON t.shop_entity_id = b.entity_id",
-        // Interiors, to tell which building (or whose housing) a stall stands in.
-        "SELECT * FROM dimension_description_state",
-        "SELECT * FROM dimension_network_state",
-        "SELECT * FROM player_housing_state",
-      ],
-      [
-        "SELECT ls.* FROM barter_stall_state b JOIN location_state ls ON ls.entity_id = b.entity_id",
-      ],
-      [
-        PublicCraftLocationsQuery,
-      ],
-      [
-        TownHallLocationsQuery,
-      ],
-      [
-        // What players hold outside inventories: worn equipment (one row per player), equipment
-        // presets (a few per player) and deployables, whose inventories are owned by the
-        // deployable. Small tables that change rarely, so they are read whole.
-        "SELECT * FROM equipment_state",
-        "SELECT * FROM equipment_preset_state",
-        "SELECT * FROM deployable_state_v2",
-        // Who belongs to which claim: a row per membership. Small next to the large per-region tables, so read whole.
-        "SELECT * FROM claim_member_state",
-      ],
-      [
-        // Event tables
-        "SELECT * FROM market_trade_event",
-        "SELECT * FROM barter_stall_inventory_event",
-      ]
+      // Every inventory: players' (main, toolbelt, wallet), banks, chests and buildings.
+      "SELECT * FROM inventory_state",
+      // Where each inventory's owner stands, to place inventories that carry no player id
+      // (housing chests: owner -> location -> dimension -> network -> player_housing_state).
+      // Reads inventory_state and looks location_state up by primary key, never scanning it.
+      // Subscribed within the same epoch, which retracts the locations of owners that are gone. A row also
+      // returned by another location_state join is asserted once: the cacheless SDK counts
+      // subscriptions per key and fires the delete only when the last one drops it.
+      OwnerLocationsQuery,
+      // Barter stalls: one row per stall. Their orders and locations are joined from the stall
+      // side, so the server looks each up by index (trade_order_state.shop_entity_id,
+      // location_state's primary key) instead of reading those tables whole.
+      "SELECT * FROM barter_stall_state",
+      "SELECT t.* FROM barter_stall_state b JOIN trade_order_state t ON t.shop_entity_id = b.entity_id",
+      // Interiors, to tell which building (or whose housing) a stall stands in.
+      "SELECT * FROM dimension_description_state",
+      "SELECT * FROM dimension_network_state",
+      "SELECT * FROM player_housing_state",
+      "SELECT ls.* FROM barter_stall_state b JOIN location_state ls ON ls.entity_id = b.entity_id",
+      PublicCraftLocationsQuery,
+      TownHallLocationsQuery,
+      // What players hold outside inventories: worn equipment (one row per player), equipment
+      // presets (a few per player) and deployables, whose inventories are owned by the
+      // deployable. Small tables that change rarely, so they are read whole.
+      "SELECT * FROM equipment_state",
+      "SELECT * FROM equipment_preset_state",
+      "SELECT * FROM deployable_state_v2",
+      // Who belongs to which claim: a row per membership. Small next to the large per-region tables, so read whole.
+      "SELECT * FROM claim_member_state",
+      // Event tables
+      "SELECT * FROM market_trade_event",
+      "SELECT * FROM barter_stall_inventory_event",
     ];
   }
 
@@ -274,33 +272,33 @@ ON p.entity_id = s.entity_id
     {
       try
       {
-        _logger.LogInformation("Heartbeat {seq}", seq);
-        _subscriber.PublishSystemEvent(new HeartbeatEvent(
-          Application: _metrics.ServiceName,
-          DateTime.UtcNow,
-          Seq: seq++
-        ));
+      _logger.LogInformation("Heartbeat {seq}", seq);
+      _subscriber.PublishSystemEvent(new HeartbeatEvent(
+        Application: _metrics.ServiceName,
+        DateTime.UtcNow,
+        Seq: seq++
+      ));
 
-        if (!string.IsNullOrEmpty(_options.Value.HeartbeatUrl))
-          _ = PingHeartbeatUrlAsync();
+      if (!string.IsNullOrEmpty(_options.Value.HeartbeatUrl))
+        _ = PingHeartbeatUrlAsync();
       }
       catch (TaskCanceledException)
       {
-        _logger.LogInformation("Heartbeat task cancelled");
-        break;
+      _logger.LogInformation("Heartbeat task cancelled");
+      break;
       }
       catch (Exception ex)
       {
-        _logger.LogError(ex, "Exception thrown while publishing heartbeat");
+      _logger.LogError(ex, "Exception thrown while publishing heartbeat");
       }
 
       try
       {
-        await Task.Delay(interval, cancellationToken);
+      await Task.Delay(interval, cancellationToken);
       }
       catch (TaskCanceledException)
       {
-        _logger.LogInformation("Heartbeat delay cancelled");
+      _logger.LogInformation("Heartbeat delay cancelled");
       }
     }
 
