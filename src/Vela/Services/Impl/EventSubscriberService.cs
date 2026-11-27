@@ -159,6 +159,8 @@ public class EventSubscriberService : IEventSubscriber
         await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftEquipmentPresetState)e, m)),
       [typeof(BitcraftDeployableState)] = async (e, m) =>
         await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftDeployableState)e, m)),
+      [typeof(BitcraftClaimMemberState)] = async (e, m) =>
+        await _convergeWriter.AssertAsync(ConvergeDbConverters.ToConverge((BitcraftClaimMemberState)e, m)),
     };
   }
 
@@ -219,6 +221,8 @@ public class EventSubscriberService : IEventSubscriber
         await _convergeWriter.RetractAsync<ConvergeEquipmentPresetState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
       [typeof(BitcraftDeployableState)] = async (e, m) =>
         await _convergeWriter.RetractAsync<ConvergeDeployableState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
+      [typeof(BitcraftClaimMemberState)] = async (e, m) =>
+        await _convergeWriter.RetractAsync<ConvergeClaimMemberState>(Convergence.Client.EntityId.FromULong(ulong.Parse(e.Id))),
     };
   }
 
@@ -278,6 +282,8 @@ public class EventSubscriberService : IEventSubscriber
         await batch.AssertAsync(_convergeWriter.GetKind<ConvergeEquipmentPresetState>(), ConvergeDbConverters.ToConverge((BitcraftEquipmentPresetState)e, m)),
       [typeof(BitcraftDeployableState)] = async (batch, e, m) =>
         await batch.AssertAsync(_convergeWriter.GetKind<ConvergeDeployableState>(), ConvergeDbConverters.ToConverge((BitcraftDeployableState)e, m)),
+      [typeof(BitcraftClaimMemberState)] = async (batch, e, m) =>
+        await batch.AssertAsync(_convergeWriter.GetKind<ConvergeClaimMemberState>(), ConvergeDbConverters.ToConverge((BitcraftClaimMemberState)e, m)),
     };
   }
 

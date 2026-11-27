@@ -47,6 +47,7 @@ public sealed class Region
     private readonly Table<ConvergeEquipmentState> _equipment = new();
     private readonly Table<ConvergeEquipmentPresetState> _presets = new();
     private readonly Table<ConvergeDeployableState> _deployables = new();
+    private readonly Table<ConvergeClaimMemberState> _claimMembers = new();
     private readonly ITable[] _tables;
 
     // Players, claims and buildings are never removed, so other rows can point at them.
@@ -71,7 +72,7 @@ public sealed class Region
             _buildings, _nicknames, _claims, _claimLocals, _claimTechs, _empires, _empireNodes, _sieges,
             _users, _usernames, _locations, _crafts, _publicCrafts, _chat, _actionLog, _auctions,
             _closedListings, _inventories, _stalls, _orders, _dimensions, _networks, _housing,
-            _marketTrades, _stallEvents, _equipment, _presets, _deployables,
+            _marketTrades, _stallEvents, _equipment, _presets, _deployables, _claimMembers,
         ];
     }
 
@@ -210,10 +211,20 @@ public sealed class Region
             ulong c = _claimIds[i];
             ulong townHall = _buildingIds[i];
             var at = _locations[townHall];
+            ulong owner = Pick(_players);
             _claims.Set(c, new ConvergeClaimState
             {
-                EntityId = EntityId.FromULong(c), Module = _module, OwnerPlayerId = Pick(_players),
+                EntityId = EntityId.FromULong(c), Module = _module, OwnerPlayerId = owner,
                 OwnerBuildingId = townHall, Name = $"Claim {_n}-{i}", IsNeutral = false,
+            });
+            // The owner is the claim's one member. A membership id of its own, outside NewId's
+            // range, so the ids handed out after it don't move.
+            ulong membership = c | (1UL << 47);
+            _claimMembers.Set(membership, new ConvergeClaimMemberState
+            {
+                EntityId = EntityId.FromULong(membership), Module = _module, ClaimEntityId = c,
+                PlayerEntityId = owner, InventoryPermission = true, BuildPermission = true,
+                OfficerPermission = true, CoOwnerPermission = true,
             });
             _claimLocals.Set(c, new ConvergeClaimLocalState
             {
