@@ -144,6 +144,23 @@ namespace Vela.Migrations
                     b.ToTable("bitcraft_claim_tech_desc", (string)null);
                 });
 
+            modelBuilder.Entity("Vela.Events.BitcraftDeployableDesc", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_bitcraft_deployable_desc");
+
+                    b.ToTable("bitcraft_deployable_desc", (string)null);
+                });
+
             modelBuilder.Entity("Vela.Events.BitcraftExtractionRecipe", b =>
                 {
                     b.Property<string>("Id")

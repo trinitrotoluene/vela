@@ -181,6 +181,7 @@ public class EventGatewayService : BackgroundService
         "SELECT * FROM extraction_recipe_desc",
         "SELECT * FROM secondary_knowledge_desc",
         "SELECT * FROM resource_desc",
+        "SELECT * FROM deployable_desc",
         "SELECT * FROM user_state",
         "SELECT * FROM claim_local_state",
         "SELECT * FROM player_username_state",
