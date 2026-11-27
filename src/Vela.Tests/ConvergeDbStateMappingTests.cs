@@ -182,15 +182,19 @@ public class ConvergeDbStateMappingTests
     }
 
     [Fact]
-    public void ClaimMember_KeepsClaimAndPlayerApart()
+    public void ClaimMember_KeepsIdsAndPermissionsApart()
     {
-        // Both are plain ulongs, so a swap would compile and quietly put players in the wrong claims.
+        // The ids are both ulongs and the permissions all bools, so a swap would compile and quietly
+        // put players in the wrong claims or give them the wrong rights.
         var converged = ConvergeDbConverters.ToConverge(new ClaimMemberStateMapper().Map(new ClaimMemberState
         {
-            EntityId = 5, ClaimEntityId = 8, PlayerEntityId = 42, UserName = "Ann", CoOwnerPermission = true,
+            EntityId = 5, ClaimEntityId = 8, PlayerEntityId = 42, UserName = "Ann",
+            InventoryPermission = true, BuildPermission = false, OfficerPermission = false, CoOwnerPermission = true,
         }), "bitcraft-live-3");
 
-        Assert.Equal((5UL, 8UL, 42UL),
-            (EntityId.ToULong(converged.EntityId), converged.ClaimEntityId, converged.PlayerEntityId));
+        Assert.Equal((5UL, 8UL, 42UL, true, false, false, true),
+            (EntityId.ToULong(converged.EntityId), converged.ClaimEntityId, converged.PlayerEntityId,
+             converged.InventoryPermission, converged.BuildPermission, converged.OfficerPermission,
+             converged.CoOwnerPermission));
     }
 }

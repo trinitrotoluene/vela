@@ -5,6 +5,10 @@ namespace Vela.Events
   public record BitcraftClaimMemberState(
     string Id,
     string ClaimEntityId,
-    string PlayerEntityId
+    string PlayerEntityId,
+    bool InventoryPermission,
+    bool BuildPermission,
+    bool OfficerPermission,
+    bool CoOwnerPermission
   ) : BitcraftEventBase(Id);
 }

@@ -223,7 +223,8 @@ public sealed class Region
             _claimMembers.Set(membership, new ConvergeClaimMemberState
             {
                 EntityId = EntityId.FromULong(membership), Module = _module, ClaimEntityId = c,
-                PlayerEntityId = owner,
+                PlayerEntityId = owner, InventoryPermission = true, BuildPermission = true,
+                OfficerPermission = true, CoOwnerPermission = true,
             });
             _claimLocals.Set(c, new ConvergeClaimLocalState
             {

@@ -229,6 +229,10 @@ public static class ConvergeDbConverters
         Module = module,
         ClaimEntityId = ulong.Parse(e.ClaimEntityId),
         PlayerEntityId = ulong.Parse(e.PlayerEntityId),
+        InventoryPermission = e.InventoryPermission,
+        BuildPermission = e.BuildPermission,
+        OfficerPermission = e.OfficerPermission,
+        CoOwnerPermission = e.CoOwnerPermission,
     };
 
     // An inventory pocket or equipment slot. Empty ones keep their place, with ItemType 0.
