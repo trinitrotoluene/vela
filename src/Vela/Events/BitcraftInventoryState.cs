@@ -8,6 +8,7 @@ namespace Vela.Events
     string OwnerEntityId,
     string PlayerOwnerEntityId,
     int InventoryIndex,
+    int CargoIndex,
     BitcraftInventoryPocket[] Pockets
   ) : BitcraftEventBase(Id);
 

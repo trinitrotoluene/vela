@@ -12,6 +12,7 @@ namespace Vela.Mappers
         OwnerEntityId: entity.OwnerEntityId.ToString(),
         PlayerOwnerEntityId: entity.PlayerOwnerEntityId.ToString(),
         InventoryIndex: entity.InventoryIndex,
+        CargoIndex: entity.CargoIndex,
         Pockets: [.. entity.Pockets.Select(x => MapPocket(x.Contents))]
       );
 

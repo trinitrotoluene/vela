@@ -20,6 +20,7 @@ public class ConvergeDbStateMappingTests
             OwnerEntityId = 500,
             PlayerOwnerEntityId = 0,
             InventoryIndex = index,
+            CargoIndex = index == 0 ? 1 : 0,
             Pockets = [new Pocket { Contents = new ItemStack { ItemId = 1, Quantity = 3, ItemType = ItemType.Cargo } }],
         };
 
@@ -32,6 +33,8 @@ public class ConvergeDbStateMappingTests
         Assert.Equal(500UL, cargo.OwnerEntityId);
         Assert.Equal(0, items.InventoryIndex);
         Assert.Equal(1, cargo.InventoryIndex);
+        Assert.Equal(1, items.CargoIndex);
+        Assert.Equal(0, cargo.CargoIndex);
         Assert.Equal(2, Assert.Single(cargo.Pockets).ItemType);
     }
 
