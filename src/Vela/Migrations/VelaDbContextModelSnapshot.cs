@@ -85,6 +85,11 @@ namespace Vela.Migrations
                         .HasColumnType("text")
                         .HasColumnName("description");
 
+                    b.Property<string>("IconAssetName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("icon_asset_name");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text")
@@ -246,6 +251,11 @@ namespace Vela.Migrations
                     b.Property<bool>("HasCompendiumEntry")
                         .HasColumnType("boolean")
                         .HasColumnName("has_compendium_entry");
+
+                    b.Property<string>("IconAssetName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("icon_asset_name");
 
                     b.Property<int>("ItemListId")
                         .HasColumnType("integer")

@@ -15,6 +15,7 @@ namespace Vela.Mappers
           Rarity: (BitcraftItemRarity)entity.Rarity,
           ItemListId: entity.ItemListId,
           HasCompendiumEntry: entity.CompendiumEntry,
-          Tag: entity.Tag);
+          Tag: entity.Tag,
+          IconAssetName: entity.IconAssetName);
   }
 }
